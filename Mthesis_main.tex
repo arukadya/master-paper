@@ -7,6 +7,7 @@
 %\usepackage{pxjahyper}
 \usepackage{here}
 \usepackage{algorithm}
+\usepackage{algorithmic}
 \usepackage{algpseudocode}
 \usepackage{hhline} 
 \usepackage[hang,small,bf]{caption}
@@ -14,6 +15,7 @@
 \usepackage{url}
 \usepackage{bm}
 \captionsetup{compatibility=false}
+ 
 
 \def\syaji{ \chapter*{謝辞} \addcontentsline{toc}{chapter}{謝辞}}
 \renewcommand{\bibname}{参考文献}
@@ -144,7 +146,7 @@ Toshiki SUNOUCHI\\
 %移流項は非線形であり，その他は線形である．
 一般の非線形微分方程式は厳密な解析的解法が存在せず，様々な条件を設定した上で，数値解法により離散化し，近似解を求めるのが一般的である．ナビエ・ストークス方程式の数値解法は，中間の速度$\bm{u^*_i} （\bm{x},t）$を用いて，右辺の項について個別に方程式の近似解を求める手法が一般的である．式 （\ref{eq:Navie}） の右辺の第一項を移流項，第二項を圧力項，第三項を粘性項，第四項を外力項とよぶ．
 
-Losassoらが提案したMarker And Cell法 （MAC法） \cite{MAC}と呼ばれる手法は，時間微分の離散化に前進差分を用いてナビエストークス方程式の数値解を求める代表的な手法である．MAC法は仮の速度$\bm{u}^*$を用いてナビエ・ストークス方程式を分割し，それぞれ個別に計算を行う．
+Losassoらが提案したMarker And Cell法 （MAC法） \cite{MAC}と呼ばれる手法は，時間微分の離散化に前進差分を用いてナビエストークス方程式の数値解を求める代表的な手法である．MAC法は仮の速度$\bm{u}^*$を用いて以下のようにナビエ・ストークス方程式を分割し，それぞれ個別に計算を行う．ここで，時刻の偏微分に前進差分$\frac{\partial}{\partial t}\bm{u} （\bm{x},t） = \frac{\bm{u} （\bm{x},t + \varDelta t）- \bm{u} （\bm{x},t ）}{\varDelta t}$を用いている．
 \begin{equation}
 	\bm{u} （\bm{x},t + \varDelta t）  =  \bm{u}^* - \varDelta t （\frac{1}{\rho}\nabla p （\bm{x},t）  + \nu\nabla^2\bm{u} （\bm{x},t）  + \bm{f}） 
 \end{equation} 
@@ -216,33 +218,67 @@ min || \mathbf{S} -  \mathbf{A}\mathbf{A^T} \mathbf{S}||^2_F
 \]
 ここで，固有ベクトル$\bm{v_i}$に対応する固有値を$\lambda_i$は，$\lambda_0 \ge \lambda_1 \cdots \ge \lambda_i \ge \lambda_{n-1} $を満たすとする．$\mathbf{S}\mathbf{S^T}$は対称行列になっているため，固有ベクトルは互いに直交し，$\mathbf{A^{-1}} = \mathbf{A^T}$となる．%また，$n \times n$行列$\mathbf{S^T}\mathbf{S}$ と$m\times m$行列$\mathbf{S}\mathbf{S^T}$の固有ベクトルは
 
-次に，行列$\mathbf{A}$を用いて$\bm{u}$を$\bm{y}$に射影するとき，$\bm{y}$が流体の非圧縮性条件$\nabla\boldsymbol{\cdot}\bm{y} = 0$を満たしていることを確かめる．行列$\mathbf{S}$の各列ベクトル$\bm{u_i}$は既存のシミュレーションの速度データであるため，流体の非圧縮性条件$\nabla\boldsymbol{\cdot}\bm{u_i} = 0$を満たす．このことから，
+次に，行列$\mathbf{A}$を用いて$\bm{u}$を$\bm{\tilde{u}}$に射影するとき，$\bm{\tilde{u}}$が流体の非圧縮性条件$\nabla\boldsymbol{\cdot}\bm{\tilde{u}} = 0$を満たしていることを確かめる．行列$\mathbf{S}$の各列ベクトル$\bm{u_i}$は既存のシミュレーションの速度データであるため，流体の非圧縮性条件$\nabla\boldsymbol{\cdot}\bm{u_i} = 0$を満たす．このことから，
 \[
 	\nabla\boldsymbol{\cdot}\mathbf{S}\ = \sum_{0 \le i \le n-1}\nabla\boldsymbol{\cdot}\bm{u_i} = 0
 \]
 が成り立つ．
-行列$\mathbf{S}\mathbf{S^T}$の固有ベクトル$\bm{v_i}$と，それに対応する固有値を$\lambda_i$とすると，固有値と固有ベクトルの定義から以下が成り立つ．
+
+また，行列$\mathbf{S}\mathbf{S^T}$の固有ベクトル$\bm{v_i}$と，それに対応する固有値を$\lambda_i$とすると，固有値と固有ベクトルの定義から以下が成り立つ．
 \[
 	\mathbf{S}\mathbf{S^T}\bm{v_i} = \lambda_i\bm{v_i}
 \]
 両辺に左から$\nabla\boldsymbol{\cdot}$を取ることにより，
+\[
+	（\nabla\boldsymbol{\cdot}\mathbf{S}）\mathbf{S^T}\bm{v_i} = \lambda_i\nabla\boldsymbol{\cdot}\bm{v_i}
+\]
+$\nabla\boldsymbol{\cdot}\mathbf{S}\ = 0$より，0でない$ \lambda_i$について，$\nabla\boldsymbol{\cdot}\bm{v_i} = 0$が成り立つことがわかる．
+%$\mathbf{A}$を用いて$\bm{u}$を$\bm{\tilde{u}}$に射影するとすると，$\bm{\tilde{u}} = \mathbf{A^T}\bm{u}$より，以下が成り立つ．
+%\[
+%	\bm{\tilde{u}} =  \begin{bmatrix}
+%	\bm{v_0}\boldsymbol{\cdot}\bm{u}\\
+%	\bm{v_1}\boldsymbol{\cdot}\bm{u}\\
+%	\vdots\\
+%	\bm{v_r}\boldsymbol{\cdot}\bm{u}
+%\end{bmatrix}
+%\]
 	%\subsection{}
 	%\section{ボリュームデータの可視化手法}
 \chapter{煙の流体シミュレーション}
-流体シミュレーションを行う際，境界条件や外力項を適切に設定することで，流体の振る舞いを操作することができる．この章では，部分空間法を用いて高速化するシミュレーションを実装する具体的な手法を紹介する．この手法で得られたシミュレーションデータを用いて，部分空間法に用いるSnapshot固有直交分解を行う．
+流体シミュレーションを行う際，境界条件や外力項を適切に設定することで，流体の振る舞いを操作することができる．この章では，文献\cite{fedkiw}を参考に，煙の流体シミュレーションを実装する方法を紹介する．この手法で得られたシミュレーションデータを用いて部分空間法に用いるSnapshot固有直交分解を行う．
 
 \section{格子法による離散化}
 格子法による空間の離散化は，扱う格子によって様々な手法が存在する．例えば物理量を格子の中心に配置するコロケート格子や，速度成分を格子の面の中心に配置するスタッガード格子が存在する．コロケート格子は流体の格子の形状によらず適用できるが，境界条件の設定が煩雑である．スタッガード格子は適用が立方体格子などに限定される一方，境界条件の設定が容易である．本論文では，シミュレーション空間をスタッガード格子を用いて離散化する．スタッガード格子は下記の図\ref{fig:staggerd}のように，格子の中心を圧力の位置に定義し，格子面の中心に，その格子面と垂直な流速の成分の位置を定義する．例えば$xy$平面に並行な格子面には，その地点での流速の$z$成分を配置する．
-シミュレーション空間の$x$，$y$，$z$軸方向の分割数を$nx$，$ny$，$nz$とする．スタッガード格子によってシミュレーションの物理量を，以下のベクトルに離散化する．
+
+\begin{figure}[htbp]
+\begin{center}
+%\includegraphics[width=80mm]{3dstaggerd.png}
+\caption{スタッガード格子}
+\label{fig:staggerd}
+\end{center}
+\end{figure}
+
+シミュレーション空間の$x$，$y$，$z$軸方向の分割数を$nx$，$ny$，$nz$とする．このとき空間解像度は$nx \cdot ny \cdot nz$となり，速度の$x，y，z$成分の空間解像度はそれぞれ$（nx+1） \cdot ny \cdot nz$，$nx \cdot （ny+1） \cdot nz$，$nx \cdot ny \cdot （nz+1）$となる．本論文では，$nx = ny =nz$とし，速度$\bm{v}$と圧力$\bm{p}$は以下のベクトルに離散化する．
 \begin{itemize}
 	\item	$\bm{v_x}$：$（nx+1） \times ny \times nz$次元ベクトル．
 	\item	$\bm{v_y}$：$nx \times （ny+1） \times nz$次元ベクトル．
 	\item	$\bm{v_z}$：$nx \times ny \times （nz+1）$次元ベクトル．
-	\item $\bm{p}$：$nx \times ny \times nz$次元ベクトル．
+	\item	$\bm{v}$：$3\times（nx+1） \cdot ny \cdot nz $次元ベクトル．
+	\item $\bm{p}$：$nx \cdot ny \cdot nz$次元ベクトル．
 \end{itemize}
-
-$\bm{v_x}$，$\bm{v_y}$，$\bm{v_z}$は速度の$x$，$y$，$z$成分，$\bm{p}$は圧力である．
-ここで，前進差分を用いた空間の偏微分の離散化の例として，スタッガード格子を用いた以下の偏微分の離散化を上記のベクトルを用いて表現することを考える．
+ここで$\bm{v}$の$v_0$から$v_{（nx+1） \cdot ny \cdot nz -1}$には速度の$x$成分，
+$v_{（nx+1） \cdot ny \cdot nz }$から$v_{2\times（nx+1） \cdot ny \cdot nz - 1}$には速度の$y$成分，
+$v_{2\times（nx+1） \dot ny \cdot nz - 1}$から$v_{3\times（nx+1） \cdot ny \cdot nz - 1}$には速度の$z$成分を保存する．
+また，位置$\bm{x} =（i，j，k）$における速度$\bm{v} （\bm{x}）$を，以下のように表す．
+\[
+	\bm{v} （\bm{x}）= 
+	 \begin{bmatrix}
+		\bm{v_x}（i，j，k）\\
+		\bm{v_y}（i，j，k）\\
+		\bm{v_z}（i，j，k）
+	\end{bmatrix}
+\]
+前進差分を用いた空間の偏微分の離散化の例として，スタッガード格子を用いた以下の偏微分の離散化を上記のベクトルを用いて表現することを考える．
 \[
 \frac{\partial}{\partial \bm{x}}\bm{u} （\bm{x}） = \frac{\bm{u}（\bm{x}+\varDelta \bm{x}）  - \bm{u} （\bm{x}） }{\varDelta \bm{x}}
 \]
@@ -257,7 +293,16 @@ $\bm{v_x}$，$\bm{v_y}$，$\bm{v_z}$は速度の$x$，$y$，$z$成分，$\bm{p}$
 \end{bmatrix}
 \]
 
-このような離散化を用いて，以降は気体の流体シミュレーションにおけるナビエ・ストークス方程式の計算方法を説明する．
+\subsection{ディリクレ境界条件}
+流体シミュレーションにおいて，流体と流体以外の境界面の物理量の条件を設定する必要がある場面がある．これを境界条件と呼び，文献\cite{fedkiw}では境界における物理量を事前に一定の値に設定するディリクレ境界条件が用いられており，境界における物理量は$0$と設定する．ディリクレ境界条件は速度成分を都度初期化することで適用できるほか，境界成分に対応する成分を0とした単位行列を用いた表現も可能である．ディリクレ境界条件を表現する行列を$\mathbf{D}$とすると，$\mathbf{D}$の$i，j$成分は以下のように定義される．
+\begin{equation}
+	\mathbf{D}_{i，j} = \begin{cases}
+ 	1 	& i = j かつ iは境界成分でない\\
+ 	0  		& その他\\
+ \end{cases}
+\end{equation}
+この行列表現は通常の流体シミュレーションでは不要であるが，部分空間法を用いた流体計算では境界成分に対応する値を変更することが困難なため，境界条件を行列積を用いて表現する手法が用いられている．
+以降は気体の流体シミュレーションにおけるナビエ・ストークス方程式の計算方法を説明する．
 \begin{equation}\label{eq:linear}
 	\bm{u} （\bm{x},t + \varDelta t）  =  \bm{u}^* - \varDelta t （\frac{1}{\rho}\nabla p （\bm{x},t）  + \nu\nabla^2\bm{u} （\bm{x},t）  + \bm{f}） 
 \end{equation} 
@@ -268,30 +313,193 @@ $\bm{v_x}$，$\bm{v_y}$，$\bm{v_z}$は速度の$x$，$y$，$z$成分，$\bm{p}$
 
 上記の式\ref{eq:linear}と式\ref{eq:nonlinear}を以下のように各項ごとに分割して計算する．
 \begin{equation}\label{eq:force}
-	\bm{u_0（\bm{x}）} =  \bm{u} （\bm{x},t）  - \varDelta t \bm{f} 
+	\bm{u_0} =  \bm{u} （t）  - \varDelta t \bm{f} 
 \end{equation} 
 
 \begin{equation}\label{eq:advect}
-	\bm{u_1（\bm{x}）} = \bm{u_0（\bm{x}）}  - \varDelta t （\bm{u_0} （\bm{x}）  \boldsymbol{\cdot}\nabla） \bm{u_0} （\bm{x}）
+	\bm{u_1} = \bm{u_0}  - \varDelta t （\bm{u_0}  \boldsymbol{\cdot}\nabla） \bm{u_0}
+	%\bm{u_1}（\bm{x}） = \bm{u_0}（\bm{x}  - \varDelta t \bm{u_0}）
 \end{equation}
 
 \begin{equation}\label{eq:diffusion}
-	\bm{u_2（\bm{x}）}   =  \bm{u_1（\bm{x}）} - \varDelta t \nu\nabla^2\bm{u_1} （\bm{x}）
+	\bm{u_2}   =  \bm{u_1} - \varDelta t \nu\nabla^2\bm{u_1}
 \end{equation}
 
 \begin{equation}\label{eq:pressure}
-	\bm{u} （\bm{x},t + \varDelta t）= \bm{u_3（\bm{x}）}  =  \bm{u_2（\bm{x}）} - \varDelta t （\frac{1}{\rho}\nabla p （\bm{x}）
+	\bm{u} （t + \varDelta t）= \bm{u_3}  =  \bm{u_2} - \varDelta t \frac{1}{\rho}\nabla p
 \end{equation} 
 
-ここで，式\ref{eq:force}は外力項，式\ref{eq:advect}は移流項，式\ref{eq:diffusion}は粘性項，式\ref{eq:diffusion}は粘性項，式\ref{eq:pressure}は圧力項を計算する式であり，これらの両辺を全て足し合わせると元のナビエ・ストークス方程式が得られる．
+ここで，式\ref{eq:force}は外力項，式\ref{eq:advect}は移流項，式\ref{eq:diffusion}は粘性項，式\ref{eq:diffusion}は粘性項，式\ref{eq:pressure}は圧力項を計算する式である．
 \subsection{外力項計算}
-\begin{equation}
-	\bm{u_0} =  \bm{u} （\bm{x},t）  - \varDelta t \bm{f} 
-\end{equation} 
-外力項では，再現したい現象になるような外力を与えなければならない．コンピュータグラフィックスにおける気体の外力は，気体にかかる重力と，温度差による対流を発生させる力，気体が渦巻くように与える力などをユーザーがパラメータによって調整できるようにする計算方法が一般的である．よりそれらしい振る舞いを再現するため，他の計算では定数として扱う密度や温度を，ここでは位置と時刻によって変化するデータとして計算する．
-位置$\bm{x}$における気体の密度，温度をそれぞれ$\rho（\bm{x}）$，$T（\bm{x}）$とし，
-\section{ボリュームデータの可視化手法}
+外力項では，再現したい現象になるような外力を与えなければならない．コンピュータグラフィックスにおける気体の外力は，気体にかかる重力と，温度差による対流を発生させる力，気体が渦巻くように与える力などをユーザーがパラメータによって調整できるようにする計算方法が一般的である．本実験では重力と，対流を発生させる力を加える．よりそれらしい振る舞いを再現するため，他の計算では定数として扱う密度や温度を，ここでは位置と時刻によって変化するデータとして計算する．
+位置$\bm{x}$における気体の密度，温度をそれぞれ$\rho（\bm{x}）$，$T（\bm{x}）$，環境温度を$T_{amb}（\bm{x}）$，重力の方向ベクトルを$\bm{d}$とすると，気体に働く外力は以下のようになる．
 
+\begin{equation}\label{eq:buoyancy}
+	\bm{f_{buoy}（\bm{x}）} =  \alpha \rho（\bm{x}）\bm{d}+ \beta（T（\bm{x}）- T_{amb}（\bm{x}））\bm{d}
+\end{equation} 
+ここで，$\alpha$，$\beta$はユーザーが設定するパラメータであり，それぞれ重力と対流の力を調整する．最終的な外力項計算は以下のようになる．
+\begin{equation}
+	\bm{u_0} =  \bm{u}  - \varDelta t \bm{f_{buoy}} 
+\end{equation} 
+
+%!!!スタッガードグリッドのスキームが速度と外力で異なる話
+%\begin{equation}\label{eq:confinent}
+%	\bm{f_{conf}（\bm{x}）} =  
+%\end{equation} 
+
+\subsection{移流項計算}
+移流項は流体の物理量が流体の速度場によって移動する様を計算することができる．移流項は非線形方程式であり，様々な計算方法が存在する．文献\cite{fedkiw}のSemi-Lagrangian法を紹介する．Semi-Lagrangian法
+は計算負荷が小さく，陰解法により安定した計算結果を得ることができるため，コンピュータグラフィックスの分野で広く用いられている．
+
+%Semi-Lagrangian法は移流計算を物質微分$\frac{\rm{D}}{\rm{D}t} =\frac{\partial}{\partial t} + \bm{u} （\bm{x},t）  \boldsymbol{\cdot}\nabla$を用いて行う．
+%簡単のため，ナビエストークス方程式から粘性項と外力項を取り除いた,オイラー方程式と呼ばれるものについて考える.
+Semi-Lagrangian法は，格子に配置されている計算点上の物理量を計算する格子法（Eulerian）の特徴と，移動する計算点を追跡し計算を行う粒子法（Lagrangian）の特徴を両方持っている計算手法である．
+移流項の計算$$\bm{u_1} = \bm{u_0}  - \varDelta t （\bm{u_0}  \boldsymbol{\cdot}\nabla） \bm{u_0}$$を変形し，時刻の偏微分に対し前進差分$\frac{\partial \bm{u}}{\partial t} = \frac{\bm{u_1} - \bm{u_0}}{ \varDelta t }$すると，以下の式が得られる．
+\[
+\frac{\partial \bm{u}}{\partial t}   +（\bm{u_0}  \boldsymbol{\cdot}\nabla） \bm{u_0} = 0
+\]
+この式は以下の輸送方程式と呼ばれる式の特殊な場合であり，輸送方程式は一般の物理量$\phi$に関して適用可能である．
+\begin{equation}\label{eq:transfer}
+	\frac{\partial {\phi}}{\partial t}  +（\bm{u}  \boldsymbol{\cdot}\nabla） {\phi} = 0
+\end{equation} 
+この輸送方程式が成り立つとき，位置$\bm{x}$，時刻$t$における物理量$\phi（\bm{x}，t）$について，以下の式が成り立つ．
+\begin{equation}\label{eq:semi-Lagrangian}
+	{\phi}（\bm{x}，t） = {\phi}（\bm{x}  - \varDelta t \bm{u}，t）
+\end{equation} 
+Semi-Lagrangian法を以下のように流速に適用することで移流項の計算を行う．また，密度や温度などに対して適用することで，空間の速度ベクトル場に沿って気体が運動する様子を再現することができる．
+\begin{equation}\label{eq:advect}
+	\bm{u_1}（\bm{x}） = \bm{u_0}（\bm{x}  - \varDelta t \bm{u_0}）
+\end{equation}
+以下では，輸送方程式\ref{eq:transfer}が成り立つとき，式\ref{eq:semi-Lagrangian}が成り立つことを確認する．$\bm{x}$にある物理量は$\bm{u} （\bm{x}） $に沿って$\varDelta t\bm{u} （\bm{x}）$移動すると仮定すると，移動前の物理量は$\phi（\bm{x} -  \varDelta t\bm{u} （\bm{x}））$となる．この間の物理量の変化$\varDelta {\phi}$は以下のようになる．
+\[
+\varDelta \phi = \phi（ \bm{u} （\bm{x}），t） - \phi （\bm{x} - \varDelta t\bm{u} （\bm{x}），t）
+\]
+これを一次のテイラー展開を用いて表すと,
+\[
+\varDelta \phi   = \frac{\partial \bm{u} （\bm{x}） }{\partial \bm{x}}\phi （\bm{x}，t） \varDelta t + \frac{\partial \phi （\bm{x}，t） }{\partial t}\varDelta t
+\]
+$\frac{\partial \bm{u} （\bm{x}） }{\partial \bm{x}}\phi （\bm{x}，t）= （\bm{u}（\bm{x}） \boldsymbol{\cdot}\nabla）\phi（\bm{x}，t）$より，
+\[
+ \frac{\varDelta \phi}{\varDelta t} =  （\bm{u}（\bm{x}）\boldsymbol{\cdot}\nabla） \phi（\bm{x}，t） + \frac{\partial \phi（\bm{x}，t） }{\partial t}
+ \]
+ 
+ 右辺が輸送方程式\ref{eq:transfer}になっていることから，$ \varDelta \phi =0$が成り立つ．
+$\varDelta \phi = \phi（ \bm{u} （\bm{x}）） - \phi （\bm{x} - \varDelta t\bm{u} （\bm{x}））= 0$より，式\ref{eq:semi-Lagrangian}が成り立つことが確認できる．
+\subsection{粘性項計算}
+粘性項は流体が徐々に周囲に広がっていく様を計算することができる．粘性項計算は$\varDelta t \nu\nabla^2$を行列を用いて表現することで，以下のように行列積を用いて表すことができる．
+\begin{equation}\label{eq:discrete Laplacian}
+	\bm{u_2}   =  \bm{u_1} - \varDelta t \nu\nabla^2\bm{u_1} = （\mathbf{I} -  \varDelta t \nu\mathbf{L}）\bm{u_1} = \mathbf{W}\bm{u_1}
+\end{equation}
+ここで，$\nabla^2$の離散化を行列$\mathbf{L}$を用いて表すことを考える．行列$\mathbf{L}$を$v_0$から$v_{n-1}$の$n$個の頂点を持つ無向グラフに対して離散ラプラシアンと呼び，$n \times n$行列$\mathbf{L}$の成分$\mathbf{L}_{i,j}$は以下のように定義される．ただし，無向グラフは自己ループを持たないとする．
+
+\begin{equation}
+	\mathbf{L}_{i，j} = \begin{cases}
+ 	deg（v_i） 	& i = j\\
+ 	-1  		& v_iとv_jが接続している\\
+ 	0  		& その他\\
+ \end{cases}
+\end{equation}
+スタッガード格子を用いた流体シミュレーションにおいて，無向グラフは流体のそれぞれの速度成分ごとの連結成分を持つとする．つまり，本論文のシミュレーションにおいては連結成分数は3であり，それぞれの頂点数は$（nx+1） \times ny \times nz$である．また，シミュレーション境界を除く速度に対応する次数は$6$であり，シミュレーション境界上の成分はディリクレ境界条件によって速度成分が$0$になるため，任意の値でよい．よって粘性項計算を表現する行列$\mathbf{W}$の成分$\mathbf{W}_{i，j}$は以下のように定義される．
+ \[
+ 	\mathbf{W}_{i，j}  = \begin{cases}
+ 	1 - 6 \varDelta t \nu 	& i = j\\
+ 	 \varDelta t \nu  	& v_iとv_jが接続している\\
+ 	0  				& その他\\
+	 \end{cases}
+\]
+
+\subsection{圧力項計算}
+圧力項計算は，流体の非圧縮性を満たすために流体に圧力勾配による外力を与える計算である．
+\[
+	\bm{u} （t + \varDelta t）=  \bm{u_2} - \varDelta t \frac{1}{\rho}\nabla p
+\]
+両辺の発散をとると，
+\[
+	\nabla\boldsymbol{\cdot}\bm{u} （t + \varDelta t）=  \nabla\boldsymbol{\cdot}\bm{u_2} - \varDelta t \frac{1}{\rho}\nabla^2 p
+\]
+が得られる．流体の非圧縮性条件，$\nabla\boldsymbol{\cdot}\bm{u} （t + \varDelta t）= 0$により，左辺は0になるため，
+\begin{equation}
+\nabla\boldsymbol{\cdot}\bm{u_2} = \frac{\varDelta t}{\rho}\nabla^2 p
+\end{equation} 
+が得られる．この式を圧力に関するポアソン方程式として解き，$\bm{u} （t + \varDelta t）=  \bm{u_2} - \varDelta t \frac{1}{\rho}\nabla p$に代入することで圧力項計算が完了する．ポアソンの境界条件にはディリクレ境界条件を適用する．
+\begin{figure}[htbp]
+\begin{center}
+%\includegraphics[width=80mm]{pressure_model.png}
+\caption{圧力計算のモデル}
+\label{fig:pressure_model}
+\end{center}
+\end{figure}
+\[
+\nabla\boldsymbol{\cdot}\bm{u_"} = \frac{\varDelta t}{\rho}\nabla^2 p 
+\]
+スタッガード格子では圧力と流速の配置されている位置が異なるため，空間微分に対して同じ差分は適応できない．そこで両辺をセルの領域で積分することを考える．
+\[
+\int_V\nabla\boldsymbol{\cdot}\bm{u_2} dV= \int_V\frac{\varDelta t}{\rho}\nabla^2 p dV
+\]
+両辺にガウスの発散定理を適用すると，周回積分の形で表せる．
+\[
+\oint_V\bm{u_2}\boldsymbol{\cdot}\bm{n} dV= \oint_V\frac{\varDelta t}{\rho}\nabla p \boldsymbol{\cdot}\bm{n}dV
+\]
+左辺から空間微分が消去できたため，右辺の空間微分に対して適切な微分スキームを適用することで，周回積分を離散化することができる．
+ここで離散化のため，$x軸方向にi番目，y軸方向にj番目，z軸方向にk番目の格子をg_{i,j,k}，圧力をp_{i,j,k}と定義し，$図\ref{fig:pressure_model}のようなモデルを考える．
+
+まず，整数$n=0,1,2,\cdots 5$までを，それぞれ格子の各面の方向に割り振る．図\ref{fig:pressure_model}の場合，$n=0$は$x$軸正の方向，$n=1$は$y$軸正の方向，$n=2$は$x$軸負の方向，$n=3$は$y$軸負の方向，$n=4$は$z$軸正の方向，$n=5$は$z$軸負の方向に割り振る．ここで，この整数$n$を用いて，以下の配列や変数を定義する．
+\begin{quote}
+	\begin{itemize}
+		\item $F_n$ 格子の面の各方向に隣接しているものが流体なら$1$，壁面なら$0$を取るブーリアン値．
+		
+		図\ref{fig:pressure_model}の場合，$n=0$に対応する$x$軸正の方向と，$n=5$に対応する$z$軸負の方向は壁に隣接していて格子がないため，$F_0,F_5 = 0,F_1,F_2,F_3,F_4 = 1$となる．
+		\item $D_n$ 格子の面の各方向に垂直で，格子の外側を向く単位ベクトルを表す係数．向いている方向が座標軸の正の向きなら+1，					負の向きなら$-1$を取る整数値．
+		
+		図\ref{fig:pressure_model}の場合，座標軸の正の方向に向いているのは$n=0,n=1,n=4$に対応する方向で，それ以外は負の方向に向いているため，
+		$F_0,F_1,F_4 = 1,F_2,F_3,F_4 = -1$となる．
+		\item $p_n$ 割り振られた方向に隣り合っている格子の圧力値．
+		図\ref{fig:pressure_model}の場合，$p_0 = p_{i+1,j,k}$，$p_1 = p_{i,j+1,k}$，$p_2 = p_{i-1,j,k}$，$p_3 = p_{i,j-1,k}$，$p_4 = p_{i,j,k+1}$，$p_5 = p_{i,j,k-1}$となるが，境界条件を考えると，壁に隣接している格子との圧力値の勾配を$0$にするため，$p_0 = p_{i,j,k}$，$p_5 = p_{i,j,k}$である．
+		\item $\nabla\bm{p_n}$ 割り振られた方向の圧力勾配.前方差分によって，$\nabla \bm{p_n} （\bm{x},t）  = \frac{p_n - p_{i,j,k}}{\varDelta x}$と近似できる．
+		\item $u_n$ $g_{i,j,k}$に配置されている流速値で，割り振られた方向の格子面に配置されている流速値．壁に隣接している方向は流速を$0$にするため，$u_0 = 0$，$u_5 = 0$である．
+	\end{itemize}
+\end{quote}
+
+定義した配列や変数を用いて，周回積分の形で表された式を離散化することで，
+$$ \sum_{n}\bm{u_n}^*D_nF_n\varDelta x = \sum_{n}\frac{\varDelta t}{\rho}\nabla p_n （\bm{x},t） F_n\varDelta x $$
+が得られ，圧力勾配を$\nabla p_n （\bm{x},t）  = \frac{p_n - p_{i,j,k}}{\varDelta x}$で近似すると，
+
+$$ \sum_{n}\bm{u_n}^*D_nF_n\varDelta x = \sum_{n}\frac{\varDelta t}{\rho}\frac{p_n （\bm{x},t） - p_{i,j,k} （\bm{x},t） }{\varDelta \bm{x}}F_n\varDelta x $$
+が得られる．この式を整理すると，
+\begin{equation}\label{eq:discretized_pressure}
+\sum_{n}\bm{u_n}^*D_nF_n= \sum_{n}\frac{\varDelta t}{\rho}\frac{p_n （\bm{x},t）  - p_{i,j,k} （\bm{x},t） }{\varDelta \bm{x}}F_n
+\end{equation} 
+が得られる．
+式 （\ref{eq:discretized_pressure}） は$p$についての連立一次方程式となっている．全ての格子に対して式 （\ref{eq:discretized_pressure}） を考えることになるため，連立方程式は規模が大きくなる．従って，直接法ではなく反復法を用いて，必要な精度で計算を打ち切って計算する．連立方程式の解法としては，前処理付き共役勾配法がよく用いられている．
+
+\begin{equation}
+\sum_{n}\bm{u_n}^*D_nF_n= \sum_{n}\frac{\varDelta t}{\rho}\frac{\bm{p_n} （\bm{x},t）  - \bm{p_{i,j,k}} （\bm{x},t） }{\varDelta \bm{x}}F_n
+\end{equation}
+
+圧力項は圧力を変数とした，上記の連立方程式を解く．格子の総数を$n$とすると，全ての格子で連立方程式を考えるため，合計$n$本の連立方程式を解くことになる．そこで，$\bm{Ax=b}$に対応させたものを解く．$\bm{A}$，$\bm{b}$それぞれのサイズは，$\bm{A}$は$n \times n$であり，$\bm{b}$は$n$である．この際，3次元に分布する圧力をベクトルにうつす．具体的には，圧力の$ （i,j,k） $成分は，ベクトルの$iN_yN_z+jN_x+k$成分にうつす．また，$\bm{A}$の$ （iN_yN_z+jN_x+k，lN_yN_z+mN_x+n） $の成分には，位置$ （i,j,k） $の格子についての連立方程式の，圧力の$ （l,m,n） $成分にかかる係数を保存すれば良い．通常の行列のままだと空間計算量や時間計算量をが非常に大きくなってしまうが，$\bm{A}$のほとんどの成分は$0$であることを利用し，Eigenの疎行列ライブラリを用いることで，空間計算量や時間計算量を削減できる．連立方程式の解法は，未知数が多いため，直接法で計算するのは現実的ではない．反復法では，必要な精度に解が収束したら計算を打ち切るため，解の収束が速い方が望ましい．前処理をすることで解の収束が速くなるため，前処理付き共役勾配法を採用し，Eigenの前処理付き共役勾配法を計算する関数を用いて連立方程式を解く．$\bm{A}$と$\bm{b}$の各成分は以下のように計算する．
+\begin{quote}
+	\begin{itemize}
+		\item $\bm{A}$，$\bm{b}$を初期化する．この際，$\bm{b}$の成分は全て0にしておく．
+		\item 全粒子について，ディリクレ境界条件を考え，粒子が存在しない空間の圧力を$0$で固定する．これは，standerdgridの$ （i,j,k） $に格納されている粒子の数を見て，0なら$\bm{A}$の$ （iN_yN_z+jN_x+k，iN_yN_z+jN_x+k） $成分を1にして，処理を終了すれば良い．
+		\item 粒子が入っていたセル$ （i,j,k） $について，式 （\ref{eq:discretized_pressure}） に従って係数を計算する．セル$ （i,j,k） $の周囲の6方向に格納されている流速について，シミュレーションの境界で，壁に隣接していない方向についての流速の周回積分を計算する．周回積分の値を，$\bm{b}$の$ （iN_yN_z+jN_x+k） $成分に代入する．
+		\item セル （i,j,k） の周囲の6方向のセルについて，粒子が入っていないセルの方向，または，壁に隣接している方向なら疎行列には何もせず，それ以外なら疎行列の$iN_yN_z+jN_x+k$行の，それぞれの方向に対応した対応した成分に$\frac{\varDelta t}{\rho\varDelta x^2}$を代入する．
+	\end{itemize}
+\end{quote}
+
+\section{ボリュームデータの可視化手法}
+ボリュームデータを三次元的な広がりの様子を把握できるようにレンダリングする手法を，ボリュームレンダリングという．描画対象の表面のみをレンダリングするサーフェスレンダリングとは異なり，光の散乱や吸収などの光学的性質を利用する．立方体格子を用いた気体の流体シミュレーションにおいては，一般的にスライスベースのボリュームレンダリングが用いられている．スライスベースのボリュームレンダリングは，シミュレーション空間がボクセル空間として捉えられることを利用し，気体の密度を用いてボクセルの透明度や色を計算する．その後，シミュレーション空間をボクセルの透明度や色をテクスチャとしてマッピングした複数の平面（スライス）に分割し，それらを順次描画することで最終的な画像を生成する．
+
+以下では，スライスベースのボリュームレンダリングのアルゴリズムと，各スライスのテクスチャの計算方法を紹介する．
+\begin{algorithm}[H]
+    	\caption{Axis Alined slice-based Volume Rendering}
+       	 \label{alg1}
+        	\begin{algorithmic}[1]
+        		\STATE x，y，z軸の中から，視線方向に近いものを選ぶ．
+                 \STATE 軸に垂直な平面（スライス）を，アルファブレンディングして描画．
+                 \[{\rm{I_n}}(\bm{x})= \alpha_n(\bm{x})c_n(\bm{x}) + (1-\alpha_n(\bm{x})){\rm{I_{n-1}}}(\bm{x})\]
+                 \[\alpha(\bm{x}) = 1 - exp(-\rho(\bm{x})\Delta s)\]
+            	\end{algorithmic}
+\end{algorithm}
 \chapter{部分空間法} \label{chapter:3}
 	\section{基底空間構築手法}
 	\section{流体ソルバへの部分空間法の適用}
@@ -321,147 +529,6 @@ $\bm{v_x}$，$\bm{v_y}$，$\bm{v_z}$は速度の$x$，$y$，$z$成分，$\bm{p}$
 \begin{equation}\label{eq:uncalculated_pressure_before}
 \frac{\partial}{\partial t}\bm{u} （\bm{x},t）  = -\bm{u} （\bm{x},t） \frac{\partial}{\partial \bm{x}}\bm{u} （\bm{x},t）
 \end{equation} 
-
-%偏微分演算子を前進差分$\frac{\partial}{\partial \bm{x}}\bm{u} （\bm{x},t）  = \frac{\bm{u} （\bm{x}+\varDelta \bm{x},t）  - \bm{u} （\bm{x},t） }{\varDelta \bm{x}}$を用いて離散化すると,
-%$$\frac{\partial}{\partial t}\bm{u} （\bm{x},t）  =  -\bm{u} （\bm{x},t） \frac{\bm{u} （\bm{x}+\varDelta \bm{x},t）  - \bm{u} （\bm{x},t） }{\varDelta \bm{x}}$$
-%が得られる．
-%二変数のテーラー展開$f （a+h,b+k）  \fallingdotseq \sum\limits_{t=0}^n \frac{1}{t!} （h\frac{\partial}{\partial \bm{x}} + k\frac{\partial}{\partial y}） ^t f （a,b） $を二次まで行い，式を整理すると，
-%$$\frac{\partial}{\partial t}\bm{u} （\bm{x},t）  = -\frac{1}{2!\varDelta \bm{x}}\bm{u} （\bm{x},t） \left （  （\bm{u} （\bm{x},t） +\varDelta t\frac{\partial}{\partial \bm{x}}\bm{u} （\bm{x},t）  +  （\varDelta \bm{x}） ^2\frac{\partial^2}{\partial \bm{x}^2}\bm{u} （\bm{x},t）  \right） $$
-            
-%$$\frac{\partial}{\partial t}\bm{u} （\bm{x},t）  =  -\bm{u} （\bm{x},t） \left （\frac{\partial}{\partial \bm{x}}\bm{u} （\bm{x},t）  + \varDelta \bm{x}\frac{\partial^2}{\partial \bm{x}^2}\bm{u} （\bm{x},t）  \right） $$
-
-%$$ \frac{\partial}{\partial t}\bm{u} （\bm{x},t）  =  -\bm{u} （\bm{x},t） \frac{\partial}{\partial \bm{x}}\bm{u} （\bm{x},t）  -\bm{u} （\bm{x},t） \varDelta \bm{x}\frac{\partial^2}{\partial \bm{x}^2}\bm{u} （\bm{x},t） $$
-
-%が得られる．ここで,$ -\bm{u} （\bm{x},t） \varDelta \bm{x} = \mu$とし,$\frac{\partial^2}{\partial \bm{x}^2}\bm{u} （\bm{x},t）  = \nabla^2\bm{u} （\bm{x},t） $とすれば,
-%\frac{\partial}{\partial t}\bm{u} （\bm{x},t）  =  -\bm{u} （\bm{x},t） \frac{\partial}{\partial \bm{x}}\bm{u} （\bm{x},t）  +\mu\nabla^2\bm{u} （\bm{x},t） ） 
-%\end{equation} 
-%が得られる．式（ \ref{eq:uncalculated_pressure_before}） と式（ \ref{eq:uncalculated_pressure_before}） を比較すると，右辺の二項目が数値拡散であること，そして数値拡散は粘性項の式とよく似ていることがわかる．
-\subsubsection{格子法における非線形項の計算} \label{subsec:gridpressure}
-式 （\ref{eq:linear}） の粘性項は先述の通り省略し，外力項は事前に流速に与えて扱うことができるため省略する．残った圧力項の計算について考える．ただし，移流項を先に計算し，$\bm{u}^*$は既知のものとする．
-\begin{equation}\label{eq:uncalculated_pressure}
-\bm{u} （\bm{x},t+1）  =  \bm{u}^* - \frac{\varDelta t}{\rho}\nabla p （\bm{x},t） 
-\end{equation} 
-両辺の発散をとると，
-$$\nabla\boldsymbol{\cdot}\bm{u} （\bm{x},t+1）  =  \nabla\boldsymbol{\cdot}\bm{u}^* - \frac{\varDelta t}{\rho}\nabla^2 p （\bm{x},t） $$
-が得られ，流体の非圧縮性条件，$\nabla\boldsymbol{\cdot}\bm{u} （\bm{x},t）  = 0$により，左辺は0になるため，
-\begin{equation}\label{eq:calculated_pressure}
-\nabla\boldsymbol{\cdot}\bm{u}^* = \frac{\varDelta t}{\rho}\nabla^2 p （\bm{x},t） 
-\end{equation} 
-が得られる．この式を満たすような圧力を求め，上記の式 （\ref{eq:uncalculated_pressure}） に代入することによって，次の時刻の流速$\bm{u} （\bm{x},t+1） $が計算できる．式 （\ref{eq:calculated_pressure}） のような微分方程式はポアソン方程式と呼ばれ，境界条件として，扱う領域の境界での$p （\bm{x},t） $の値を計算前に定めることで，式を満たすような変数を求めることができる．
-%\subsubsection{格子法における物理量の位置の定義方法} \label{subsec:grid_sampling}
-\begin{figure}[htbp]
-\begin{center}
-%\includegraphics[width=80mm]{3dstaggerd.png}
-\caption{スタッガード格子}
-\label{fig:staggerd}
-\end{center}
-\end{figure}．
-
-%\subsubsection{スタッガード格子を用いた，格子法の線形項の計算の離散化方法}
-\begin{figure}[htbp]
-\begin{center}
-%\includegraphics[width=80mm]{pressure_model.png}
-\caption{圧力計算のモデル}
-\label{fig:pressure_model}
-\end{center}
-\end{figure}
-圧力項の計算を，スタッガード格子を用いて離散化するため，先ほどの式 （\ref{eq:calculated_pressure}） を考える．
-$$\nabla\boldsymbol{\cdot}\bm{u}^* = \frac{\varDelta t}{\rho}\nabla^2 p （\bm{x},t） $$
-スタッガード格子では圧力と流速が配置してある位置がずれている．従って，空間微分に対して同じ差分を適用すると，同じ幅で差分を取ったとしても離散化される空間の位置がずれてしまうため，空間微分に対して同じ差分は適応できない．そこで差分を取るのではなく，両辺をセルの領域で積分して考える．
-$$\int_V\nabla\boldsymbol{\cdot}\bm{u}^* dV= \int_V\frac{\varDelta t}{\rho}\nabla^2 p （\bm{x},t） dV$$
-両辺にガウスの発散定理を適用すると，周回積分の形で表せる．
-$$\oint_V\bm{u}^*\boldsymbol{\cdot}\bm{n} dV= \oint_V\frac{\varDelta t}{\rho}\nabla p （\bm{x},t） \boldsymbol{\cdot}\bm{n}dV$$
-この式はスタッガード格子において，周回積分は格子の各面で境界条件を考えて，全ての面の物理量を足すことで表すことができる．
-ここで離散化のため，$x軸方向にi番目，y軸方向にj番目，z軸方向にk番目の格子をg_{i,j,k}，g_{i,j,k}の圧力をp_{i,j,k}と定義し，$図\ref{fig:pressure_model}のようなモデルを考える．
-
-まず，整数$n=0,1,2,\cdots 5$までを，それぞれ格子の各面の方向に割り振る．図\ref{fig:pressure_model}の場合，$n=0$は$x$軸正の方向，$n=1$は$y$軸正の方向，$n=2$は$x$軸負の方向，$n=3$は$y$軸負の方向，$n=4$は$z$軸正の方向，$n=5$は$z$軸負の方向に割り振る．ここで，この整数$n$を使って，いくつかの配列や変数を定義する．
-\begin{quote}
-	\begin{itemize}
-		\item $F_n$ 格子の面の各方向に隣接しているものが流体なら$1$，壁面なら$0$を取るブーリアン値．
-		
-		図\ref{fig:pressure_model}の場合，$n=0$に対応する$x$軸正の方向と，$n=5$に対応する$z$軸負の方向は壁に隣接していて格子がないため，$F_0,F_5 = 0,F_1,F_2,F_3,F_4 = 1$となる．
-		\item $D_n$ 格子の面の各方向に垂直で，格子の外側を向く単位ベクトルを表す係数．向いている方向が座標軸の正の向きなら+1，					負の向きなら$-1$を取る整数値．
-		
-		図\ref{fig:pressure_model}の場合，座標軸の正の方向に向いているのは$n=0,n=1,n=4$に対応する方向で，それ以外は負の方向に向いているため，
-		$F_0,F_1,F_4 = 1,F_2,F_3,F_4 = -1$となる．
-		\item $p_n$ 割り振られた方向に隣り合っている格子の圧力値．
-		図\ref{fig:pressure_model}の場合，$p_0 = p_{i+1,j,k}$，$p_1 = p_{i,j+1,k}$，$p_2 = p_{i-1,j,k}$，$p_3 = p_{i,j-1,k}$，$p_4 = p_{i,j,k+1}$，$p_5 = p_{i,j,k-1}$となるが，境界条件を考えると，壁に隣接している格子との圧力値の勾配を$0$にするため，$p_0 = p_{i,j,k}$，$p_5 = p_{i,j,k}$である．
-		\item $\nabla\bm{p_n}$ 割り振られた方向の圧力勾配.前方差分によって，$\nabla \bm{p_n} （\bm{x},t）  = \frac{p_n - p_{i,j,k}}{\varDelta x}$と近似できる．
-		\item $u_n$ $g_{i,j,k}$に配置されている流速値で，割り振られた方向の格子面に配置されている流速値．壁に隣接している方向は流速を$0$にするため，$u_0 = 0$，$u_5 = 0$である．
-	\end{itemize}
-\end{quote}
-
-定義した配列や変数を用いて，周回積分の形で表された式を離散化することで，
-$$ \sum_{n}\bm{u_n}^*D_nF_n\varDelta x = \sum_{n}\frac{\varDelta t}{\rho}\nabla p_n （\bm{x},t） F_n\varDelta x $$
-が得られ，圧力勾配を$\nabla p_n （\bm{x},t）  = \frac{p_n - p_{i,j,k}}{\varDelta x}$で近似すると，
-
-$$ \sum_{n}\bm{u_n}^*D_nF_n\varDelta x = \sum_{n}\frac{\varDelta t}{\rho}\frac{p_n （\bm{x},t） - p_{i,j,k} （\bm{x},t） }{\varDelta \bm{x}}F_n\varDelta x $$
-が得られる．この式を整理すると，
-\begin{equation}\label{eq:discretized_pressure}
-\sum_{n}\bm{u_n}^*D_nF_n= \sum_{n}\frac{\varDelta t}{\rho}\frac{p_n （\bm{x},t）  - p_{i,j,k} （\bm{x},t） }{\varDelta \bm{x}}F_n
-\end{equation} 
-が得られる．
-式 （\ref{eq:discretized_pressure}） は$p$についての連立一次方程式となっている．全ての格子に対して式 （\ref{eq:discretized_pressure}） を考えることになるため，連立方程式は規模が大きくなる．従って，直接法ではなく反復法を用いて，必要な精度で計算を打ち切って計算する．連立方程式の解法としては，前処理付き共役勾配法がよく用いられている．
-
-%\subsubsection{ディリクレ境界条件} \label{subsec:Dirichlet}
-圧力項の計算を離散化した式 （\ref{eq:discretized_pressure}） は，求めたい圧力分布の式 （\ref{eq:uncalculated_pressure}） を満たすような解が得られるが，得られた解がシミュレーション内で，良い圧力として振る舞うかどうかは考えなければならない．ディリクレ境界条件は，扱う領域を流体と気体の領域に分割し，流体の物理量のみを考える際に用いる境界条件で，流体が存在しない格子の圧力値を$0$とする．ディリクレ境界条件を考えずに流体の圧力のみを計算すると，気体の領域とされている場所にも流体の圧力が計算できてしまう．そのため，気体と液体の領域に分割するようなシミュレーションで，気体の圧力が液体の圧力に及ぼす影響が小さい場合は，圧力にディリクレ境界条件を追加した方が，より良い圧力分布になると言える．
-
-%\subsection{粒子法} \label{subsec:particle}
-粒子法とは，流体をいくつかの小さな粒子の集まりとして考え，各粒子に物理量を与えて計算をする方法である．本来は流体は，アボガドロ数 （$N_A = 6.02*10^{23}$） 単位の分子が動いているが，これら全てを計算機で扱うのは現実的でないため，いくつかの分子の動きを一つの粒子にまとめて扱う．粒子の数が多いほど実際の現象に近づき，精度が良くなるが，計算負荷は増加する．利点として，以下の計算によって，移流項の計算に数値拡散が発生しないことが確認できるため，移流項が精度良く計算できる．また，格子法では水飛沫の表現が困難であるが，粒子法は粒子が存在する場所に液体が存在すると考えるため，粒が飛び散りさへすれば水飛沫のような表現になる．欠点として，粒子が飛び散ったときに粒子の影響範囲内に他の粒子がいないとき，計算がうまくできないことから，正確な物理量の分布が計算できる訳ではない．また，対象の流体以外は計算しないことが多いため，例えば水と空気が入り混じるようなシミュレーションを考える際，水の計算のみをすることで，空気の影響が無視されてしまう．
-%\subsubsection{粒子法における移流項の計算} \label{subsec:particleadvect}
-簡単のため,ナビエストークス方程式から粘性項と外力項を取り除いた,オイラー方程式と呼ばれるものについて考える.
-$$\frac{\partial}{\partial t}\bm{u} （\bm{x},t）  = - （\bm{u} （\bm{x},t） \boldsymbol{\cdot}\nabla） \bm{u} （\bm{x},t）  - \frac{1}{\rho}\nabla \bm{p}$$
-粒子法はラグランジュ微分を用いることで、移流項の計算が単純になる。
-時刻$t_0$に位置$\bm{x_0}$にある流体の速度を$\bm{u} （\bm{x_0},t_0） $とする.$\varDelta t$秒後の位置は$\bm{x_0}+v （\bm{x_0},t_0） \varDelta t$になっているので,時刻$t_0+\varDelta t$の流体の速度は、$\bm{u} （\bm{x_0}+\bm{u} （\bm{x_0},t_0） \varDelta t,t_0+\varDelta t） $となる。この間の速度変化$\varDelta \bm{u}$をテイラー展開を用いて表すと,
-
-$$ \varDelta \bm{u} = \bm{u} （\bm{x_0}+v\varDelta t,t_0+\varDelta t）  - \bm{u} （\bm{x_0},t_0）  = \frac{\partial \bm{u} （\bm{x_0},t_0） }{\partial \bm{x}}\bm{u} （\bm{x_0},t_0） \varDelta t + \frac{\partial \bm{u} （\bm{x_0},t_0） }{\partial t}\varDelta t$$
-
-両辺を$\varDelta t$で割ると,
-$$ \frac{\varDelta \bm{u}}{\varDelta t} = \frac{\partial \bm{u} （\bm{x_0},t_0） }{\partial \bm{x}}\bm{u} （\bm{x_0},t_0）  + \frac{\partial \bm{u} （\bm{x_0},t_0） }{\partial t}$$
-$$ \frac{\varDelta \bm{u}}{\varDelta t} =  （\bm{u}\boldsymbol{\cdot}\nabla） \bm{u} + \frac{\partial \bm{u} （\bm{x_0},t_0） }{\partial t}$$
-
-ラグランジュ微分，つまり，粒子を流れに沿って動かしたときの変化量が，オイラー方程式の移流項になっている．粒子法では，物理量をもった粒子自体を動かすだけで，移流項の計算をすることができる．
-
-%\subsection{部分空間法} \label{subsec:subspace}
-
-
-%\section{関連研究} \label{sec:reratedworks}
-
-
-%\chapter{提案手法} \label{chapter:4}
-
-%\section{圧力項の離散化と実装} \label{sec:Imppressure}
-\begin{equation}
-\sum_{n}\bm{u_n}^*D_nF_n= \sum_{n}\frac{\varDelta t}{\rho}\frac{\bm{p_n} （\bm{x},t）  - \bm{p_{i,j,k}} （\bm{x},t） }{\varDelta \bm{x}}F_n
-\end{equation}
-
-圧力項は圧力を変数とした，上記の連立方程式を解く．格子の総数を$n$とすると，全ての格子で連立方程式を考えるため，合計$n$本の連立方程式を解くことになる．そこで，$\bm{Ax=b}$に対応させたものを解く．$\bm{A}$，$\bm{b}$それぞれのサイズは，$\bm{A}$は$n \times n$であり，$\bm{b}$は$n$である．この際，3次元に分布する圧力をベクトルにうつす．具体的には，圧力の$ （i,j,k） $成分は，ベクトルの$iN_yN_z+jN_x+k$成分にうつす．また，$\bm{A}$の$ （iN_yN_z+jN_x+k，lN_yN_z+mN_x+n） $の成分には，位置$ （i,j,k） $の格子についての連立方程式の，圧力の$ （l,m,n） $成分にかかる係数を保存すれば良い．通常の行列のままだと空間計算量や時間計算量をが非常に大きくなってしまうが，$\bm{A}$のほとんどの成分は$0$であることを利用し，Eigenの疎行列ライブラリを用いることで，空間計算量や時間計算量を削減できる．連立方程式の解法は，未知数が多いため，直接法で計算するのは現実的ではない．反復法では，必要な精度に解が収束したら計算を打ち切るため，解の収束が速い方が望ましい．前処理をすることで解の収束が速くなるため，前処理付き共役勾配法を採用し，Eigenの前処理付き共役勾配法を計算する関数を用いて連立方程式を解く．$\bm{A}$と$\bm{b}$の各成分は以下のように計算する．
-\begin{quote}
-	\begin{itemize}
-		\item $\bm{A}$，$\bm{b}$を初期化する．この際，$\bm{b}$の成分は全て0にしておく．
-		\item 全粒子について，ディリクレ境界条件を考え，粒子が存在しない空間の圧力を$0$で固定する．これは，standerdgridの$ （i,j,k） $に格納されている粒子の数を見て，0なら$\bm{A}$の$ （iN_yN_z+jN_x+k，iN_yN_z+jN_x+k） $成分を1にして，処理を終了すれば良い．
-		\item 粒子が入っていたセル$ （i,j,k） $について，式 （\ref{eq:discretized_pressure}） に従って係数を計算する．セル$ （i,j,k） $の周囲の6方向に格納されている流速について，シミュレーションの境界で，壁に隣接していない方向についての流速の周回積分を計算する．周回積分の値を，$\bm{b}$の$ （iN_yN_z+jN_x+k） $成分に代入する．
-		\item セル （i,j,k） の周囲の6方向のセルについて，粒子が入っていないセルの方向，または，壁に隣接している方向なら疎行列には何もせず，それ以外なら疎行列の$iN_yN_z+jN_x+k$行の，それぞれの方向に対応した対応した成分に$\frac{\varDelta t}{\rho\varDelta x^2}$を代入する．
-	\end{itemize}
-\end{quote}
-%\section{シミュレーション領域の定義} \label{sec:levelsetserface}
-本手法では，シミュレーションは立方体の内部の領域内で行う．立方体の一辺の長さ$L$は，スタッガード格子の水平方向の数を$N$，スタッガード格子の一辺の長さを$dx$とすると，$L = Ndx$である．
-8点$ （0,0,0） ， （L,0,0） ， （0,L,0） , （0,0,L） ， （L,L,0） ， （0,L,L） ， （L,0,L） , （L,L,L） $を頂点とするような立方体の領域を扱うレベルセットサーフェス$\varphi （x,y） $を，以下のように定義する．
-\begin{equation}\label{eq:levelsetserface}
-\varphi （x,y,z） 
-\begin{cases}
- （x,y,z）  & x \le0 , y \le 0,z \le 0,\\
- （L - x,y,z）  & L \le x , y \le 0,z \le 0,\\
- （x,L-y,z）  & x \le0 , L \le y,z \le 0,\\
- （L-x,L-y,z）  & L \le x , L \le y,z \le 0,\\
- （x,y,L-z）  & x \le0 , y \le 0,L \le z,\\
- （L - x,y,L-z）  & L \le x , y \le 0,L \le z,\\
- （x,L-y,L-z）  & x \le0 , L \le y,L \le z,\\
- （L-x,L-y,L-z）  & L \le x , L \le y,L \le z,\\
- （0,0）  & \rm{else}.\\
-\end{cases}
-\end{equation} 
-このようにして定義されるレベルセットサーフェスは，粒子の座標を引数とし，シミュレーションする立方体から外に出ていた場合は，立方体の領域内に最短距離で戻すようなベクトルを返り値として返す．粒子に対して移流計算や粒子位置の補正を行うと，シミュレーション領域から粒子が出ていってしまうことがあるため，そのような計算を行った後に全粒子に対して領域内部に戻す処理を行う．
 
 %\section{図と表の例} \label{section:figure_table}
 
@@ -527,14 +594,12 @@ $$ \frac{\varDelta \bm{u}}{\varDelta t} =  （\bm{u}\boldsymbol{\cdot}\nabla） 
 
 結論には，研究の成果や意義その他を総括的に{\em 過去形}で述べる．
 
-
-
 %謝辞
 \syaji
 \par
 本研究を進めるにあたり，大変多くのご指導，ご助言を頂いた
 中央大学理工学部情報工学科の森口　昌樹 准教授に深く感謝いたします．
-また，多大なるご助言，ご協力を頂いた〇〇研究室の皆様には大変お世話になりました．
+また，多大なるご助言，ご協力を頂いた形状情報処理研究室の皆様には大変お世話になりました．
 心から感謝いたします．
 
 
@@ -546,6 +611,9 @@ F. H. Harlow and J. E. Welch. Numerical calculation of time-dependent viscous in
 
 \bibitem{fedkiw}
 R. Fedkiew, J. stam, H. Jensen. Visual simulation of smoke. In \textit{Proceedings of SIGGRAPH 01}, 15--22, 2001.
+
+\bibitem{stable fluids}
+J. Stam. Stable Fluids. In \textit{SIGGRAPH 99 Conference Proceedings, Annual Conference Series}, pages 121--128, 1999.
 
 \bibitem{subspace}
 T. Kim, J. Delaney. Subspace Fluid Re-Simulation. \textit{ACM Transactions on Graphics},32（4）: 62:1--62:9, 2013.
@@ -562,4 +630,19 @@ M. Wicke, M. Stanton, and A. Treuille, Modular Bases for Fluid Dynamics. \textit
 %\begin{therelatedreference}{99}
 %\end{therelatedreference}
 
+
+%偏微分演算子を前進差分$\frac{\partial}{\partial \bm{x}}\bm{u} （\bm{x},t）  = \frac{\bm{u} （\bm{x}+\varDelta \bm{x},t）  - \bm{u} （\bm{x},t） }{\varDelta \bm{x}}$を用いて離散化すると,
+%$$\frac{\partial}{\partial t}\bm{u} （\bm{x},t）  =  -\bm{u} （\bm{x},t） \frac{\bm{u} （\bm{x}+\varDelta \bm{x},t）  - \bm{u} （\bm{x},t） }{\varDelta \bm{x}}$$
+が得られる．
+%二変数のテーラー展開$f （a+h,b+k）  \fallingdotseq \sum\limits_{t=0}^n \frac{1}{t!} （h\frac{\partial}{\partial \bm{x}} + k\frac{\partial}{\partial y}） ^t f （a,b） $を二次まで行い，式を整理すると，
+%$$\frac{\partial}{\partial t}\bm{u}（\bm{x},t）= -\frac{1}{2!\varDelta \bm{x}}\bm{u}（\bm{x},t）\left(（\bm{u} （\bm{x},t） +\varDelta t\frac{\partial}{\partial \bm{x}}\bm{u} （\bm{x},t）+（\varDelta \bm{x}）^2\frac{\partial^2}{\partial \bm{x}^2}\bm{u} （\bm{x},t）  \right) $$
+            
+%$$\frac{\partial}{\partial t}\bm{u} （\bm{x},t）  =  -\bm{u} （\bm{x},t） \left(\frac{\partial}{\partial \bm{x}}\bm{u} （\bm{x},t）  + \varDelta \bm{x}\frac{\partial^2}{\partial \bm{x}^2}\bm{u} （\bm{x},t）  \right) $$
+
+%$$ \frac{\partial}{\partial t}\bm{u} （\bm{x},t）  =  -\bm{u} （\bm{x},t） \frac{\partial}{\partial \bm{x}}\bm{u} （\bm{x},t）  -\bm{u} （\bm{x},t） \varDelta \bm{x}\frac{\partial^2}{\partial \bm{x}^2}\bm{u} （\bm{x},t） $$
+
+%が得られる．ここで,$ -\bm{u} （\bm{x},t） \varDelta \bm{x} = \mu$とし,$\frac{\partial^2}{\partial \bm{x}^2}\bm{u} （\bm{x},t）  = \nabla^2\bm{u} （\bm{x},t） $とすれば,
+%$$\frac{\partial}{\partial t}\bm{u} （\bm{x},t）  =  -\bm{u} （\bm{x},t） \frac{\partial}{\partial \bm{x}}\bm{u} （\bm{x},t）  +\mu\nabla^2\bm{u} （\bm{x},t） ） $$
+
+%が得られる．式（ \ref{eq:uncalculated_pressure_before}） と式（ \ref{eq:uncalculated_pressure_before}） を比較すると，右辺の二項目が数値拡散であること，そして数値拡散は粘性項の式とよく似ていることがわかる．
 \end{document}
