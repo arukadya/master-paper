@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.1-u1.30-230214-2.6 (utf8.euc) (TeX Live 2024) (preloaded format=platex 2024.3.22)  2 FEB 2025 01:41
+This is e-upTeX, Version 3.141592653-p4.1.1-u1.30-230214-2.6 (utf8.euc) (TeX Live 2024) (preloaded format=platex 2024.3.22)  4 FEB 2025 23:49
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -164,38 +164,7 @@ Package: algorithmic 2009/08/24 v0.1 Document Style `algorithmic'
 \ALC@tlm=\skip53
 \algorithmicindent=\skip54
 )
-(/usr/local/texlive/2024/texmf-dist/tex/latex/algorithmicx/algpseudocode.sty
-Package: algpseudocode 
-
-(/usr/local/texlive/2024/texmf-dist/tex/latex/algorithmicx/algorithmicx.sty
-Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
-
-Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
-\c@ALG@line=\count282
-\c@ALG@rem=\count283
-\c@ALG@nested=\count284
-\ALG@tlm=\skip55
-\ALG@thistlm=\skip56
-\c@ALG@Lnr=\count285
-\c@ALG@blocknr=\count286
-\c@ALG@storecount=\count287
-\c@ALG@tmpcounter=\count288
-\ALG@tmplength=\skip57
-
-/usr/local/texlive/2024/texmf-dist/tex/latex/algorithmicx/algorithmicx.sty:112:
- LaTeX Error: Command \algorithmic already defined.
-               Or name \end... illegal, see p.192 of the manual.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.112    }
-          %
-? 
-)
-Document Style - pseudocode environments for use with the `algorithmicx' style
-) (/usr/local/texlive/2024/texmf-dist/tex/latex/tools/hhline.sty
+(/usr/local/texlive/2024/texmf-dist/tex/latex/tools/hhline.sty
 Package: hhline 2020/01/04 v2.04 Table rule package (DPC)
 )
 (/usr/local/texlive/2024/texmf-dist/tex/latex/caption/caption.sty
@@ -224,15 +193,15 @@ Package caption Warning: Unknown document class (or package),
 (caption)                standard defaults will be used.
 See the caption package documentation for explanation.
 
-\c@caption@flags=\count289
-\c@continuedfloat=\count290
+\c@caption@flags=\count282
+\c@continuedfloat=\count283
 Package caption Info: float package is loaded.
 ) (/usr/local/texlive/2024/texmf-dist/tex/latex/caption/subcaption.sty
 Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
 Package caption Info: New subtype `subfigure' on input line 238.
-\c@subfigure=\count291
+\c@subfigure=\count284
 Package caption Info: New subtype `subtable' on input line 238.
-\c@subtable=\count292
+\c@subtable=\count285
 )
 (/usr/local/texlive/2024/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip17
@@ -252,14 +221,24 @@ LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 149.
 (/usr/local/texlive/2024/texmf-dist/tex/latex/l3backend/l3backend-dvips.def
 File: l3backend-dvips.def 2024-02-20 L3 backend support: dvips
 \l__pdf_internal_box=\box72
-\g__pdf_backend_object_int=\count293
+\g__pdf_backend_object_int=\count286
 \l__pdf_backend_content_box=\box73
 \l__pdf_backend_model_box=\box74
-\g__pdf_backend_annotation_int=\count294
-\g__pdf_backend_link_int=\count295
-\g__pdf_backend_link_sf_int=\count296
+\g__pdf_backend_annotation_int=\count287
+\g__pdf_backend_link_int=\count288
+\g__pdf_backend_link_sf_int=\count289
 )
-(./Mthesis_main.aux)
+(./Mthesis_main.aux
+
+LaTeX Warning: Label `eq:advect' multiply defined.
+
+
+LaTeX Warning: Label `fig:pressure_model' multiply defined.
+
+
+LaTeX Warning: Label `chapter:3' multiply defined.
+
+)
 \openout1 = `Mthesis_main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 34.
@@ -302,13 +281,23 @@ LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <24.88> not available
 (Font)              Font shape `JT1/gt/m/n' tried instead on input line 76.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <24.88> not available
 (Font)              Font shape `JY1/gt/m/n' tried instead on input line 76.
- (./Mthesis_main.toc)
+ (./Mthesis_main.toc
+LaTeX Font Info:    Trying to load font information for U+msa on input line 3.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 3.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+) [2
+
+])
 \tf@toc=\write3
 \openout3 = `Mthesis_main.toc'.
 
- [2
-
-]
+ [3]
 第 1 章
 [1
 
@@ -318,160 +307,115 @@ LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <17.28> not available
 (Font)              Font shape `JT1/gt/m/n' tried instead on input line 107.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <17.28> not available
 (Font)              Font shape `JY1/gt/m/n' tried instead on input line 107.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 117
-.
-(/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Trying to load font information for U+msb on input line 117
-.
-
-(/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-
-LaTeX Warning: Reference `eq:Navie' on page 2 undefined on input line 130.
-
-
-LaTeX Warning: Reference `eq:compressed' on page 2 undefined on input line 131.
-
-
-
-LaTeX Warning: Reference `eq:compressed' on page 2 undefined on input line 131.
-
-
-
-LaTeX Warning: Reference `eq:uncompressed1' on page 2 undefined on input line 1
-31.
-
-
-LaTeX Warning: Reference `eq:uncompressed' on page 2 undefined on input line 13
-1.
-
-
-LaTeX Warning: Reference `eq:Navie' on page 2 undefined on input line 131.
-
-
-LaTeX Warning: Reference `eq:uncompressed' on page 2 undefined on input line 13
-1.
-
-
-LaTeX Warning: Reference `eq:uncompressed1' on page 2 undefined on input line 1
-31.
-
 [2
 
-]
-
-LaTeX Warning: Reference `eq:Navie' on page 3 undefined on input line 147.
-
-
-LaTeX Warning: Citation `MAC' on page 3 undefined on input line 149.
-
-[3] [4] [5] [6]
+] [3] [4] [5] [6] [7]
 第 3 章
-
-LaTeX Warning: Citation `fedkiw' on page 7 undefined on input line 248.
-
-
-LaTeX Warning: Reference `fig:staggerd' on page 7 undefined on input line 251.
-
+File: images/3dstaggerd.png Graphic file (type bmp)
+<images/3dstaggerd.png>
 LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <10.95> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 256.
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 320.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <10.95> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 256.
-[7
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 320.
+[8
 
-]
-
-LaTeX Warning: Citation `fedkiw' on page 8 undefined on input line 297.
-
-[8]
-
-LaTeX Warning: Reference `eq:linear' on page 9 undefined on input line 314.
-
-
-LaTeX Warning: Reference `eq:nonlinear' on page 9 undefined on input line 314.
-
-
-LaTeX Warning: Reference `eq:force' on page 9 undefined on input line 332.
-
-
-LaTeX Warning: Reference `eq:advect' on page 9 undefined on input line 332.
-
-
-LaTeX Warning: Reference `eq:diffusion' on page 9 undefined on input line 332.
-
-
-LaTeX Warning: Reference `eq:diffusion' on page 9 undefined on input line 332.
-
-
-LaTeX Warning: Reference `eq:pressure' on page 9 undefined on input line 332.
-
-
-LaTeX Warning: Citation `fedkiw' on page 9 undefined on input line 351.
-
-[9]
-
-LaTeX Warning: Reference `eq:transfer' on page 10 undefined on input line 373.
-
-
-LaTeX Warning: Reference `eq:semi-Lagrangian' on page 10 undefined on input lin
-e 373.
-
-
-LaTeX Warning: Reference `eq:transfer' on page 10 undefined on input line 386.
-
-
-LaTeX Warning: Reference `eq:semi-Lagrangian' on page 10 undefined on input lin
-e 387.
-
-[10] [11]
-
-LaTeX Warning: Reference `fig:pressure_model' on page 12 undefined on input lin
-e 444.
-
-
-LaTeX Warning: Reference `fig:pressure_model' on page 12 undefined on input lin
-e 446.
-
-
-LaTeX Warning: Reference `fig:pressure_model' on page 12 undefined on input lin
-e 451.
-
-[12]
-
-LaTeX Warning: Reference `fig:pressure_model' on page 13 undefined on input lin
-e 454.
-
-
-LaTeX Warning: Reference `fig:pressure_model' on page 13 undefined on input lin
-e 457.
-
-
-Overfull \hbox (6.89273pt too wide) in paragraph at lines 458--459
-[]$\OMS/cmsy/m/n/12 r\OML/cmm/b/it/12 p[]$ \JY1/mc/m/n/12 割り振られた方向の圧
+] [9] [10] [11] [12] [13]
+Overfull \hbox (2.29453pt too wide) in paragraph at lines 489--490
+[]$\OMS/cmsy/m/n/12 r\OML/cmm/m/it/12 p[]$ \JY1/mc/m/n/12 割り振られた方向の圧
 力勾配\OT1/cmr/m/n/12 . \JY1/mc/m/n/12 前方差分によ っ て ， $\OMS/cmsy/m/n/12 
-r\OML/cmm/b/it/12 p[]\JY1/mc/m/n/12 （\OML/cmm/b/it/12 x\OML/cmm/m/it/12 ; t\JY
+r\OML/cmm/m/it/12 p[]\JY1/mc/m/n/12 （\OML/cmm/b/it/12 x\OML/cmm/m/it/12 ; t\JY
 1/mc/m/n/12 ） \OT1/cmr/m/n/12 = []$
  []
 
-
-LaTeX Warning: Reference `eq:discretized_pressure' on page 13 undefined on inpu
-t line 473.
-
-
-LaTeX Warning: Reference `eq:discretized_pressure' on page 13 undefined on inpu
-t line 473.
-
-[13]
-
-LaTeX Warning: Reference `eq:discretized_pressure' on page 14 undefined on inpu
-t line 484.
-
+File: images/pressure_model.png Graphic file (type bmp)
+<images/pressure_model.png>
 [14]
-./Mthesis_main.tex:501: Missing number, treated as zero.
-<to be read again> 
-                   \ALG@currentblock@0 
-l.501             ^^I\end{algorithmic}
-     
+File: images/P2V.png Graphic file (type bmp)
+<images/P2V.png>
+ [15] [16] [17] [18]
+第 4 章
+[19
+
+] [20] [21]
+第 5 章
+[22
+
+]
+第 6 章
+
+LaTeX Warning: Citation `suetake' on page 23 undefined on input line 751.
+
+
+LaTeX Warning: Citation `kusano' on page 23 undefined on input line 751.
+
+
+LaTeX Warning: Citation `fuortes' on page 23 undefined on input line 751.
+
+
+LaTeX Warning: Citation `rice' on page 23 undefined on input line 752.
+
+
+LaTeX Warning: Citation `guibas' on page 23 undefined on input line 752.
+
+
+LaTeX Warning: Citation `chudai' on page 23 undefined on input line 752.
+
+
+LaTeX Warning: Citation `iwama' on page 23 undefined on input line 752.
+
+
+LaTeX Warning: Citation `IPSJ' on page 23 undefined on input line 752.
+
+LaTeX Font Info:    Kanji font shape `JY1/gt/m/it' undefined
+(Font)              No change on input line 753.
+
+LaTeX Warning: Citation `IPSJ' on page 23 undefined on input line 767.
+
+LaTeX Font Info:    Kanji font shape `JY1/gt/m/it' undefined
+(Font)              No change on input line 770.
+[23
+
+]
+LaTeX Font Info:    Kanji font shape `JY1/gt/m/it' undefined
+(Font)              No change on input line 780.
+ [24] [25
+
+]
+LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
+(Font)              No change on input line 795.
+LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
+(Font)              No change on input line 798.
+LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
+(Font)              No change on input line 801.
+LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
+(Font)              No change on input line 804.
+LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
+(Font)              No change on input line 807.
+LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
+(Font)              No change on input line 810.
+ [26
+
+] (./Mthesis_main.aux)
+ ***********
+pLaTeX2e <2023-02-14>+1, based on
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-02-20>
+ ***********
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 4318 strings out of 474774
+ 69743 string characters out of 5758801
+ 1930032 words of memory out of 5000000
+ 26635 multiletter control sequences out of 15000+600000
+ 579101 words of font info for 117 fonts, out of 8000000 for 9000
+ 929 hyphenation exceptions out of 8191
+ 57i,10n,65p,982b,576s stack positions out of 10000i,1000n,20000p,200000b,200000s
+
+Output written on Mthesis_main.dvi (30 pages, 84820 bytes).
