@@ -154,16 +154,13 @@ Toshiki SUNOUCHI\\
 \begin{equation}\label{eq:force}
 	\bm{u_0} =  \bm{u} （t）  - \varDelta t \bm{f} 
 \end{equation} 
-
 \begin{equation}\label{eq:advect}
 	\bm{u_1} （\bm{x}） = \bm{u_0} （\bm{x}） - \varDelta t （\bm{u_0}（\bm{x}）  \boldsymbol{\cdot}\nabla） \bm{u_0}（\bm{x}）
 	%\bm{u_1}（\bm{x}） = \bm{u_0}（\bm{x}  - \varDelta t \bm{u_0}）
 \end{equation}
-
 \begin{equation}\label{eq:diffusion}
 	\bm{u_2}   =  \bm{u_1} - \varDelta t \nu\nabla^2\bm{u_1}
 \end{equation}
-
 \begin{equation}\label{eq:pressure}
 	\bm{u} （t + \varDelta t）= \bm{u_3}  =  \bm{u_2} - \varDelta t \frac{1}{\rho}\nabla \bm{p} 
 \end{equation} 
@@ -297,8 +294,51 @@ $n \times r$行列$\mathbf{S}$の特異値分解は，以下のように定義�
 式\ref{eq:diagonalization}と右辺を比較することによって，\(\mathbf{P} = \mathbf{V} \)，\(\mathbf{A} = \mathbf{\Sigma^2} \)であることがわかる．
 
 \subsection{非線形項の計算}
-非線形項については，Cubature法を用いた積分計算の計算量削減手法を用いて次元削減を行う．
-$n$次元ベクトルに関する非線形関数$\mathcal{F}$について，$\bm{f} = \mathcal{F}（\bm{x}）$とする．
+非線形項については，Cubature法を用いた積分計算の計算量削減手法を用いて次元削減を行う．非線形関数$\mathcal{F}$について，$\bm{f} = \mathcal{F}（\bm{x}）$とする．ここで，$\bm{f}$，$（\bm{x}）$は$n$次元ベクトルである．削減前の$\bm{f}$は，$\mathcal{F}$をシミュレーション空間$\Omega$の全ての計算点$\bm{x_p}$において積分することで求められる．
+\[
+	\bm{f} = \int_\Omega\mathcal{F}_p（\bm{x_p}）
+\]
+この積分計算をCubature法を用いて次元削減する．
+Cubature法はシミュレーション空間全域から適切に計算点を有限個サンプリングし，重み付き和をとることで積分計算を離散化する．
+サンプリングした点集合を$P$，サンプリング点$p$に対応する重みを$w_p$とすると，Cubature法は以下のように表せる．
+\[
+	\bm{f} = \sum_{p=1}^Pw_p\mathcal{F}_p（\bm{x_p}）
+\]
+この式は速度に関する基底を用いて以下のように部分空間へ射影することが可能である．
+\[
+	\mathbf{U_1}\bm{f} = \sum_{p=1}^Pw_p（\mathbf{U^p_1}）^T\mathcal{F}_p（\mathbf{U^p_0}\bm{x}）
+\]
+ここで，$\mathbf{U^p}$は$3 \times n$基底行列$\mathbf{U}$のサンプリング点$p$に関する行を抜粋して作成した，$3 \times r$行列である．$\bm{\tilde{f}}_p$ = $（\mathbf{U^p_1}）^T\mathcal{F}_p（\bm{\tilde{u_1}}）$とすると，最終的な部分空間に射影した移流項計算は，以下のようになる．
+\[
+	\bm{\tilde{u_2}} = \sum_{p=1}^Pw_p\bm{\tilde{f}}_p =   \sum_{p=1}^Pw_p（\mathbf{U^p_1}）^T\mathcal{F}_p（\bm{\tilde{u_1}}）
+\]
+
+以降はサンプリング点と重みを評価する手法について説明する．
+\begin{equation}
+	 \begin{bmatrix}
+	 \bm{\tilde{f}}^0_0	&\cdots	&\bm{\tilde{f}}^p_0	&\cdots	&\bm{\tilde{f}}^P_0\\
+		\vdots		&\ddots		&\vdots		&		&\vdots			\\
+	\bm{\tilde{f}}^0_t	&\cdots	&\bm{\tilde{f}}^p_t	&\cdots	&\bm{\tilde{f}}^P_t\\
+		\vdots		&		&\vdots			&\ddots		&\vdots			\\
+	\bm{\tilde{f}}^0_T	&\cdots	&\bm{\tilde{f}}^p_T	&\cdots	&\bm{\tilde{f}}^P_T\\
+	\end{bmatrix}
+	\begin{bmatrix}
+	w_0 	\\
+	\vdots \\
+	w_p \\
+	\vdots \\
+	w_P
+	\end{bmatrix}=
+	\begin{bmatrix}
+	\bm{\tilde{f}}_0 	\\
+	\vdots \\
+	\bm{\tilde{f}}_t \\
+	\vdots \\
+	\bm{\tilde{f}}_T
+	\end{bmatrix}
+\end{equation}
+
+ここで，$\bm{\tilde{f}}_t $はシミュレーションのSnapshot行列$\mathbf{S}$から抜粋した$t$番目の速度$\bm{u}_t$を用いて$\bm{\tilde{f}}_t = \mathbf{U}_1\bm{u}_t$とする．$\bm{\tilde{f}}^p_t$はサンプリング点に関する値$\mathbf{U^p}_1\bm{u^p}_t$である．
 %$\mathbf{A}$を用いて$\bm{u}$を$\bm{\tilde{u}}$に射影するとすると，$\bm{\tilde{u}} = \mathbf{A^T}\bm{u}$より，以下が成り立つ．
 %\[
 %	\bm{\tilde{u}} =  \begin{bmatrix}
@@ -608,7 +648,6 @@ I_n( \bm{x}) = \alpha_n( \bm{x}) c_n( \bm{x}) + ( 1-\alpha_n( \bm{x}) ) I_{n-1}(
    	| & | &  & |
 	\end{bmatrix}
 \]
-
  \[ \mathbf{S_p} = 
 	 \begin{bmatrix}
   	 | & | &  & |\\
@@ -655,15 +694,12 @@ $\mathbf{S^T}\mathbf{S} = \mathbf{V}\mathbf{\Sigma^2} \mathbf{V}^T$
 \[
 	\bm{u_2}   =  \mathbf{V}\bm{u_1}
 \]
-
 \[
 	\bm{b} = \mathbf{W}\bm{u_2}
 \]
-
 \[
 	\bm{p} = \mathbf{A^{-1}}\bm{b}
 \]
-
 \[
 	\bm{u_3}  =  \bm{u_2} - \mathbf{Y}\bm{p} 
 \]
@@ -679,11 +715,8 @@ $\mathbf{S^T}\mathbf{S} = \mathbf{V}\mathbf{\Sigma^2} \mathbf{V}^T$
 %\]
 \begin{align*}
  \mathbf{U_2^T}\bm{u_2}	& = （\mathbf{U_2^T}\mathbf{V}\mathbf{U_1}）\mathbf{U_1^T}\bm{u_1} 					&\bm{\tilde{u_2}} 		&= \mathbf{\tilde{V}}\bm{\tilde{u_1}}	\\
- &&&\\
  \mathbf{P^T}\bm{b}		& = （\mathbf{P^T}\mathbf{W}\mathbf{U_2}）\mathbf{U_2^T}\bm{u_2}        				&\bm{\tilde{b}}			&= \mathbf{\tilde{W}}\bm{\tilde{u_2}}	\\
-  &&&\\
  \mathbf{P^T}\bm{p} 		&= （\mathbf{P^T}\mathbf{A}^{-1}\mathbf{P}）\mathbf{P^T}\bm{b}						&\bm{\tilde{p}}			&= \mathbf{\tilde{A}}\bm{\tilde{b}}\\
-   &&&\\
  \mathbf{U_3^T}\bm{u_3} 	&=  \mathbf{U_2^T}\bm{u_2} - （\mathbf{U_3^T}\mathbf{Y}\mathbf{P}）\mathbf{P^T}\bm{p}	&\bm{\tilde{u_3}}		&= \bm{\tilde{u_2}}  -  \mathbf{\tilde{Y}}\bm{\tilde{p}}
 \end{align*}
 ただし，$\mathbf{P^T}\mathbf{A}^{-1}\mathbf{P} = （\mathbf{P^T}\mathbf{A}\mathbf{P}）^{-1}$であり，圧力ベクトルの次元数を$n$として$\mathbf{A}$は$n\times n$疎行列であり，$（\mathbf{P^T}\mathbf{A}\mathbf{P}）$は$m\times m$密行列である．密行列であることに注意が必要だが，逆行列を高速に求められるため，$\mathbf{\tilde{A}} = （\mathbf{P^T}\mathbf{A}\mathbf{P}）^{-1}$とする．
