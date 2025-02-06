@@ -176,7 +176,7 @@ Toshiki SUNOUCHI\\
 %	\bm{u}^* = \bm{u} （\bm{x},t）  - \varDelta t （\bm{u} （\bm{x},t）  \boldsymbol{\cdot}\nabla） \bm{u} （\bm{x},t）  
 %\end{equation}
 
-ナビエストークス方程式の空間の離散化については，大きく分けて格子法（Eulerian）と粒子法（Lagrangian）がある．
+ナビエ・ストークス方程式の空間の離散化については，大きく分けて格子法（Eulerian）と粒子法（Lagrangian）がある．
 格子法とは，流体を扱う空間を正方形や立方体の格子に区切り，格子の中心や辺，頂点などに物理量を配置して計算する方法である．区切る格子の数が多いほど，流体の詳細な動きが計算できるが，計算負荷は増加する．格子法の利点は，規則正しく並んだ格子で空間を離散化することで，微分演算を差分法などの方法で近似することができることや，境界条件の設定が容易であることが挙げられる．一方で，格子法の欠点は，格子の大きさよりも細かい表現が正確に行えないことや，格子内の流体の粒子の運動を平均化することにより，個々の粒子の詳細な運動を追跡することができないことが挙げられる．これらの欠点により，薄く広がった流体の運動や，水飛沫などを表現することが困難である．
 
 粒子法は，流体の粒子の運動を追跡する手法であり，薄く広がった流体の運動や水飛沫などを表現することが容易である利点がある一方で，計算精度の保証が不十分であることや，境界条件の設定が煩雑になるという欠点がある．
@@ -186,7 +186,7 @@ Toshiki SUNOUCHI\\
 
 
 \section{部分空間法}\label{sec:Subspace}
-部分空間法は，ベクトル空間をより低次元の部分空間に射影し，数値シミュレーションにおける計算負荷を軽減する手法である．流体シミュレーションにおける部分空間法は，モデル縮約やモデル縮退とも呼ばれている．扱うベクトルデータやシミュレーションの計算を低次元の部分空間に射影して行い計算負荷を軽減する．以下では，部分空間法の理論の概要を説明する．
+部分空間法は，ベクトル空間をより低次元の部分空間に射影し，数値シミュレーションにおける計算負荷を軽減する手法である．流体シミュレーションにおける部分空間法は，モデル縮約やモデル縮退とも呼ばれている．扱うベクトルデータやシミュレーションの計算を低次元の部分空間に射影して行い計算負荷を軽減する．部分空間上におけるシミュレーションでは，元のシミュレーションよりも$\varDelta t$を小さい値に設定することで，シミュレーションの時間変化をより詳細に追跡することが可能である．以下では，部分空間法の理論の概要を説明する．
 
 \subsection{部分空間への射影}
 シミュレーションの前処理として，$n$次元ベクトル$\bm{x}$を$r$次元ベクトル$\bm{\tilde{x}} $に変換する，$n \times r$直交行列$\mathbf{A}$を考える．以下の2式が成り立つ．
@@ -293,7 +293,7 @@ $n \times r$行列$\mathbf{S}$の特異値分解は，以下のように定義�
 \]
 式\ref{eq:diagonalization}と右辺を比較することによって，\(\mathbf{P} = \mathbf{V} \)，\(\mathbf{A} = \mathbf{\Sigma^2} \)であることがわかる．
 
-\subsection{非線形項の計算}
+\subsection{非線形項の計算}\label{noLinear}
 非線形項については，Cubature法を用いた積分計算の計算量削減手法を用いて次元削減を行う．非線形関数$\mathcal{F}$について，$\bm{f} = \mathcal{F}（\bm{x}）$とする．ここで，$\bm{f}$，$（\bm{x}）$は$n$次元ベクトルである．削減前の$\bm{f}$は，$\mathcal{F}$をシミュレーション空間$\Omega$の全ての計算点$\bm{x_p}$において積分することで求められる．
 \[
 	\bm{f} = \int_\Omega\mathcal{F}_p（\bm{x_p}）
@@ -306,15 +306,13 @@ Cubature法はシミュレーション空間全域から適切に計算点を有
 \]
 この式は速度に関する基底を用いて以下のように部分空間へ射影することが可能である．
 \[
-	\mathbf{U_1}\bm{f} = \sum_{p=1}^Pw_p（\mathbf{U^p_1}）^T\mathcal{F}_p（\mathbf{U^p_0}\bm{x}）
+	\mathbf{U_1}\bm{f} = \sum_{p=1}^Pw_p（\mathbf{U^p}）^T\mathcal{F}_p（\mathbf{U^p}\bm{x}）
 \]
-ここで，$\mathbf{U^p}$は$3 \times n$基底行列$\mathbf{U}$のサンプリング点$p$に関する行を抜粋して作成した，$3 \times r$行列である．$\bm{\tilde{f}}_p$ = $（\mathbf{U^p_1}）^T\mathcal{F}_p（\bm{\tilde{u_1}}）$とすると，最終的な部分空間に射影した移流項計算は，以下のようになる．
-\[
-	\bm{\tilde{u_2}} = \sum_{p=1}^Pw_p\bm{\tilde{f}}_p =   \sum_{p=1}^Pw_p（\mathbf{U^p_1}）^T\mathcal{F}_p（\bm{\tilde{u_1}}）
-\]
+ここで，$\mathbf{U^p}$は$3 \times n$基底行列$\mathbf{U}$のサンプリング点$p$に関する行を抜粋して作成した，$3 \times r$行列である．ここで，$\bm{\tilde{f}}_p$ = $（\mathbf{U^p}）^T\mathcal{F}_p（\bm{\tilde{u}}）$とする．
 
 以降はサンプリング点と重みを評価する手法について説明する．
-\begin{equation}
+サンプリングした点集合を$P$とする．以下の式を非負の$\bm{w}$に関する線形方程式として解くことで，適切な重みを求める．
+\begin{equation}\label{weight}
 	 \begin{bmatrix}
 	 \bm{\tilde{f}}^0_0	&\cdots	&\bm{\tilde{f}}^p_0	&\cdots	&\bm{\tilde{f}}^P_0\\
 		\vdots		&\ddots		&\vdots		&		&\vdots			\\
@@ -337,8 +335,13 @@ Cubature法はシミュレーション空間全域から適切に計算点を有
 	\bm{\tilde{f}}_T
 	\end{bmatrix}
 \end{equation}
+ここで，$\bm{\tilde{f}}_t $はシミュレーションのSnapshot行列$\mathbf{S}$から抜粋した$t$番目の速度$\bm{u}_t$を用いて$\bm{\tilde{f}}_t = \mathbf{U}\bm{u}_t$とする．$\bm{\tilde{f}}^p_t$はサンプリング点に関する値$\mathbf{U^p}\bm{u^p}_t$である．
 
-ここで，$\bm{\tilde{f}}_t $はシミュレーションのSnapshot行列$\mathbf{S}$から抜粋した$t$番目の速度$\bm{u}_t$を用いて$\bm{\tilde{f}}_t = \mathbf{U}_1\bm{u}_t$とする．$\bm{\tilde{f}}^p_t$はサンプリング点に関する値$\mathbf{U^p}_1\bm{u^p}_t$である．
+サンプリングした点集合は，空集合の状態からランダムに点集合を選び追加する．式\ref{weight}を線形方程式$\mathbf{A}\bm{w} = \bm{b}$とし，残差$\bm{r} = |\bm{b} - \mathbf{A}\bm{w}|$が閾値以下になるまでサンプリング点を追加する．サンプリングされた点を点集合に追加する際に，以下の式によって求められる確率関数を用いて追加するモンテカルロ法により，更なる効率化を達成できる．
+
+\[
+f（\bm{x_p}） = R（\frac{\bm{a_p}・\bm{r}}{\bm{r}・\bm{r}}）
+\]
 %$\mathbf{A}$を用いて$\bm{u}$を$\bm{\tilde{u}}$に射影するとすると，$\bm{\tilde{u}} = \mathbf{A^T}\bm{u}$より，以下が成り立つ．
 %\[
 %	\bm{\tilde{u}} =  \begin{bmatrix}
@@ -692,6 +695,12 @@ $\mathbf{S^T}\mathbf{S} = \mathbf{V}\mathbf{\Sigma^2} \mathbf{V}^T$
 	%\bm{u_1}（\bm{x}） = \bm{u_0}（\bm{x}  - \varDelta t \bm{u_0}）
 %\end{equation}
 \[
+	\bm{u_0} =  \bm{u} （t）  - \varDelta t \bm{f} 	
+\]
+\[
+	\bm{u_1}（\bm{x}） = \bm{u_0}（\bm{x}  - \varDelta t \bm{u_0}）
+\]
+\[
 	\bm{u_2}   =  \mathbf{V}\bm{u_1}
 \]
 \[
@@ -721,19 +730,32 @@ $\mathbf{S^T}\mathbf{S} = \mathbf{V}\mathbf{\Sigma^2} \mathbf{V}^T$
 \end{align*}
 ただし，$\mathbf{P^T}\mathbf{A}^{-1}\mathbf{P} = （\mathbf{P^T}\mathbf{A}\mathbf{P}）^{-1}$であり，圧力ベクトルの次元数を$n$として$\mathbf{A}$は$n\times n$疎行列であり，$（\mathbf{P^T}\mathbf{A}\mathbf{P}）$は$m\times m$密行列である．密行列であることに注意が必要だが，逆行列を高速に求められるため，$\mathbf{\tilde{A}} = （\mathbf{P^T}\mathbf{A}\mathbf{P}）^{-1}$とする．
 
-部分空間法によるシミュレーション計算は，前処理として基底と部分空間に射影した行列を計算する．基底を計算するステップの計算量はQR分解の$O(nm^2)$がボトルネックである．部分空間に射影した行列を計算するステップについては，射影前のそれぞれの行列が非常に疎であるため$O(nm^2)$程度になる．
+部分空間法によるシミュレーション計算は，前処理として基底と部分空間に射影した行列を計算する．基底を計算するステップの計算量のボトルネックは，QR分解の$O（nm^2）$である．部分空間に射影した行列を計算するステップについては，射影前のそれぞれの行列が非常に疎であるため，基底の計算ほど時間はかからない．
+
+非線形項は\ref{noLinear}にて紹介したCubature法を用いて計算する．Cubature法に用いる基底は，外力項は$\mathbf{U}_0$であり，移流項は$\mathbf{U}_1$である．
+例えば，移流項を最終的な部分空間に射影した移流項計算は以下のようになる．
+\[
+	\bm{\tilde{u_2}} = \sum_{p=1}^Pw_p\bm{\tilde{f}}_p =   \sum_{p=1}^Pw_p（\mathbf{U^p_1}）^T\mathcal{F}_p（\bm{\tilde{u_1}}）
+\]
 
 \section{部分空間法の課題}
+部分空間法はシミュレーションの次元を$n$次元から$r$次元に削減するため，各ステップの計算負荷を大幅に減らすことができる手法である．その一方で，前処理として基底の計算やCubature法のランダムサンプリングと重み計算，シミュレーションに用いる行列の部分空間への射影などを行う必要がある．これらの計算負荷はSnapshotの数に依存しているが，Snapshotの数以下の次元にしか次元削減できず，流体シミュレーションとして意味のある結果を得るためにはSnapshotの数が十分でなければならない．また，Snapshot行列の空間解像度が大きいという問題点がある．例えば空間解像度$64\times64\times64$，Snapshot数$50$とすると，流速のSnapshot行列の空間解像度は$10$GB程度になる．GPUによる高速化を併用する際，GPUが1度のデータ通信によって処理し切ることができる空間解像度の制限を超えてしまうことで計算時間が増加することが考えられる．
+
+他にも，事前計算したシミュレーションと異なるシミュレーションを行うことが困難であり，境界条件や流体の初期化，与える外力を大幅に変更することはできず，別途シミュレーションデータを用意する必要がある．
 
 \chapter{部分空間法の高速化手法の提案} \label{chapter:3}
-	\section{Snapshotの分割による高速化}
-	\section{領域分割による高速化}
-	\section{計算機実験}
-		\subsection{計算条件}
-		\subsection{計算結果}
-	\section{課題}
-\chapter{結論}
+部分空間法の前処理において，基底の計算と行列の射影の計算量はSnapshotの2乗に比例し，前処理の大多数の時間を占めている．この章では部分空間法の前処理の高速化を達成するため，Snapshotを$d$個に分割する手法を提案する．
 
+\section{Snapshotの分割による高速化}
+基底の計算に用いるSnapshotを$d$分割することによって，基底1つの計算負荷$O（nm^2）$が$\frac{1}{d^2}$に削減される．アルゴリズム全体では$d$回計算するため，計算負荷は$\frac{1}{d}$になることが期待できる．行列の射影計算も分割した基底ごとに行う．分割前の基底の削減した次元を$r$とすると，分割する基底の削減した次元は$\frac{r}{d}$とすることにより基底に用いる空間計算量は変わらない．射影した行列のサイズは$r\times r$から$\frac{r}{d}\times \frac{r}{d}$になる．
+\section{計算機実験}
+	\subsection{計算条件}
+	\subsection{計算結果}
+	非線形項については追加の実験を行ったところ，サンプリングされる点によって重みの計算が発散する場合がある．計算時間はSnapshot数については線形時間であるが，サンプリングする点の数が減ることによりNNLSソルバの反復回数が減ることで，実質的に高速化が見込めることもあった．
+\section{考察}
+削減後の次元数を分割ごとに揃える必要がある．分割後の基底の条件数が異なるため，揃えた次元数では過剰であったり，不足する可能性がある．次元数が過剰になった基底では条件数が大きくなり，不安定な部分空間を構築する場合がある．次元数が不足した基底では，シミュレーション計算の精度が下がる．%特異値分解を用いた次元削減は例えばシミュレーションの開始直後ではタイムステップごとの流速や圧力の変化が大きく，Snapshot間での相関関係が弱くなり
+\chapter{結論}
+基底の計算に用いるSnapshotを$d$分割することによって，基底計算全体の計算負荷は$\frac{1}{d}$になることが期待できる．
 %計算機が登場する以前の流体力学は，実際の流体を用いて実験を繰り返さなければならなかったが，計算機が登場してからは，シミュレーションをすることで，計算機上で流体の振る舞いを確認できるようになった．計算機を使った流体力学を特別に，数値流体力学 （CFD: Computational Fluid Dynamics） と呼び分けることも多い．CFDは実験で得ることが困難な，流れ場全体の詳細な情報を得ることができる．CFDは流体に触れる製品の設計・開発に非常に大きな貢献をした．
 
 %また，コンピューターグラフィックスにおいても，流体のアニメーションを計算することができるCFDが貢献していて，映像作品やゲームなどで利用されている．コンピューターグラフィックスにおいては，それらしい流体の運動がリアルタイムでシミュレーションできることが重要視される．精度良く計算できることはそこまで重要視されておらず，場合によってはそれらしさのために，現実より大袈裟なシミュレーションをすることもある．
@@ -744,71 +766,10 @@ $\mathbf{S^T}\mathbf{S} = \mathbf{V}\mathbf{\Sigma^2} \mathbf{V}^T$
 
 
 %\subsubsection{格子法における移流項の計算} \label{subsec:gridadvect}
-\begin{equation}\label{eq:uncalculated_pressure_before}
-\frac{\partial}{\partial t}\bm{u} （\bm{x},t）  = -\bm{u} （\bm{x},t） \frac{\partial}{\partial \bm{x}}\bm{u} （\bm{x},t）
-\end{equation} 
+%\begin{equation}\label{eq:uncalculated_pressure_before}
+%\frac{\partial}{\partial t}\bm{u} （\bm{x},t）  = -\bm{u} （\bm{x},t） \frac{\partial}{\partial \bm{x}}\bm{u} （\bm{x},t）
+%\end{equation} 
 
-%\section{図と表の例} \label{section:figure_table}
-
-図・表には通し番号と見出し（caption）を付け，本文中で当該の図・表に言及する．また，単位や目盛を正確に記す．
-図のタイトルは図の下に，表のタイトルは表の上に書く．
-
-例を図\ref{fig:logo}と表\ref{tab:results}に示す．
-第\ref{chapter:2}章の図には図2.1, 図2.2, 図2.3，…のように番号が振られ，
-第\ref{chapter:2}章の表には表2.1, 表2.2, 表2.3，…のように，図とは独立に番号が振られる．
-
-
-\begin{figure}[b]
-    \centering
-    %\includegraphics[scale=0.5]{images/logo_color.png}
-    \caption{情報工学科のロゴ}
-    \label{fig:logo}
-  \end{figure}
-
-
-\begin {table}[t]
-    \centering
-  \caption{表のタイトル}
-  \label{tab:results}
-  \begin {tabular}{ccc} \hline
-     項目1 & 項目2 & 項目3 \\ \hline
-    データ1 & データ2 & データ3 \\
-    データ1 & データ2 & データ3 \\
-    データ1 & データ2 & データ3 \\ \hline
-  \end {tabular}
-\end {table}
-
-
-%\section{参考文献の書き方}
-
-一例として，和文の著書\cite{suetake}，和文の論文誌\cite{kusano}，英文の編書\cite{fuortes}，
-英文の論文誌\cite{rice}，国際会議\cite{guibas}，修士論文\cite{chudai}，電子雑誌\cite{iwama}，Webページ\cite{IPSJ}を，
-2ページの参考文献の節に載せる．{\em 参考文献には信頼性が高く，後世に残るものを載せるように注意せよ．}
-
-書くべき情報は以下のとおりである．
-\begin{itemize}
-\item 和文の著書: 著者，書名，シリーズ名（あれば），発行所，都市，年．
-\item 和文の論文誌: 著者，題名，誌名，巻，号，頁，年．
-\item 英文の編書: 編者，書名，発行所，都市，年．
-\item 英文の論文誌: 著者，題名，誌名，巻，号，頁，年．
-\item 国際会議: 著者，題名，予稿集名，都市，コード等，頁，年．
-\item 修士論文: 著者，題名，機関名，年．
-\item 電子雑誌: 著者，題名，誌名，巻，号，頁（オンライン），DOI，西暦年．
-\item Webページ: 著者，Webページの題名，Webサイトの名称（オンライン）（ただし，著者と同じ場合は省略可），入手先〈URL〉（参照日付）．
-\end{itemize}
-英語の文献はすべて半角文字で書く．参考文献には本文で引用した文献のみ載せる．
-情報処理学会の論文誌の原稿執筆案内\cite{IPSJ}も参考になる．
-
-通し番号は，引用順または著者名のアルファベット順に付ける．
-文献の引用のしかたは分野ごとに異なるので，{\em 自己流では書かず，当該分野の論文誌などを参考にする}こと．
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%
-% 〇章
-%%%%%%%%%%%%%%%%%%%%%
-%\chapter{おわりに} \label{chapter:7}
 
 結論には，研究の成果や意義その他を総括的に{\em 過去形}で述べる．
 
@@ -851,7 +812,7 @@ M. Wicke, M. Stanton, and A. Treuille, Modular Bases for Fluid Dynamics. \textit
 
 %偏微分演算子を前進差分$\frac{\partial}{\partial \bm{x}}\bm{u} （\bm{x},t）  = \frac{\bm{u} （\bm{x}+\varDelta \bm{x},t）  - \bm{u} （\bm{x},t） }{\varDelta \bm{x}}$を用いて離散化すると,
 %$$\frac{\partial}{\partial t}\bm{u} （\bm{x},t）  =  -\bm{u} （\bm{x},t） \frac{\bm{u} （\bm{x}+\varDelta \bm{x},t）  - \bm{u} （\bm{x},t） }{\varDelta \bm{x}}$$
-が得られる．
+%が得られる．
 %二変数のテーラー展開$f （a+h,b+k）  \fallingdotseq \sum\limits_{t=0}^n \frac{1}{t!} （h\frac{\partial}{\partial \bm{x}} + k\frac{\partial}{\partial y}） ^t f （a,b） $を二次まで行い，式を整理すると，
 %$$\frac{\partial}{\partial t}\bm{u}（\bm{x},t）= -\frac{1}{2!\varDelta \bm{x}}\bm{u}（\bm{x},t）\left(（\bm{u} （\bm{x},t） +\varDelta t\frac{\partial}{\partial \bm{x}}\bm{u} （\bm{x},t）+（\varDelta \bm{x}）^2\frac{\partial^2}{\partial \bm{x}^2}\bm{u} （\bm{x},t）  \right) $$
             
