@@ -153,7 +153,7 @@ Toshiki SUNOUCHI\\
 	\end{equation}
 
 %移流項は非線形であり，その他は線形である．
-一般の非線形微分方程式は厳密な解析的解法が存在せず，様々な条件を設定した上で，数値解法により離散化し，近似解を求めるのが一般的である．ナビエ・ストークス方程式の数値解法は，分離解法と連成解法が存在する．分離解法は微分方程式の各項ごとに計算を分割する手法であり，線形問題の収束性が良い利点があル．しかし，分割した項同士の相互作用を計算できないため，厳密な現象の再現が困難であるという欠点がある．特に圧力の計算を分離するMarker And Cell法 （MAC法） \cite{MAC}と呼ばれる手法をLosassoらが提案し，MAC法は現在では圧力を分離する解法のことを広く指す．また，全ての項を個別に分割して解く手法としてフラクショナルステップ法が存在する．フラクショナルステップの分割において，式 \ref{eq:Navie} の右辺の第一項を移流項，第二項を圧力項，第三項を粘性項，第四項を外力項と呼ぶ．一方，連成解法は各項を分離せずに解く手法であり，より正確に現象を再現できる利点がある．しかし，計算負荷が高く，収束性が悪いという欠点がある．分離解法は，コンピュータグラフィックスや流体解析の分野で広く用いられており，選択する手法によって詳細に計算したい相互作用を調整することが可能である．
+一般の非線形微分方程式は厳密な解析的解法が存在せず，様々な条件を設定した上で，数値解法により離散化し，近似解を求めるのが一般的である．ナビエ・ストークス方程式の数値解法は，分離解法と連成解法が存在する．分離解法は微分方程式の各項ごとに計算を分割する手法であり，線形問題の収束性が良い利点があル．しかし，分割した項同士の相互作用を計算できないため，厳密な現象の再現が困難であるという欠点がある．一方，連成解法は各項を分離せずに解く手法であり，より正確に現象を再現できる利点がある．しかし，計算負荷が高く，収束性が悪いという欠点がある．分離解放の中でも圧力項の計算を分離する手法\cite{MAC,Chorin}によって，収束性や精度が問題であった圧力項計算の安定性が劇的に向上した．特にMarker And Cell法 （MAC法） \cite{MAC}は現在では圧力を分離する解法のことを広く指す．また， \cite{MAC}において全ての項を個別に分割して解く手法としてフラクショナルステップ法が提案されている．フラクショナルステップ法の分割において，式 \ref{eq:Navie} の右辺の第一項を移流項，第二項を圧力項，第三項を粘性項，第四項を外力項と呼ぶ．分離解法は，コンピュータグラフィックスや流体解析の分野で広く用いられており，選択する手法によって詳細に計算したい相互作用を調整することが可能である．
 
 以降はフラクショナルステップ法によるナビエ・ストークス方程式の分割方法を説明する．まず，上記の式\ref{eq:Navie}の時間微分に前進差分を適用し，以下を得る．
 \[
@@ -194,6 +194,14 @@ Toshiki SUNOUCHI\\
 格子法および粒子法は，固体にも適用することが可能であり，流体とは異なる支配方程式を用いて変形や移動を計算することができる．流体と固体の相互作用をシミュレーションする際には，格子法と粒子法をそれぞれ個別に適用することが可能である．また，流体の移流項のみを粒子法で計算し，その他の項を格子法で計算するなど，各項ごとに異なる手法を適用する手法も存在する．
 %微分計算の差分近似によって，無視されてしまう項が存在する．格子法での移流項の計算に用いられる差分近似で無視される項を，数値拡散，または人工粘性と呼ぶ．格子法での移流項の計算には風上差分がよく用いられるが，簡単のため，前進差分を用いる．格子法の欠点は，この数値拡散が決して小さくないため，移流項の精度があまりよくないことである．しかし，以下の移流項の計算によって，移流項の数値拡散として粘性項に似た形の式が現れる．従って，粘性項は移流項の数値拡散として扱い，まとめて計算されることが多い．また，水飛沫などの，液体が細かく分散するような計算は困難である．これは，微分の計算を差分で近似することで，隣接する格子との相互関係を用いて計算することになるため，液体が分散すると計算がうまくいかないためである．
 
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=80mm]{images/3dstaggerd.png}
+\caption{スタッガード格子}
+\label{fig:staggerd}
+\end{center}
+\end{figure}
+格子法による空間の離散化は，扱う格子によって様々な手法が存在する．例えば物理量を格子の中心に配置するコロケート格子や，速度成分を格子の面の中心に配置するスタッガード格子が存在する．コロケート格子は流体の格子の形状によらず適用できるが，境界条件の設定が煩雑である．スタッガード格子は適用が立方体格子などに限定される一方，境界条件の設定が容易である．スタッガード格子は上の図\ref{fig:staggerd}のように，圧力の定義位置を格子の中心とし，格子面の中心にその格子面と垂直な流速の成分の位置を定義する．例えば$xy$平面に並行な格子面には，その地点での流速の$z$成分を配置する．
 
 \section{部分空間法}\label{sec:Subspace}
 部分空間法は，ベクトル空間をより低次元の部分空間に射影し，数値シミュレーションにおける計算負荷を軽減する手法である．流体シミュレーションにおける部分空間法は，モデル縮約やモデル縮退とも呼ばれている．扱うベクトルデータやシミュレーションの計算を低次元の部分空間に射影して行い計算負荷を軽減する．部分空間上におけるシミュレーションでは，元のシミュレーションよりも$\varDelta t$を小さい値に設定することで，シミュレーションの時間変化をより詳細に追跡することが可能である．以下では，部分空間法の理論の概要を説明する．
@@ -385,19 +393,7 @@ f（\bm{x_p}） = R（\frac{\bm{a_p}・\bm{r}}{\bm{r}・\bm{r}}）
 \chapter{煙の流体シミュレーション}
 流体シミュレーションを行う際，境界条件や外力項を適切に設定することで流体の振る舞いを操作することができる．この章では文献\cite{fedkiw}を参考に，フラクショナルステップ法を格子法により離散化した煙の流体シミュレーションを実装する方法と，スライスベースのボリュームレンダリングによる可視化手法について説明する．%この手法で得られたシミュレーションデータを用いて部分空間法に用いるSnapshot固有直交分解を行う．
 
-\section{格子法による離散化}
-\begin{figure}[H]
-\begin{center}
-\includegraphics[width=80mm]{images/3dstaggerd.png}
-\caption{スタッガード格子}
-\label{fig:staggerd}
-\end{center}
-\end{figure}
-格子法による空間の離散化は，扱う格子によって様々な手法が存在する．例えば物理量を格子の中心に配置するコロケート格子や，速度成分を格子の面の中心に配置するスタッガード格子が存在する．コロケート格子は流体の格子の形状によらず適用できるが，境界条件の設定が煩雑である．スタッガード格子は適用が立方体格子などに限定される一方，境界条件の設定が容易である．スタッガード格子は上の図\ref{fig:staggerd}のように，圧力の定義位置を格子の中心とし，格子面の中心にその格子面と垂直な流速の成分の位置を定義する．例えば$xy$平面に並行な格子面には，その地点での流速の$z$成分を配置する．
-
-%\begin{figure}[htbp]
-
-
+\section{格子法によるフラクショナルステップ法}
 シミュレーション空間の$\rm{x，y，z}$軸方向の分割数を$\rm{nx，ny，nz}$とする．このとき空間解像度は$\rm{nx \cdot ny \cdot nz}$となり，速度の$\rm{x，y，z}$成分の空間解像度はそれぞれ$（nx+1） \cdot ny \cdot nz$，$nx \cdot （ny+1） \cdot nz$，$nx \cdot ny \cdot （nz+1）$となる．本論文では，$nx = ny =nz$とし，速度$\bm{v}$と圧力$\bm{p}$は以下のベクトルに離散化する．
 \begin{itemize}
 	\item	$\bm{v_x}$：$（nx+1） \times ny \times nz$次元ベクトル．
@@ -767,18 +763,70 @@ $\mathbf{S^T}\mathbf{S} = \mathbf{V}\mathbf{\Sigma^2} \mathbf{V}^T$
 部分空間法の前処理において，基底の計算と行列の射影の計算量はSnapshotの2乗に比例し，前処理の大多数の時間を占めている．この章では部分空間法の前処理の高速化を達成するため，Snapshotを$d$個に分割する手法を提案する．
 
 \section{Snapshotの分割による高速化}
-基底の計算に用いるSnapshotを$d$分割することによって，基底1つの計算負荷$O（nm^2）$が$\frac{1}{d^2}$に削減される．アルゴリズム全体では$d$回計算するため，計算負荷は$\frac{1}{d}$になることが期待できる．行列の射影計算も分割した基底ごとに行う．分割前の基底の削減した次元を$r$とすると，分割する基底の削減した次元は$\frac{r}{d}$とすることにより基底に用いる空間計算量は変わらない．射影した行列のサイズは$r\times r$から$\frac{r}{d}\times \frac{r}{d}$になる．
+部分空間法の基底の計算に用いるSnapshotを$d$分割することによって，基底1つの計算負荷$O（nm^2）$が$\frac{1}{d^2}$に削減される．アルゴリズム全体では$d$回計算するため，計算負荷は$\frac{1}{d}$になることが期待できる．行列の射影計算も分割した基底ごとに行う．空間計算量のボトルネックは分割前のSnapshot行列であり，分割前と変わらない．しかし，特異値分解する行列のサイズが$\frac{1}{d}$になることで，GPUを用いた大規模高速計算と併用する場合，GPUメモリの削減が期待できる．空間計算量をGPUが一度に扱うことができる値まで削減することで，並列計算による高速化が期待できる一方で，特異値分解の回数が$d$倍になることで，CPU-GPU間のデータ通信の時間が増加することに注意が必要である．
+
 \section{計算機実験}
-本研究では，コンピュータグラフィックスライブラリOpenGLとc++，線形代数ライブラリEigenを用いて，文献\cite{fedkiw}の煙の流体シミュレーションとスライスベースのボリュームレンダリングを行うソフトウェアを実装した．立方体形状のシミュレーション空間の底面中心から，煙が立ち上る様子をシミュレーションし，そのデータを元に部分空間法による次元削減を行なった．Cubature法のNNLSソルバにはEigenのUnsupportedライブラリのソルバを用いて実装した．
+本研究では，コンピュータグラフィックスライブラリOpenGLとc++，線形代数ライブラリEigenを用いて，文献\cite{fedkiw}の煙の流体シミュレーションとスライスベースのボリュームレンダリングを行うソフトウェアを実装した．立方体形状のシミュレーション空間の底面中心から，煙が立ち上る様子をシミュレーションし，そのデータを元に部分空間法による次元削減を行なった．Cubature法のNNLSソルバにはEigenのUnsupportedライブラリのソルバを用いて実装した．これによって得られたシミュレーション結果と，提案手法の計算負荷と削減後のデータの精度について調査を行った．計算負荷の評価は，部分空間法の基底を計算する前処理と行列の射影について実行時間を計測した．データの精度は非線形項の部分空間への射影手法\cite{projection_base}を参考に，L2誤差を用いて評価を行なった．ここでL2誤差は次元削減前後のベクトル$\bm{u}$と$\bm{\tilde{u}}$について，以下のように表される．
+
+\[
+L_2 = \frac{||  ||_2}{||  ||_2}
+\]
+
+
 \subsection{計算条件}
-解像度$n$，Snapshot数$T$，Snapshotの分割数$d$を変更し，計算負荷と削減後のデータの精度について調査を行った．計算負荷の評価は，部分空間法の基底を計算する前処理と行列の射影について行い，データの精度はL2誤差を用いて評価を行なった．
-
-
+解像度$n$，Snapshot数$T$，Snapshotの分割数$d$を変更し，
 
 \subsection{計算結果}
+\begin {table}[t]
+    \centering
+  \caption{基底計算における解像度と分割数ごとの実行時間（ms）}
+  \label{tab:results}
+  \begin {tabular}{ccccc} \hline
+    解像度 					&分割なし 		&分割数2			&分割数4 		&分割数10\\ \hline
+    $64^3$ 					& 23,428 			&14,564	 		&8,981	 	&3,780\\
+    $128^3$ 				& データ1 		& データ2 		& データ3 	&\\ \hline
+  \end {tabular}
+\end {table}
+
+\begin {table}[t]
+    \centering
+  \caption{基底計算における解像度と分割数ごとの実行時間（ms）}
+  \label{tab:results}
+  \begin {tabular}{ccccc} \hline
+    解像度 					&分割なし 		&分割数2			&分割数4 		&分割数10\\ \hline
+    $64^3$ 					& 3,514 			&2,823	 		&846	 		&666\\
+    $128^3$ 				& データ1 		& データ2 		& データ3 	&\\ \hline
+  \end {tabular}
+\end {table}
+%\begin {table}[t]
+%    \centering
+%  \caption{解像度$n = 64\times64\times64$の実行時間}
+%  \label{tab:results}
+%  \begin{minipage}[c]{0.45\hsize}
+%    \subcaption{基底計算}
+%  \begin {tabular}{ccc} \hline
+%     分割なし & 分割数2 & 分割数4 \\ \hline
+%    データ1 & データ2 & データ3 \\
+%    データ1 & データ2 & データ3 \\
+%    データ1 & データ2 & データ3 \\ \hline
+%  \end {tabular}
+%      \end{minipage}
+        %\begin{minipage}[c]{0.45\hsize}
+     %       \subcaption{行列の射影}
+  %\begin {tabular}{ccc} \hline
+     %分割なし & 分割数2 & 分割数4 \\ \hline
+    %データ1 & データ2 & データ3 \\
+    %データ1 & データ2 & データ3 \\
+    %データ1 & データ2 & データ3 \\ \hline
+  %\end {tabular}
+   %   \end{minipage}
+%\end {table}
+
 非線形項については追加の実験を行ったところ，サンプリングされる点によって重みの計算が発散する場合がある．計算時間はSnapshot数については線形時間であるが，サンプリングする点の数が減ることによりNNLSソルバの反復回数が減ることで，実質的に高速化が見込めることもあった．
+
+また，部分空間法の課題として，実験に用いるシミュレーションデータの質に左右される．シミュレーションデータ内で計算が発散していない場合でも，部分空間に射影することで計算が発散し，意味のある結果が得られない場合がある．以下は外力項のパラメータを高く設定した例である．
 \section{考察}
-分割後の基底の条件数が異なるため，次元数が過剰であったり，不足する可能性がある．次元数が過剰になった基底では条件数が大きくなり，不安定な部分空間を構築する場合がある．次元数が不足した基底では，シミュレーション計算の精度が下がる．特異値分解を用いた次元削減はの条件数は，行列を構成する列ベクトル同士の相関が強いほど悪くなることが知られている．本実験のシミュレーションの開始直後においては，タイムステップごとの流速や圧力の変化が大きくSnapshot間の相関関係が弱い．一方でシミュレーション終了付近においては，タイムステップごとの流速や圧力の変化が大きくSnapshot間の相関関係が強い．
+分割後の基底の条件数が異なるため，次元数が過剰であったり，不足する場合がある．次元数が過剰になった基底では条件数が大きくなり，小さな特異値に対応するモードが構築する部分空間に射影する場合がある．次元数が不足した基底では，シミュレーション計算の精度が下がる．特異値分解を用いた次元削減はの条件数は，行列を構成する列ベクトル同士の相関が強いほど悪くなることが知られている．本実験のシミュレーションの開始直後においては，タイムステップごとの流速や圧力の変化が大きくSnapshot間の相関関係が弱い．一方でシミュレーション終了付近においては，タイムステップごとの流速や圧力の変化が大きくSnapshot間の相関関係が強い．
 \chapter{結論}
 基底の計算に用いるSnapshotを$d$分割することによって，基底計算全体の計算速度を$\frac{1}{d}$に達成した．
 %計算機が登場する以前の流体力学は，実際の流体を用いて実験を繰り返さなければならなかったが，計算機が登場してからは，シミュレーションをすることで，計算機上で流体の振る舞いを確認できるようになった．計算機を使った流体力学を特別に，数値流体力学 （CFD: Computational Fluid Dynamics） と呼び分けることも多い．CFDは実験で得ることが困難な，流れ場全体の詳細な情報を得ることができる．CFDは流体に触れる製品の設計・開発に非常に大きな貢献をした．
@@ -811,7 +859,10 @@ $\mathbf{S^T}\mathbf{S} = \mathbf{V}\mathbf{\Sigma^2} \mathbf{V}^T$
 \begin{thebibliography}{99}
 \addcontentsline{toc}{chapter}{参考文献}
 \bibitem{MAC}
-F. H. Harlow and J. E. Welch. Numerical calculation of time-dependent viscous incompressible flow of fluid with a free surface. \textit{The Physics of Fluids}, 8（12）: 2182--2189, 1965.
+F. H. Harlow and J. E. Welch. Numerical calculation of time-dependent viscous incompressible flow of fluid with a free surface. \textit{Physics of Fluids}, 8（12）: 2182--2189, 1965.
+
+\bibitem{Chorin}
+A. J. Chorin. Numerical Solution of the Navier-Stokes Equations. \textit{Mathematics of Computation}, 22（104）: 745--762, 1968.
 
 \bibitem{fedkiw}
 R. Fedkiew, J. stam, H. Jensen. Visual simulation of smoke. In \textit{Proceedings of SIGGRAPH 01}, 15--22, 2001.
@@ -819,14 +870,17 @@ R. Fedkiew, J. stam, H. Jensen. Visual simulation of smoke. In \textit{Proceedin
 \bibitem{stable fluids}
 J. Stam. Stable Fluids. In \textit{SIGGRAPH 99 Conference Proceedings, Annual Conference Series}, pages 121--128, 1999.
 
+\bibitem{projection_base}
+A. Treuille, A. Lewis, and Z. Popovic. Model Reduction for Real-time Fluids. \textit{ACM Transactions on Graphics},25（3）: 826--834, 2006.
+
 \bibitem{subspace}
 T. Kim, J. Delaney. Subspace Fluid Re-Simulation. \textit{ACM Transactions on Graphics},32（4）: 62:1--62:9, 2013.
 
-\bibitem{subspaceDCT}
-A. Jones, P. Sen, and T. Kim. Compressing fluid subspaces. \textit{Proceedings of the ACM SIGGRAPH/Eurographics Symposium on Computer Animation}, pp. 77--84, 2016.
+%\bibitem{subspaceDCT}
+%A. Jones, P. Sen, and T. Kim. Compressing fluid subspaces. \textit{Proceedings of the ACM SIGGRAPH/Eurographics Symposium on Computer Animation}, pp. 77--84, 2016.
 
-\bibitem{tile}
-M. Wicke, M. Stanton, and A. Treuille, Modular Bases for Fluid Dynamics. \textit{ACM Transactions on Graphics}, 39:1--39:8, 2009.
+%\bibitem{tile}
+%M. Wicke, M. Stanton, and A. Treuille, Modular Bases for Fluid Dynamics. \textit{ACM Transactions on Graphics}, 39:1--39:8, 2009.
 
 \end{thebibliography}
 
