@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.1-u1.30-230214-2.6 (utf8.euc) (TeX Live 2024) (preloaded format=platex 2024.3.22)  8 FEB 2025 18:48
+This is e-upTeX, Version 3.141592653-p4.1.1-u1.30-230214-2.6 (utf8.euc) (TeX Live 2024) (preloaded format=platex 2024.3.22)  8 FEB 2025 20:16
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -266,26 +266,28 @@ LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <14.4> not available
 (Font)              Font shape `JT1/gt/m/n' tried instead on input line 68.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <14.4> not available
 (Font)              Font shape `JY1/gt/m/n' tried instead on input line 68.
-LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <12> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 71.
-LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <12> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 71.
- [1]
-LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <24.88> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 76.
-LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <24.88> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 76.
- (./Mthesis_main.toc
-LaTeX Font Info:    Trying to load font information for U+msa on input line 3.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 69.
 
-(/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsa.fd
+ (/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 3.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 69.
+
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [2
+)
+LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <12> not available
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 72.
+LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <12> not available
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 72.
+ [1]
+LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <24.88> not available
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 77.
+LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <24.88> not available
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 77.
+
+(./Mthesis_main.toc [2
 
 ])
 \tf@toc=\write3
@@ -298,24 +300,28 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ]
 第 2 章
 LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <17.28> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 117.
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 118.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <17.28> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 117.
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 118.
 [2
 
 ] [3]
 File: images/3dstaggerd.png Graphic file (type bmp)
 <images/3dstaggerd.png>
 LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <10.95> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 200.
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 201.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <10.95> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 200.
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 201.
  [4] [5] [6] [7] [8] [9] [10]
 第 3 章
 [11
 
-] [12] [13] [14] [15]
-Overfull \hbox (27.94934pt too wide) detected at line 621
+] [12]
+
+LaTeX Warning: Citation `stam' on page 13 undefined on input line 472.
+
+[13] [14] [15]
+Overfull \hbox (27.94934pt too wide) detected at line 623
 \OMS/cmsy/m/n/12 r ^^A \OT1/cmr/bx/n/12 u \OMS/cmsy/m/n/12 ^^Y [] \OT1/cmr/m/n/
 12 + [] + []
  []
@@ -333,47 +339,61 @@ File: images/64error.png Graphic file (type bmp)
 <images/64error.png>
 File: images/128error.png Graphic file (type bmp)
 <images/128error.png>
-File: images/n128_f99_dev2.png Graphic file (type bmp)
-<images/n128_f99_dev2.png>
+File: images/n128_f99_truth.png Graphic file (type bmp)
+<images/n128_f99_truth.png>
 
 
 Package caption Warning: \setcaptionsubtype
-(caption)                outside box or environment on input line 917.
+(caption)                outside box or environment on input line 925.
 See the caption package documentation for explanation.
 
 
 Package caption Warning: \subcaption
-(caption)                outside box or environment on input line 917.
+(caption)                outside box or environment on input line 925.
 See the caption package documentation for explanation.
 
 LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <10> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 917.
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 925.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <10> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 917.
-File: images/n128_f99_dev2.png Graphic file (type bmp)
-<images/n128_f99_dev2.png>
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 925.
+File: images/n128_f99_dev1.png Graphic file (type bmp)
+<images/n128_f99_dev1.png>
 
 Package caption Warning: \subcaption
-(caption)                outside box or environment on input line 919.
+(caption)                outside box or environment on input line 927.
 See the caption package documentation for explanation.
 
 File: images/n128_f99_dev2.png Graphic file (type bmp)
 <images/n128_f99_dev2.png>
+
+Package caption Warning: \subcaption
+(caption)                outside box or environment on input line 929.
+See the caption package documentation for explanation.
+
+File: images/n128_f100_truth.png Graphic file (type bmp)
+<images/n128_f100_truth.png>
 
 Package caption Warning: \setcaptionsubtype
-(caption)                outside box or environment on input line 926.
+(caption)                outside box or environment on input line 937.
 See the caption package documentation for explanation.
 
 
 Package caption Warning: \subcaption
-(caption)                outside box or environment on input line 926.
+(caption)                outside box or environment on input line 937.
+See the caption package documentation for explanation.
+
+File: images/n128_f100_dev1.png Graphic file (type bmp)
+<images/n128_f100_dev1.png>
+
+Package caption Warning: \subcaption
+(caption)                outside box or environment on input line 939.
 See the caption package documentation for explanation.
 
 File: images/n128_f100_dev2.png Graphic file (type bmp)
 <images/n128_f100_dev2.png>
 
 Package caption Warning: \subcaption
-(caption)                outside box or environment on input line 928.
+(caption)                outside box or environment on input line 941.
 See the caption package documentation for explanation.
 
 [24] [25] [26] [27] [28]
@@ -384,19 +404,19 @@ See the caption package documentation for explanation.
 
 ]
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 968.
+(Font)              No change on input line 992.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 971.
+(Font)              No change on input line 995.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 974.
+(Font)              No change on input line 998.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 977.
+(Font)              No change on input line 1001.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 980.
+(Font)              No change on input line 1004.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 983.
+(Font)              No change on input line 1007.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 986.
+(Font)              No change on input line 1010.
  [31
 
 ] (./Mthesis_main.aux)
@@ -407,16 +427,19 @@ L3 programming layer <2024-02-20>
  ***********
 
 
+LaTeX Warning: There were undefined references.
+
+
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 4401 strings out of 474774
- 71077 string characters out of 5758801
+ 4425 strings out of 474774
+ 71798 string characters out of 5758801
  1935032 words of memory out of 5000000
- 26714 multiletter control sequences out of 15000+600000
+ 26734 multiletter control sequences out of 15000+600000
  581648 words of font info for 127 fonts, out of 8000000 for 9000
  929 hyphenation exceptions out of 8191
  57i,10n,65p,1178b,639s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on Mthesis_main.dvi (35 pages, 100912 bytes).
+Output written on Mthesis_main.dvi (35 pages, 103284 bytes).

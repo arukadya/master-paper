@@ -66,6 +66,7 @@ Toshiki SUNOUCHI\\
 
 
 \begin{center} {\large \bf{概　要}} \end{center}
+本研究では部分空間法の前処理に対して，計算時間を高速化する手法を提案する．部分空間法を適用することで，シミュレーションは大幅に高速化することができるが，前処理に膨大な計算時間がかかることが課題である．そこで本研究は，前処理をシミュレーション時間に対して$d$分割し，前処理全体の計算時間を削減する手法を提案する．計算機実験の結果，前処理のボトルネックとなっている基底計算のための特異値分解の高速化を確認し，前処理の高速化に有効であると示すことができた．
 
 \vspace{1zw} \noindent
 {\bf キーワード: }流体シミュレーション，部分空間法，Snapshot 固有直交分解，Cubature
@@ -468,8 +469,8 @@ $2\times（nx+1） \dot ny \cdot nz - 1$から$3\times（nx+1） \cdot ny \cdot 
 %\end{equation} 
 
 \subsection{移流項計算}
-移流項は流体の物理量が流体の速度場によって移動する様を計算することができる．移流項は非線形方程式であり，様々な計算方法が存在する．文献\cite{fedkiw}のSemi-Lagrangian法を紹介する．Semi-Lagrangian法
-は計算負荷が小さく，陰解法により安定した計算結果を得ることができるため，コンピュータグラフィックスの分野で広く用いられている．
+移流項は流体の物理量が流体の速度場によって移動する様を計算することができる．移流項は非線形方程式であり，様々な計算方法が存在する．本節ではコンピュータグラフィックスの分野において広く用いられている，文献\cite{stam}のSemi-Lagrangian法を紹介する．Semi-Lagrangian法
+は計算負荷が小さく，陰解法により安定した計算結果を得ることができる．
 
 %Semi-Lagrangian法は移流計算を物質微分$\frac{\rm{D}}{\rm{D}t} =\frac{\partial}{\partial t} + \bm{u} （\bm{x},t）  \boldsymbol{\cdot}\nabla$を用いて行う．
 %簡単のため，ナビエストークス方程式から粘性項と外力項を取り除いた,オイラー方程式と呼ばれるものについて考える.
@@ -532,7 +533,8 @@ $\nabla^2$を離散ラプラシアン行列$\mathbf{L}$を用いて離散化す�
 \]
 
 \subsection{圧力項計算}
-圧力項計算は，流体の非圧縮性を満たすために流体に圧力勾配による外力を与える計算である．以下では，代表的な圧力項計算手法である，コリンの射影法を紹介する．圧力項計算によって離散化するのは以下の方程式である．
+圧力項計算は，流体の非圧縮性を満たすように流体に圧力勾配による外力を与える計算である．本節では，代表的な圧力項計算手法であるコリンの射影法\cite{Chorin}を紹介する．
+圧力項計算によって離散化するのは以下の方程式である．
 \[
 	\bm{u} （t + \varDelta t）=  \bm{u_2} - \varDelta t \frac{1}{\rho}\nabla p
 \]
@@ -735,6 +737,8 @@ I_n( \bm{x}) = \alpha_n( \bm{x}) c_n( \bm{x}) + ( 1-\alpha_n( \bm{x}) ) I_{n-1}(
 %\end{algorithm}
 
 \chapter{部分空間法} \label{chapter:3}
+本章では，スタッガード格子を用いた煙の流体シミュレーション\cite{fedkiw}に対して，線形項と非線形項の計算を部分空間上に射影して計算する手法\cite{subspace}を適用する方法を説明する．
+
 \section{基底空間構築手法}
 スタッガード格子を用いた流体シミュレーションの，時刻$t \{t \in N, 0 \le t \le m\}$の流速データ$\bm{u_t}$と圧力データ$\bm{p}$を用いて，Snapshot行列$\mathbf{S_u}$と$\mathbf{S_p}$を定義する．$\rm{x，y，z}$軸方向の分割数を$\rm{nx，ny，nz}$$（nx = ny = nz）$とすると，$\bm{u_t}$と$\bm{p}$の次元はそれぞれ$3（nx+1）\times nx\times nx$，$nx\times nx \times nx$である．
 
@@ -773,12 +777,13 @@ $\mathbf{Q}と\mathbf{U_R}$は直交行列であることから，以下が得�
 \[
 \mathbf{S^T}\mathbf{S} = \mathbf{V_R}\mathbf{\Sigma_R^2} \mathbf{V_R}^T
 \]
+
 \ref{sec:Subspace}にて
 $\mathbf{S^T}\mathbf{S} = \mathbf{V}\mathbf{\Sigma^2} \mathbf{V}^T$
 となることを利用して基底を求めることができることを紹介した．同様にしてQR分解後の特異値分解を利用して基底を求めることができる．この手法により，特異値分解する行列は各列に相関がある$n \times m$行列からQR分解後の$m \times m$上三角行列になり，空間計算量と行列の条件数が改善される．
 
 \section{フラクショナルステップ法への部分空間法の適用}
-本節では，\ref{sec:fractional}にて得た，フラクショナルステップ法による以下のシミュレーション計算を部分空間上に射影して計算する方法を説明する．
+本節では，\ref{sec:fractional}にて得たフラクショナルステップ法による以下のシミュレーション計算に，部分空間法を適用する方法を説明する．
 
 %\begin{equation}
 %	\bm{u_0} =  \bm{u} （t）  - \varDelta t \bm{f} 
@@ -858,7 +863,7 @@ L_2 = \frac{|| \bm{u} - \bm{\tilde{u}} ||_2}{||  \bm{u} ||_2}
   \begin {tabular}{ccccc} \hline
     解像度 					&分割なし 		&分割数2			&分割数4 		&分割数10\\ \hline
     $64^3$ 					& 23,428 			&14,564	 		&8,981	 	&3,780\\
-    $128^3$ 				& 1,256,569 		&118,489 			& 69,615 		&33,427\\ \hline
+    $128^3$ 				& 190,541 		&118,489 			& 69,615 		&33,427\\ \hline
   \end {tabular}
 \end {table}
 
@@ -886,20 +891,21 @@ L_2 = \frac{|| \bm{u} - \bm{\tilde{u}} ||_2}{||  \bm{u} ||_2}
 %\end {table}
 
 \begin{figure}[htbp]
+\centering
 \includegraphics[width=140mm]{images/64error.png}
-\caption{$解像度64^3におけるL2誤差$}
+\caption{$解像度64^3におけるL_2誤差$}
 \label{fig:64error}
 \end{figure}
 
 \begin{figure}[htbp]
-
+\centering
 \includegraphics[width=140mm]{images/128error.png}
-\caption{$解像度128^3におけるL2誤差$}
+\caption{$解像度128^3におけるL_2誤差$}
 \label{fig:128error}
 \end{figure}
 表\ref{tab:basis}は基底の計算にかかった実行時間，表\ref{tab:projection}は行列の射影にかかった実行時間を解像度と分割数ごとに計測した結果である．基底の計算については分割数が大きくなるほど高速化に成功している．一方で，行列の射影に関しては，低解像度では分割数が大きいほど高速になっているが，高解像度における目立った高速化は見られなかった．
 
-また，図\ref{fig:64error}，図\ref{fig:128error}は，解像度$64^3$，$128^3$における，流速の$L_2$誤差の時間推移を表したグラフである．Snapshotの分割の直後に$L_2$誤差が減少している．また，流れの時間変化が少ないシミュレーションの後半では，分割なしと比べて精度が向上している．一方で，シミュレーション結果をボリュームレンダリングした画像では，精度の変化による流体の変化はほとんど見られなかった．
+また，図\ref{fig:64error}，図\ref{fig:128error}は，解像度$64^3$，$128^3$における，流速の$L_2$誤差の時間推移を表したグラフである．Snapshotの分割の直後に$L_2$誤差が減少している．また，流れの時間変化が少ないシミュレーションの後半では，分割なしと比べて精度が向上している．図\ref{fig:n128_f99}，\ref{fig:n128_f100}は，$L_2$シミュレーション結果のレンダリング画像のうち，誤差が大きく変化した99フレーム目と100フレーム目のもので，上段が元のシミュレーション結果，中段が分割なし，下段が分割数2のものである．$L_2$誤差によって煙の密度分布に変化が見られる一方で，部分空間の適用前後の変化と比べると変化量は小さい．
 
 非線形項については追加の実験を行ったところ，サンプリングされる点によって重みの計算が発散する場合がある．計算時間はSnapshot数については線形時間であるが，サンプリングする点の数が減ることによりNNLSソルバの反復回数が減ることで，実質的に高速化が見込めることもあった．
 
@@ -913,23 +919,44 @@ L_2 = \frac{|| \bm{u} - \bm{\tilde{u}} ||_2}{||  \bm{u} ||_2}
 
 \begin{figure}[htbp]
 \caption{$解像度128^3，99フレーム目$}
-\includegraphics[width=140mm]{images/n128_f99_dev2.png}
-\subcaption{gruound truth}
-\includegraphics[width=140mm]{images/n128_f99_dev2.png}
-\subcaption{分割数2}
 \label{fig:n128_f99}
+\centering
+\includegraphics[width=100mm]{images/n128_f99_truth.png}
+\subcaption{gruound truth}
+\includegraphics[width=100mm]{images/n128_f99_dev1.png}
+\subcaption{分割数1}
+\includegraphics[width=100mm]{images/n128_f99_dev2.png}
+\subcaption{分割数2}
 \end{figure}
 
 \begin{figure}[htbp]
 \caption{$解像度128^3，100フレーム目$}
-\includegraphics[width=140mm]{images/n128_f99_dev2.png}
+\label{fig:n128_f100}
+\centering
+\includegraphics[width=100mm]{images/n128_f100_truth.png}
 \subcaption{gruound truth}
-\includegraphics[width=140mm]{images/n128_f100_dev2.png}
+\includegraphics[width=100mm]{images/n128_f100_dev1.png}
+\subcaption{分割数1}
+\includegraphics[width=100mm]{images/n128_f100_dev2.png}
 \subcaption{分割数2}
-\label{fig:n128_f99}
 \end{figure}
+
+%\begin{figure}[htbp]
+%\caption{$解像度128^3，180フレーム目$}
+%\label{fig:n128_f100}
+%\centering
+%\includegraphics[width=100mm]{images/n128_f180_truth.png}
+%\subcaption{gruound truth}
+%\includegraphics[width=100mm]{images/n128_f180_dev1.png}
+%\subcaption{分割数1}
+%\includegraphics[width=100mm]{images/n128_f100_dev2.png}
+%\subcaption{分割数2}
+%\end{figure}
 \section{考察}
+%解像度$128^3$における計算時間が，分割なしと分割数2で劇的に向上しているのは，Snapshot行列の空間計算量が計算機のメモリを超えてしまい，メモリ領域外アクセスが発生してしまったためだと考えられる．
+
 分割なしと比べて精度が向上している点については，分割なしでは抽出されなかったモードを抽出することができていることによって，シミュレーション後半の流れを詳細にシミュレーションできていると考えられる．特異値分解を用いた次元削減はの条件数は，行列を構成する列ベクトル同士の相関が強いほど悪くなることが知られている．本実験のシミュレーションの開始直後においては，タイムステップごとの流速や圧力の変化が大きくSnapshot間の相関関係が弱い．一方でシミュレーション終了付近においては，タイムステップごとの流速や圧力の変化が大きくSnapshot間の相関関係が強い．Snapshotの分割によって各基底の最大特異値が小さくなることによって，分割前と比較してシミュレーション後半に対応する特異値に関する条件数が改善され，詳細にシミュレーションできていると考えられる．
+
 
 \chapter{終わりに}
 流体シミュレーションにおける部分空間法の前処理にかかる計算時間に対し，Snapshotを分割することによって高速化する手法を提案した．特に基底計算については分割数に応じた高速化を達成し，前処理全体の高速化を達成した．Snapshot分割によるシミュレーションの結果に関して，$L_2$誤差では差が認められたものの，見た目の上では問題ない範囲であった．
@@ -956,11 +983,8 @@ L_2 = \frac{|| \bm{u} - \bm{\tilde{u}} ||_2}{||  \bm{u} ||_2}
 \syaji
 \par
 本研究を進めるにあたり，大変多くのご指導，ご助言を頂いた
-中央大学理工学部情報工学科の森口　昌樹 准教授に深く感謝いたします．
-また，多大なるご助言，ご協力を頂いた形状情報処理研究室の皆様には大変お世話になりました．
-心から感謝いたします．
-
-
+中央大学理工学部情報工学科の森口昌樹 准教授に深く感謝いたします．3年間に渡り，研究の進め方や，開発方法について大変多くのご指導をいただきました．また，多大なるご助言，ご協力を頂いた形状情報処理研究室の皆様には大変お世話になりました．心から感謝いたします．
+最後に，研究生活を支えてくれた家族にも感謝いたします．
 %参考文献
 \begin{thebibliography}{99}
 \addcontentsline{toc}{chapter}{参考文献}
@@ -983,7 +1007,7 @@ A. Treuille, A. Lewis, and Z. Popovic. Model Reduction for Real-time Fluids. \te
 T. Kim, J. Delaney. Subspace Fluid Re-Simulation. \textit{ACM Transactions on Graphics},32（4）: 62:1--62:9, 2013.
 
 \bibitem{subspaceDCT}
-A. Jones, P. Sen, and T. Kim. Compressing fluid subspaces. \textit{Proceedings of the ACM SIGGRAPH/Eurographics Symposium on Computer Animation}, pp. 77--84, 2016.
+A. Jones, P. Sen, and T. Kim. Compressing fluid subspaces. \textit{Proceedings of the ACM SIGGRAPH/Eurographics Symposium on Computer Animation}, 77--84, 2016.
 
 %\bibitem{tile}
 %M. Wicke, M. Stanton, and A. Treuille, Modular Bases for Fluid Dynamics. \textit{ACM Transactions on Graphics}, 39:1--39:8, 2009.
