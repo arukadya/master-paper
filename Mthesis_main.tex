@@ -391,7 +391,7 @@ f（\bm{x_p}） = R（\frac{\bm{a_p}・\bm{r}}{\bm{r}・\bm{r}}）
 	%\subsection{}
 	%\section{ボリュームデータの可視化手法}
 \chapter{煙の流体シミュレーション}
-流体シミュレーションを行う際，境界条件や外力項を適切に設定することで流体の振る舞いを操作することができる．この章では文献\cite{fedkiw}を参考に，フラクショナルステップ法を格子法により離散化した煙の流体シミュレーションを実装する方法と，スライスベースのボリュームレンダリングによる可視化手法について説明する．%この手法で得られたシミュレーションデータを用いて部分空間法に用いるSnapshot固有直交分解を行う．
+流体シミュレーションを実施する際には，境界条件や外力項を適切に設定することで流体の挙動を制御することが可能である．特に，煙のような流体のシミュレーションにおいて，適切な外力を与えることで現実的な動きを再現できる．Fedkiwらによる手法\cite{fedkiw}は，高速かつ安定したシミュレーションを実現し，映像分野への応用が実用的になった最初の手法である．本章では，文献\cite{fedkiw}を参考に，フラクショナルステップ法を格子法により離散化した煙の流体シミュレーションの実装方法について述べる．さらに，スライスベースのボリュームレンダリングを用いた可視化手法についても説明する．%この手法で得られたシミュレーションデータを用いて部分空間法に用いるSnapshot固有直交分解を行う．
 
 \section{格子法によるフラクショナルステップ法}
 シミュレーション空間の$\rm{x，y，z}$軸方向の分割数を$\rm{nx，ny，nz}$とする．このとき空間解像度は$\rm{nx \cdot ny \cdot nz}$となり，速度の$\rm{x，y，z}$成分の空間解像度はそれぞれ$（nx+1） \cdot ny \cdot nz$，$nx \cdot （ny+1） \cdot nz$，$nx \cdot ny \cdot （nz+1）$となる．本論文では，$nx = ny =nz$とし，速度$\bm{v}$と圧力$\bm{p}$は以下のベクトルに離散化する．
@@ -424,23 +424,40 @@ $2\times（nx+1） \dot ny \cdot nz - 1$から$3\times（nx+1） \cdot ny \cdot 
 %\end{bmatrix}\]
 
 \subsection{ディリクレ境界条件}
-流体シミュレーションにおいて，流体と流体以外の境界面の物理量の条件を設定する必要がある場面がある．これを境界条件と呼び，文献\cite{fedkiw}では境界における物理量を事前に一定の値に設定するディリクレ境界条件が用いられており，境界における物理量は$0$と設定する．ディリクレ境界条件は速度成分を都度初期化することで適用できるほか，境界成分に対応する成分を0とした単位行列を用いた表現も可能である．ディリクレ境界条件を表現する行列を$\mathbf{D}$とすると，$\mathbf{D}$の$i，j$成分は以下のように定義される．
+流体シミュレーションにおいて，流体と流体以外の境界面における物理量の条件を適切に設定する必要があり，これを境界条件と呼ぶ．文献\cite{fedkiw}では，境界における物理量を事前に一定の値に設定するディリクレ境界条件を採用しており，境界における物理量は$0$と設定される．ディリクレ境界条件は速度成分を逐次初期化することで適用可能であり，また，境界に対応する成分を$0$とした単位行列を用いて表現することもできる．この行列表現は通常の流体シミュレーションでは不要であるが，部分空間法を用いた流体計算において，境界条件を部分空間に射影するため，境界条件を行列積によって表現する手法が用いられている．ディリクレ境界条件を表現する行列を$\mathbf{D}$とすると，$\mathbf{D}$の$i，j$成分は以下のように定義される．
 \begin{equation}
 	\mathbf{D}_{i，j} = \begin{cases}
  	1 	& i = j かつ iは境界成分でない\\
  	0  		& その他\\
  \end{cases}
 \end{equation}
-この行列表現は通常の流体シミュレーションでは不要であるが，部分空間法を用いた流体計算では境界成分に対応する値を変更することが困難なため，境界条件を行列積を用いて表現する手法が用いられている．
+
 
 \subsection{外力項計算}
-外力項では，再現したい現象になるような外力を与えなければならない．コンピュータグラフィックスにおける気体の外力は，気体にかかる重力と，温度差による対流を発生させる力，気体が渦巻くように与える力などをユーザーがパラメータによって調整できるようにする計算方法が一般的である．本実験では重力と，対流を発生させる力を加える．よりそれらしい振る舞いを再現するため，他の計算では定数として扱う密度や温度を，ここでは位置と時刻によって変化するデータとして計算する．
-位置$\bm{x}$における気体の密度，温度をそれぞれ$\rho（\bm{x}）$，$T（\bm{x}）$，環境温度を$T_{amb}（\bm{x}）$，重力の方向ベクトルを$\bm{d}$とすると，気体に働く外力は以下のようになる．
+外力項においては．再現したい現象に適した外力を与える必要がある．ユーザーが設定可能なパラメータによって外力を調整できる計算手法が望ましい．コンピュータグラフィックスにおける気体の外力には重力のほか，温度差による対流を発生させる力や．気体の渦運動を生成する力などが含まれ，これらを適用することで，気体の自然な挙動を再現することが可能となる．さらに，より現実的な挙動を再現するために，他の計算では定数として扱われる密度や温度を，本手法では位置および時刻に依存するスカラー量として計算する．
+
+まず，気体に働く重力と，対流を発生させる力について説明する．位置$\bm{x}$における気体の密度，温度をそれぞれ$\rho（\bm{x}）$，$T（\bm{x}）$，環境温度を$T_{amb}（\bm{x}）$，重力の方向ベクトルを$\bm{d}$とすると，気体に働く重力と，対流を発生させる力の合力は以下のようになる．
 
 \begin{equation}\label{eq:buoyancy}
 	\bm{f_{buoy}（\bm{x}）} =  \alpha \rho（\bm{x}）\bm{d}+ \beta（T（\bm{x}）- T_{amb}（\bm{x}））\bm{d}
 \end{equation} 
-ここで，$\alpha$，$\beta$はユーザーが設定するパラメータであり，それぞれ重力と対流の力を調整する．最終的な外力項計算は以下のようになる．
+
+ここで，$\alpha$，$\beta$はユーザーが設定するパラメータであり，それぞれ重力と対流の力の大きさを調整する．
+
+次に，気体の渦運動を生成する力を説明する．
+気体の渦運動を強めるために，渦度$\boldsymbol{\omega}$を利用した外力を考える．渦度は速度場$\mathbf{u}$の回転として以下のように定義される
+\[
+    \boldsymbol{\omega} = \nabla \times \mathbf{u}
+\]
+渦度の大きい領域では流体が強く回転しており，この回転運動を強調するために以下のような外力項$\mathbf{F}_{\text{vortex}}$を定義する
+\[
+    \mathbf{F}_{\text{vortex}} = \lambda (\boldsymbol{\omega} \times \mathbf{u})
+\]
+ここで，$\lambda$は渦運動を強調する強度を制御するパラメータである．この外力項は，渦度ベクトルと速度ベクトルの外積を利用することで，流れの回転を増幅する効果を持つ．
+
+
+
+最終的な外力項計算は以下のようになる．
 \begin{equation}
 	\bm{u_0} =  \bm{u}  - \varDelta t \bm{f_{buoy}} 
 \end{equation} 
@@ -470,9 +487,9 @@ Semi-Lagrangian法は，格子に配置されている計算点上の物理量�
 	{\phi}（\bm{x}，t） = {\phi}（\bm{x}  - \varDelta t \bm{u}，t）
 \end{equation} 
 Semi-Lagrangian法を以下のように流速に適用することで移流項の計算を行う．また，密度や温度などに対して適用することで，空間の速度ベクトル場に沿って気体が運動する様子を再現することができる．
-\begin{equation}
+\[
 	\bm{u_1}（\bm{x}） = \bm{u_0}（\bm{x}  - \varDelta t \bm{u_0}）
-\end{equation}
+\]
 以下では，輸送方程式\ref{eq:transfer}が成り立つとき，式\ref{eq:semi-Lagrangian}が成り立つことを確認する．$\bm{x}$にある物理量は$\bm{u} （\bm{x}） $に沿って$\varDelta t\bm{u} （\bm{x}）$移動すると仮定すると，移動前の物理量は$\phi（\bm{x} -  \varDelta t\bm{u} （\bm{x}））$となる．この間の物理量の変化$\varDelta {\phi}$は以下のようになる．
 \[
 \varDelta \phi = \phi（ \bm{u} （\bm{x}），t） - \phi （\bm{x} - \varDelta t\bm{u} （\bm{x}），t）
@@ -489,19 +506,23 @@ $\frac{\partial \bm{u} （\bm{x}） }{\partial \bm{x}}\phi （\bm{x}，t）= （
  右辺が輸送方程式\ref{eq:transfer}になっていることから，$ \varDelta \phi =0$が成り立つ．
 $\varDelta \phi = \phi（ \bm{u} （\bm{x}）） - \phi （\bm{x} - \varDelta t\bm{u} （\bm{x}））= 0$より，式\ref{eq:semi-Lagrangian}が成り立つことが確認できる．
 \subsection{粘性項計算}
-粘性項は流体が徐々に周囲に広がっていく様を計算することができる．粘性項計算は$\varDelta t \nu\nabla^2$を行列を用いて表現することで，以下のように行列積を用いて表すことができる．
+粘性項は以下の式を用いて，流体が徐々に周囲に広がっていく様を計算することができる．
+\[
+\bm{u_2}   =  \bm{u_1} - \varDelta t \nu\nabla^2\bm{u_1}
+\]
+$\nabla^2$を離散ラプラシアン行列$\mathbf{L}$を用いて離散化することができる．$\varDelta t \nu\nabla^2$を行列を用いて表現することで，以下のように行列積を用いて表すことができる．
 \begin{equation}\label{eq:discrete Laplacian}
 	\bm{u_2}   =  \bm{u_1} - \varDelta t \nu\nabla^2\bm{u_1} = （\mathbf{I} -  \frac{\varDelta t \nu}{（\varDelta x）^2}\mathbf{L}）\bm{u_1} = \mathbf{W}\bm{u_1}
 \end{equation}
-ここで，$\nabla^2$の離散化を行列$\mathbf{L}$を用いて表すことを考える．行列$\mathbf{L}$を$v_0$から$v_{n-1}$の$n$個の頂点を持つ無向グラフに対して離散ラプラシアンと呼び，$n \times n$行列$\mathbf{L}$の成分$\mathbf{L}_{i,j}$は以下のように定義される．ただし，無向グラフは自己ループを持たないとする．
-\begin{equation}
+ここで，$v_0$から$v_{n-1}$の$n$個の頂点を持つ無向グラフに対して$n \times n$行列$\mathbf{L}$の成分$\mathbf{L}_{i,j}$は以下のように定義される．ただし，無向グラフは自己ループを持たないとする．
+\[
 	\mathbf{L}_{i，j} = \begin{cases}
  	deg（v_i） 	& i = j\\
  	-1  		& v_iとv_jが接続している\\
  	0  		& その他\\
  \end{cases}
-\end{equation}
-スタッガード格子を用いた流体シミュレーションにおいて，無向グラフは流体のそれぞれの速度成分ごとの連結成分を持つとする．つまり，本論文のシミュレーションにおいては連結成分数は3であり，それぞれの頂点数は$（nx+1） \times ny \times nz$である．また，シミュレーション境界を除く速度に対応する次数は$6$であり，シミュレーション境界上の成分はディリクレ境界条件によって速度成分が$0$になるため，任意の値でよい．よって粘性項計算を表現する行列$\mathbf{V}$の成分$\mathbf{V}_{i，j}$は以下のように定義される．
+\]
+スタッガード格子を用いた流体シミュレーションにおいて，無向グラフは流体のそれぞれの速度成分ごとの連結成分を持つとする．本論文のシミュレーションにおいては連結成分数は3であり，それぞれの頂点数は$（nx+1） \times ny \times nz$である．また，シミュレーション境界を除いて，速度に対応する次数は$6$である．シミュレーション境界に対応する離散ラプラシアン行列の成分については，ディリクレ境界条件によって速度成分が$0$になるため，任意の値でよい．従って，粘性項計算を表現する行列$\mathbf{V}$の成分$\mathbf{V}_{i，j}$は以下のように定義される．
  \[
  	\mathbf{V}_{i，j}  = \begin{cases}
  	1 - 6 \frac{\varDelta t \nu}{（\varDelta x）^2} 	& i = j\\
@@ -525,45 +546,44 @@ $\varDelta \phi = \phi（ \bm{u} （\bm{x}）） - \phi （\bm{x} - \varDelta t\
 \end{equation} 
 が得られる．この式を圧力に関するポアソン方程式として解き，$\bm{u} （t + \varDelta t）=  \bm{u_2} - \varDelta t \frac{1}{\rho}\nabla p$に代入することで圧力項計算が完了する．ポアソンの境界条件にはディリクレ境界条件を適用する．
 
-スタッガード格子では圧力と流速の配置されている位置が異なるため，空間微分に対して同じ差分は適応できない．そこで両辺をセルの領域で積分することを考える．
-\[
-\int_V\nabla\boldsymbol{\cdot}\bm{u_2} dV= \int_V\frac{\varDelta t}{\rho}\nabla^2 \bm{p}  dV
-\]
-両辺にガウスの発散定理を適用すると，周回積分の形で表せる．
-\[
-\oint_V\bm{u_2}\boldsymbol{\cdot}\bm{n} dV= \oint_V\frac{\varDelta t}{\rho}\nabla \bm{p}  \boldsymbol{\cdot}\bm{n}dV
-\]
-左辺から空間微分が消去できたため，右辺の空間微分に対して適切な微分スキームを適用することで，周回積分を離散化することができる．
-ここで離散化のため，$x軸方向にi番目，y軸方向にj番目，z軸方向にk番目の格子を$$g_{i,j,k}$，圧力を$p_{i,j,k}$と定義し，図\ref{fig:pressure_model}のようなモデルを考える．
+%スタッガード格子では圧力と流速の配置されている位置が異なるため，空間微分に対して同じ差分は適応できない．そこで両辺をセルの領域で積分することを考える．
+%\[
+%\int_V\nabla\boldsymbol{\cdot}\bm{u_2} dV= \int_V\frac{\varDelta t}{\rho}\nabla^2 \bm{p}  dV
+%\]
+%右辺にガウスの発散定理を適用すると，周回積分の形で表せる．
+%\[
+%\oint_V\bm{u_2}\boldsymbol{\cdot}\bm{n} dV= \oint_V\frac{\varDelta t}{\rho}\nabla \bm{p}  \boldsymbol{\cdot}\bm{n}dV
+%\]
+%左辺から空間微分が消去できたため，右辺の空間微分に対して適切な微分スキームを適用することで，周回積分を離散化することができる．ここで離散化のため，$x軸方向にi番目，y軸方向にj番目，z軸方向にk番目の格子を$$g_{i,j,k}$，圧力を$p_{i,j,k}$と定義し，図\ref{fig:pressure_model}のようなモデルを考える．
 
-まず，整数$n=0,1,2,\cdots 5$までを，それぞれ格子の各面の方向に割り振る．図\ref{fig:pressure_model}の場合，$n=0$は$x$軸正の方向，$n=1$は$y$軸正の方向，$n=2$は$x$軸負の方向，$n=3$は$y$軸負の方向，$n=4$は$z$軸正の方向，$n=5$は$z$軸負の方向に割り振る．ここで，この整数$n$を用いて，以下の配列や変数を定義する．
-\begin{quote}
-	\begin{itemize}
-		\item $F_n$ 格子の面の各方向に隣接しているものが流体なら$1$，壁面なら$0$を取るブーリアン値．
+%まず，整数$n=0,1,2,\cdots 5$までを，それぞれ格子の各面の方向に割り振る．図\ref{fig:pressure_model}の場合，$n=0$は$x$軸正の方向，$n=1$は$y$軸正の方向，$n=2$は$x$軸負の方向，$n=3$は$y$軸負の方向，$n=4$は$z$軸正の方向，$n=5$は$z$軸負の方向に割り振る．ここで，この整数$n$を用いて，以下の配列や変数を定義する．
+%\begin{quote}
+%	\begin{itemize}
+%		\item $F_n$ 格子の面の各方向に隣接しているものが流体なら$1$，壁面なら$0$を取るブーリアン値．
 		
-		図\ref{fig:pressure_model}の場合，$n=0$に対応する$x$軸正の方向と，$n=5$に対応する$z$軸負の方向は壁に隣接していて格子がないため，$F_0,F_5 = 0,F_1,F_2,F_3,F_4 = 1$となる．
-		\item $D_n$ 格子の面の各方向に垂直で，格子の外側を向く単位ベクトルを表す係数．向いている方向が座標軸の正の向きなら+1，					負の向きなら$-1$を取る整数値．
+%		図\ref{fig:pressure_model}の場合，$n=0$に対応する$x$軸正の方向と，$n=5$に対応する$z$軸負の方向は壁に隣接していて格子がないため，$F_0,F_5 = 0,F_1,F_2,F_3,F_4 = 1$となる．
+%		\item $D_n$ 格子の面の各方向に垂直で，格子の外側を向く単位ベクトルを表す係数．向いている方向が座標軸の正の向きなら+1，					負の向きなら$-1$を取る整数値．
 		
-		図\ref{fig:pressure_model}の場合，座標軸の正の方向に向いているのは$n=0,n=1,n=4$に対応する方向で，それ以外は負の方向に向いているため，
-		$F_0,F_1,F_4 = 1,F_2,F_3,F_4 = -1$となる．
-		\item $p_n$ 割り振られた方向に隣り合っている格子の圧力値．
-		図\ref{fig:pressure_model}の場合，$p_0 = p_{i+1,j,k}$，$p_1 = p_{i,j+1,k}$，$p_2 = p_{i-1,j,k}$，$p_3 = p_{i,j-1,k}$，$p_4 = p_{i,j,k+1}$，$p_5 = p_{i,j,k-1}$となるが，境界条件を考えると，壁に隣接している格子との圧力値の勾配を$0$にするため，$p_0 = p_{i,j,k}$，$p_5 = p_{i,j,k}$である．
-		\item $\nabla p_n$ 割り振られた方向の圧力勾配.前方差分によって，$\nabla p_n （\bm{x},t）  = \frac{p_n - p_{i,j,k}}{\varDelta x}$と近似できる．
-		\item $u_n$ $g_{i,j,k}$において，割り振られた方向の格子面に配置されている流速値．壁に隣接している方向は流速を$0$にするため，$u_0 = 0$，$u_5 = 0$である．
-	\end{itemize}
-\end{quote}
+%		図\ref{fig:pressure_model}の場合，座標軸の正の方向に向いているのは$n=0,n=1,n=4$に対応する方向で，それ以外は負の方向に向いているため，
+%		$F_0,F_1,F_4 = 1,F_2,F_3,F_4 = -1$となる．
+%		\item $p_n$ 割り振られた方向に隣り合っている格子の圧力値．
+%		図\ref{fig:pressure_model}の場合，$p_0 = p_{i+1,j,k}$，$p_1 = p_{i,j+1,k}$，$p_2 = p_{i-1,j,k}$，$p_3 = p_{i,j-1,k}$，$p_4 = p_{i,j,k+1}$，$p_5 = p_{i,j,k-1}$となるが，境界条件を考えると，壁に隣接している格子との圧力値の勾配を$0$にするため，$p_0 = p_{i,j,k}$，$p_5 = p_{i,j,k}$である．
+%		\item $\nabla p_n$ 割り振られた方向の圧力勾配.前方差分によって，$\nabla p_n （\bm{x},t）  = \frac{p_n - p_{i,j,k}}{\varDelta x}$と近似できる．
+%		\item $u_n$ $g_{i,j,k}$において，割り振られた方向の格子面に配置されている流速値．壁に隣接している方向は流速を$0$にするため，$u_0 = 0$，$u_5 = 0$である．
+%	\end{itemize}
+%\end{quote}
 %\begin{figure}[htbp]
-\begin{figure}[H]
-\begin{center}
-\includegraphics[width=80mm]{images/pressure_model.png}
-\caption{圧力計算のモデル}
-\label{fig:pressure_model}
-\end{center}
-\end{figure}
-定義した配列や変数を用いて，周回積分の形で表された式を離散化することで，下記の式を得る．
-\[
-	\sum_{n}\frac{\varDelta t}{\rho}\nabla p_n （\bm{x},t） F_n =  \sum_{n}u_nD_nF_n
-\]
+%\begin{figure}[H]
+%\begin{center}
+%\includegraphics[width=80mm]{images/pressure_model.png}
+%\caption{圧力計算のモデル}
+%\label{fig:pressure_model}
+%\end{center}
+%\end{figure}
+%定義した配列や変数を用いて，周回積分の形で表された式を離散化することで，下記の式を得る．
+%\[
+%	\sum_{n}\frac{\varDelta t}{\rho}\nabla p_n （\bm{x},t） F_n =  \sum_{n}u_nD_nF_n
+%\]
 
 
 %が得られ，圧力勾配を$\nabla p_n （\bm{x},t）  = \frac{p_n - p_{i,j,k}}{\varDelta x}$で近似すると，
@@ -576,7 +596,7 @@ $\varDelta \phi = \phi（ \bm{u} （\bm{x}）） - \phi （\bm{x} - \varDelta t\
 %\sum_{n}\frac{\varDelta t}{\rho}\frac{p_n （\bm{x},t）  - p_{i,j,k} （\bm{x},t） }{\varDelta \bm{x}}F_n = \sum_{n}\bm{u_n}^*D_nF_n
 %\end{equation} 
 %が得られる．
-圧力項は圧力を変数とした，上記の式を$\bm{Ax=b}$に対応させたものを解く．空間解像度を$n$とすると，$\bm{A}$は$n \times n$行列であり，$\bm{b}$は$n$次元ベクトルである．行列$\bm{A}$は規模が大きいため，直接法ではなく反復法を用いて必要な精度で計算を打ち切って計算する．連立方程式の解法としては，前処理付き共役勾配法がよく用いられている．また，行列$\mathbf{A}$は離散ラプラシアンを用いて$\mathbf{A} = \frac{\varDelta t}{\rho \varDelta x}\mathbf{L}$と計算できる．よって，$\mathbf{A}$の$（i，j）$成分$\mathbf{A_{i，j}}$の各成分は以下のように計算する．
+圧力項は圧力を変数とした，上記の式を$\bm{Ax=b}$に対応させたものを解く．空間解像度を$n$とすると，$\bm{A}$は$n \times n$行列であり，$\bm{b}$は$n$次元ベクトルである．行列$\mathbf{A}$は式\ref{eq:discrete Laplacian}と同様に離散ラプラシアンを用いて$\mathbf{A} = \frac{\varDelta t}{\rho \varDelta x}\mathbf{L}$と計算できる．よって，$\mathbf{A}$の$（i，j）$成分$\mathbf{A_{i，j}}$の各成分は以下のように計算する．
 
 \[
 	\mathbf{A}_{i，j} = 
@@ -587,42 +607,100 @@ $\varDelta \phi = \phi（ \bm{u} （\bm{x}）） - \phi （\bm{x} - \varDelta t\
 	\end{cases}
 \]
 
-ベクトル$\bm{b}$は速度ベクトル$\bm{u_2}$と行列$\mathbf{W}$を用いて，$\bm{b} = \mathbf{W}\bm{u_2}$と表せる．したがって，実際に解く線形方程式は$\mathbf{A}\bm{p} = \mathbf{W}\bm{u_2}$となる．
+3次元のスタッガード格子における流体シミュレーションでは，速度場 $\mathbf{u} = （u_x，u_y，u_z）
+$ の発散 $\nabla \cdot \mathbf{u}$ を行列 $\mathbf{W}$ を用いて
 
-上記の線型方程式の解法は，行列$\mathbf{A}$が正定値対称行列になるため，前処理付き共役勾配法が広く用いられている．また，$\mathbf{A}$のほとんどの成分は$0$であるため，疎行列の反復法ソルバーを用いることで空間計算量や時間計算量を削減できる．線形代数ライブラリにはEigenを用いる．反復法では，必要な精度に解が収束したら計算を打ち切る．ここでの精度は反復回数や視覚的に影響を与えるほか，低い精度では流体の非圧縮性条件を満たさなくなってしまう恐れがある．文献\cite{fedkiw}のフラクショナルステップ法における計算時間のボトルネックは圧力項計算であり，解の収束が早いほど反復回数が少なくなり，計算負荷が少なくなる．
-
-次に，圧力の勾配ベクトル$\nabla\bm{p}$が速度に与える影響を考える．$g_{i,j,k}$の$x$方向の速度成分$v（i，j，k）$は，
-%\begin{figure}[htbp]
-\begin{figure}[H]
-\begin{center}
-\includegraphics[width=80mm]{images/P2V.png}
-\caption{圧力と速度の配置位置}
-\label{fig:pressure_model}
-\end{center}
-\end{figure}
-$\mathbf{A}\bm{p} = \mathbf{W}\bm{b}$によって求めた$\bm{p}$を元の式に代入し，最終的な流速を得る．
 \[
-	\bm{u} （t + \varDelta t）=  \bm{u_2} - \varDelta t \frac{1}{\rho}\nabla \bm{p} 
+\nabla \cdot \mathbf{u} = \mathbf{W} \mathbf{u}
 \]
 
-ここで，$\varDelta t \frac{1}{\rho}\nabla\bm{p} $を行列$\mathbf{Y}$を用いて，$\varDelta t \frac{1}{\rho}\nabla\bm{p} = \mathbf{Y}\bm{p}$と表せる．
+と離散化する．3次元のスタッガード格子では，発散は以下の中央差分で近似される．
+
+\[
+\nabla \cdot \mathbf{u} \approx \frac{u_x（i+1，j，k） - u_（i，j，k）}{\varDelta x} + \frac{u_y（i，j+1，k）- u_y（i，j，k）}{\varDelta y} + \frac{u_z（i，j，k+1） - u_z（i，j，k）}{\varDelta z}
+\]
+ただし，本実験では$\varDelta x = \varDelta y= \varDelta z$である．
+これを行列形式で表現するために，行列 $\mathbf{W}$ の各成分 $W_{i，j}$ を次のように定義する：
+
+\begin{equation}
+W_{i，j} =
+\begin{cases}
+\frac{1}{\varDelta x}, &  u_x（i+1，j，k），u_y（i，j+1，k），u_z（i，j，k+1）に対応する成分 \\
+-\frac{1}{\varDelta x}, & u_x（i，j，k），u_y（i，j，k），u_z（i，j，k）に対応する成分\\
+0, & \text{otherwise}
+\end{cases}
+\end{equation}
+
+以上により，ベクトル$\bm{b}$は速度ベクトル$\bm{u_2}$と行列$\mathbf{W}$を用いて，$\bm{b} = \mathbf{W}\bm{u_2}$と表せる．したがって，実際に解く線形方程式は$\mathbf{A}\bm{p} = \mathbf{W}\bm{u_2}$となる．
+
+行列$\bm{A}$は規模が大きいため，反復法を用いて計算する．行列$\mathbf{A}$が正定値対称行列になるため，前処理付き共役勾配法が広く用いられている．また，$\mathbf{A}$のほとんどの成分は$0$であるため，疎行列の反復法ソルバーを用いることで空間計算量や時間計算量を削減できる．反復法では，必要な精度に解が収束したら計算を打ち切る．ここでの精度は反復回数や視覚的に影響を与えるほか，低い精度では流体の非圧縮性条件を満たさなくなってしまう恐れがある．文献\cite{fedkiw}のフラクショナルステップ法における計算時間のボトルネックは圧力項計算であり，解の収束が早いほど反復回数が少なくなり，計算負荷が少なくなる．
+
+次に，圧力の勾配ベクトル$\nabla\bm{p}$が速度に与える影響を考える．
+圧力勾配を行列 $\mathbf{Y}$ を用いて離散化し，以下のように表せることを説明する．
+
+\begin{equation}
+\nabla p = \mathbf{Y} p
+\end{equation}
+
+3次元格子では，圧力勾配 $\nabla p = (\frac{\partial p}{\partial x}, \frac{\partial p}{\partial y}, \frac{\partial p}{\partial z})$ は，各方向において以下のように離散化される：
+
+\begin{equation}
+\frac{\partial p}{\partial x} \approx \frac{p_{i+1,j,k} - p_{i,j,k}}{\Delta x}, \quad
+\frac{\partial p}{\partial y} \approx \frac{p_{i,j+1,k} - p_{i,j,k}}{\Delta y}, \quad
+\frac{\partial p}{\partial z} \approx \frac{p_{i,j,k+1} - p_{i,j,k}}{\Delta z}
+\end{equation}
+
+ただし，本実験では$\varDelta x = \varDelta y= \varDelta z$である．
+これを行列形式で表現するために，行列 $\mathbf{Y}$ の各成分 $Y_{m,n}$ を次のように定義する：
+
+\[
+Y_{m,n} =
+\begin{cases}
+\frac{1}{\varDelta x}, &  \nabla p_x（i+1，j，k），\nabla p_y（i，j+1，k），\nabla p_z（i，j，k+1）に対応する成分 \\
+-\frac{1}{\varDelta x}, &  \nabla p_x（i，j，k）， \nabla p_y（i，j，k）， \nabla p_z（i，j，k）に対応する成分\\
+0, & \text{otherwise}
+\end{cases}
+\]
+
+この行列 $\mathbf{Y}$ を用いることで，速度場の更新に必要な圧力勾配を効率的に計算することが可能となる．また，$\mathbf{Y}$は$\mathbf{W}$ の転置になっている．
+
+%\begin{figure}[htbp]
+%\begin{figure}[H]
+%\begin{center}
+%\includegraphics[width=80mm]{images/P2V.png}
+%\caption{圧力と速度の配置位置}
+%\label{fig:pressure_model}
+%\end{center}
+%\end{figure}
+
+以上のことから，圧力項の計算をまとめると，以下のようになる．
+\[
+	\bm{b} = \mathbf{W}\bm{u_2}
+\]
+\[
+	\bm{p} = \mathbf{A^{-1}}\bm{b}
+\]
+\[
+	\bm{u_3}  =  \bm{u_2} - \mathbf{Y}\bm{p} 
+\]
+
 \section{ボリュームデータの可視化手法}
 ボリュームデータを三次元的な広がりの様子を把握できるようにレンダリングする手法をボリュームレンダリングという．描画対象の表面のみをレンダリングするサーフェスレンダリングとは異なり，光の散乱や吸収などの光学的性質を利用して，描画対象の内側のデータも出力画像に反映させる．代表的な手法として，レイトレーシングを用いるボリュームレイキャスティング（Volume Ray Casting）や，サンプルデータをスライスごとに投影するスライスベースの手法が存在する．スライスベースの手法は計算負荷が低くリアルタイム処理に適している．スライスベースのボリュームレンダリングは，シミュレーション空間がボクセル空間として捉えられることを利用し，気体の密度を用いてボクセルの透明度や色を計算する．その後，シミュレーション空間をボクセルの透明度や色をテクスチャとしてマッピングした複数の平面（スライス）に分割し，それらを順次描画することで最終的な画像を生成する．
 
 以下では，スライスベースのボリュームレンダリングのアルゴリズムと，各スライスのテクスチャの計算方法を紹介する．
 \subsection{ボクセルの透明度計算}
-視線方向に沿ったスライス間の距離を$\Delta s$とし，$i$番目のスライスと視線の交点の位置を$i\Delta s$とする．
-ボクセルの透明度$t(i\Delta s)$と不透明度$\alpha( i\Delta) $は，以下の式で計算する．
-\[t( i\Delta s) = \rm{exp}( -\rho(i\Delta s) \Delta s)\]
-\[\alpha( i\Delta s) = 1 - t( i\Delta s) \]
+視線方向に沿ったスライス間の距離を$\varDelta s$とし，$i$番目のスライスと視線の交点の位置を$i\varDelta s$とする．
+ボクセルの透明度$t(i\varDelta s)$と不透明度$\alpha( i\varDelta) $は，以下の式で計算する．
+\[t( i\varDelta s) = \rm{exp}( -\rho(i\varDelta s) \varDelta s)\]
+\[\alpha( i\varDelta s) = 1 - t( i\varDelta s) \]
 %
-$\rho(i\Delta s)$は，流体シミュレーションによって計算した，位置$i\Delta s$の密度である．
+$\rho(i\varDelta s)$は，流体シミュレーションによって計算した，位置$i\varDelta s$の密度である．
 %
-また，$\Delta s$は視線とスライスの法線がなす角$\theta$とすると以下のように変化するため，$\Delta s$はテクスチャ座標によって異なる．
+また，$\varDelta s$は視線とスライスの法線がなす角$\theta$とすると以下のように変化するため，$\varDelta s$はテクスチャ座標によって異なる．
 %
 \begin{equation}\label{eq:cos}
-%\Delta s' = \frac{\Delta s}{cos\theta}
-\Delta s' = \Delta s / \rm{cos}\theta
+%\varDelta s' = \frac{\varDelta s}{cos\theta}
+\varDelta s' = \varDelta s / \rm{cos}\theta
 \end{equation}
 
 \subsection{アルファブレンディング}
@@ -640,10 +718,10 @@ I_n( \bm{x}) = \alpha_n( \bm{x}) c_n( \bm{x}) + ( 1-\alpha_n( \bm{x}) ) I_{n-1}(
 
 \end{itemize}
 %
-式\ref{eq:alpha}の不透明度に$\alpha( i\Delta s') $を用いることで，アルファブレンディングによってシミュレーション空間がボリュームレンダリングできる．
+式\ref{eq:alpha}の不透明度に$\alpha( i\varDelta s') $を用いることで，アルファブレンディングによってシミュレーション空間がボリュームレンダリングできる．
 
 \subsection{スライス方向の比較}
-シミュレーション空間をスライスによって分割する方向は，視線方向に垂直な方向と，$\rm{x，y，z}$軸の中で視線になるべく垂直な方向が考えられる．一般的に視線とスライスの交点がボクセルの計算点上にないため，$\rho( i\Delta s) $を補間して得る必要がある．前者は式\ref{eq:cos}による$\Delta s$の変化量が透視投影の影響しか受けない．一方，後者は視線とスライスの法線がなす角は視点に依存し，より式\ref{eq:cos}による$\Delta s$の変化量が大きい．また，$\rm{x，y，z}$軸の方向による分割は視線の方向によって視線と交差するスライスが少なくなり，視覚的に不自然なスライスの形状が現れることがある．CGの分野においては後者の手法でも見た目上問題ないことが多く，文献\cite{fedkiw}では後者の手法を用いている．
+シミュレーション空間をスライスによって分割する方向は，視線方向に垂直な方向と，$\rm{x，y，z}$軸の中で視線になるべく垂直な方向が考えられる．一般的に視線とスライスの交点がボクセルの計算点上にないため，$\rho( i\varDelta s) $を補間して得る必要がある．前者は式\ref{eq:cos}による$\varDelta s$の変化量が透視投影の影響しか受けない．一方，後者は視線とスライスの法線がなす角は視点に依存し，より式\ref{eq:cos}による$\varDelta s$の変化量が大きい．また，$\rm{x，y，z}$軸の方向による分割は視線の方向によって視線と交差するスライスが少なくなり，視覚的に不自然なスライスの形状が現れることがある．CGの分野においては後者の手法でも見た目上問題ないことが多く，文献\cite{fedkiw}では後者の手法を用いている．
 
 %\begin{algorithm}[H]
 %    	\caption{Axis Alined slice-based Volume Rendering}
@@ -652,7 +730,7 @@ I_n( \bm{x}) = \alpha_n( \bm{x}) c_n( \bm{x}) + ( 1-\alpha_n( \bm{x}) ) I_{n-1}(
 %		\STATE x，y，z軸の中から，視線方向に近いものを選ぶ．
 %                 \STATE 軸に垂直な平面（スライス）を，アルファブレンディングして描画．
 %                 \[{\rm{I_n}}(\bm{x})= \alpha_n(\bm{x})c_n(\bm{x}) + (1-\alpha_n(\bm{x})){\rm{I_{n-1}}}(\bm{x})\]
-%                 \[\alpha(\bm{x}) = 1 - exp(-\rho(\bm{x})\Delta s)\]
+%                 \[\alpha(\bm{x}) = 1 - exp(-\rho(\bm{x})\varDelta s)\]
 %        \end{algorithmic}
 %\end{algorithm}
 
@@ -760,75 +838,106 @@ $\mathbf{S^T}\mathbf{S} = \mathbf{V}\mathbf{\Sigma^2} \mathbf{V}^T$
 他にも，事前計算したシミュレーションと異なるシミュレーションを行うことが困難であり，境界条件や流体の初期化，与える外力を大幅に変更することはできず，別途シミュレーションデータを用意する必要がある．
 
 \chapter{部分空間法の高速化手法の提案} \label{chapter:3}
-部分空間法の前処理において，基底の計算と行列の射影の計算量はSnapshotの2乗に比例し，前処理の大多数の時間を占めている．この章では部分空間法の前処理の高速化を達成するため，Snapshotを$d$個に分割する手法を提案する．
+部分空間法の前処理において，基底の計算と行列の射影の計算量はSnapshotの$2$乗に比例し，前処理の大多数の時間を占めている．この章では部分空間法の前処理の高速化を達成するため，Snapshotを$d$個に分割する手法を提案する．
 
 \section{Snapshotの分割による高速化}
 部分空間法の基底の計算に用いるSnapshotを$d$分割することによって，基底1つの計算負荷$O（nm^2）$が$\frac{1}{d^2}$に削減される．アルゴリズム全体では$d$回計算するため，計算負荷は$\frac{1}{d}$になることが期待できる．行列の射影計算も分割した基底ごとに行う．空間計算量のボトルネックは分割前のSnapshot行列であり，分割前と変わらない．しかし，特異値分解する行列のサイズが$\frac{1}{d}$になることで，GPUを用いた大規模高速計算と併用する場合，GPUメモリの削減が期待できる．空間計算量をGPUが一度に扱うことができる値まで削減することで，並列計算による高速化が期待できる一方で，特異値分解の回数が$d$倍になることで，CPU-GPU間のデータ通信の時間が増加することに注意が必要である．
+
 
 \section{計算機実験}
 本研究では，コンピュータグラフィックスライブラリOpenGLとc++，線形代数ライブラリEigenを用いて，文献\cite{fedkiw}の煙の流体シミュレーションとスライスベースのボリュームレンダリングを行うソフトウェアを実装した．立方体形状のシミュレーション空間の底面中心から，煙が立ち上る様子をシミュレーションし，そのデータを元に部分空間法による次元削減を行なった．Cubature法のNNLSソルバにはEigenのUnsupportedライブラリのソルバを用いて実装した．これによって得られたシミュレーション結果と，提案手法の計算負荷と削減後のデータの精度について調査を行った．計算負荷の評価は，部分空間法の基底を計算する前処理と行列の射影について実行時間を計測した．データの精度は非線形項の部分空間への射影手法\cite{projection_base}を参考に，L2誤差を用いて評価を行なった．ここでL2誤差は次元削減前後のベクトル$\bm{u}$と$\bm{\tilde{u}}$について，以下のように表される．
 
 \[
-L_2 = \frac{||  ||_2}{||  ||_2}
+L_2 = \frac{|| \bm{u} - \bm{\tilde{u}} ||_2}{||  \bm{u} ||_2}
 \]
 
-
-\subsection{計算条件}
-解像度$n$，Snapshot数$T$，Snapshotの分割数$d$を変更し，
-
-\subsection{計算結果}
-\begin {table}[t]
+\begin {table}[htbp]
     \centering
   \caption{基底計算における解像度と分割数ごとの実行時間（ms）}
-  \label{tab:results}
+  \label{tab:basis}
   \begin {tabular}{ccccc} \hline
     解像度 					&分割なし 		&分割数2			&分割数4 		&分割数10\\ \hline
     $64^3$ 					& 23,428 			&14,564	 		&8,981	 	&3,780\\
-    $128^3$ 				& データ1 		& データ2 		& データ3 	&\\ \hline
+    $128^3$ 				& 1,256,569 		&118,489 			& 69,615 		&33,427\\ \hline
   \end {tabular}
 \end {table}
 
-\begin {table}[t]
+\begin {table}[htbp]
     \centering
-  \caption{基底計算における解像度と分割数ごとの実行時間（ms）}
-  \label{tab:results}
+  \caption{行列の射影における解像度と分割数ごとの実行時間（ms）}
+  \label{tab:projection}
   \begin {tabular}{ccccc} \hline
     解像度 					&分割なし 		&分割数2			&分割数4 		&分割数10\\ \hline
     $64^3$ 					& 3,514 			&2,823	 		&846	 		&666\\
-    $128^3$ 				& データ1 		& データ2 		& データ3 	&\\ \hline
+    $128^3$ 				& 5,206 			& 3,061 			& 3,050 		&3,975\\ \hline
   \end {tabular}
 \end {table}
-%\begin {table}[t]
+
+
+%\begin {table}[htbp]
 %    \centering
-%  \caption{解像度$n = 64\times64\times64$の実行時間}
-%  \label{tab:results}
-%  \begin{minipage}[c]{0.45\hsize}
-%    \subcaption{基底計算}
-%  \begin {tabular}{ccc} \hline
-%     分割なし & 分割数2 & 分割数4 \\ \hline
-%    データ1 & データ2 & データ3 \\
-%    データ1 & データ2 & データ3 \\
-%    データ1 & データ2 & データ3 \\ \hline
+%  \caption{基底の削減後の次元の和}
+%  \label{tab:basis_nam}
+%  \begin {tabular}{ccccc} \hline
+%    解像度 					&分割なし 		&分割数2			&分割数4 		&分割数10\\ \hline
+%    $64^3$ 					& 3,514 			&2,823	 		&846	 		&666\\
+%    $128^3$ 				& 32 				& 39 				& 47 		&63\\ \hline
 %  \end {tabular}
-%      \end{minipage}
-        %\begin{minipage}[c]{0.45\hsize}
-     %       \subcaption{行列の射影}
-  %\begin {tabular}{ccc} \hline
-     %分割なし & 分割数2 & 分割数4 \\ \hline
-    %データ1 & データ2 & データ3 \\
-    %データ1 & データ2 & データ3 \\
-    %データ1 & データ2 & データ3 \\ \hline
-  %\end {tabular}
-   %   \end{minipage}
 %\end {table}
+
+\begin{figure}[htbp]
+\includegraphics[width=140mm]{images/64error.png}
+\caption{$解像度64^3におけるL2誤差$}
+\label{fig:64error}
+\end{figure}
+
+\begin{figure}[htbp]
+
+\includegraphics[width=140mm]{images/128error.png}
+\caption{$解像度128^3におけるL2誤差$}
+\label{fig:128error}
+\end{figure}
+表\ref{tab:basis}は基底の計算にかかった実行時間，表\ref{tab:projection}は行列の射影にかかった実行時間を解像度と分割数ごとに計測した結果である．基底の計算については分割数が大きくなるほど高速化に成功している．一方で，行列の射影に関しては，低解像度では分割数が大きいほど高速になっているが，高解像度における目立った高速化は見られなかった．
+
+また，図\ref{fig:64error}，図\ref{fig:128error}は，解像度$64^3$，$128^3$における，流速の$L_2$誤差の時間推移を表したグラフである．Snapshotの分割の直後に$L_2$誤差が減少している．また，流れの時間変化が少ないシミュレーションの後半では，分割なしと比べて精度が向上している．一方で，シミュレーション結果をボリュームレンダリングした画像では，精度の変化による流体の変化はほとんど見られなかった．
 
 非線形項については追加の実験を行ったところ，サンプリングされる点によって重みの計算が発散する場合がある．計算時間はSnapshot数については線形時間であるが，サンプリングする点の数が減ることによりNNLSソルバの反復回数が減ることで，実質的に高速化が見込めることもあった．
 
-また，部分空間法の課題として，実験に用いるシミュレーションデータの質に左右される．シミュレーションデータ内で計算が発散していない場合でも，部分空間に射影することで計算が発散し，意味のある結果が得られない場合がある．以下は外力項のパラメータを高く設定した例である．
+また，本手法の課題として，実験に用いるシミュレーションデータの質に左右される．シミュレーションデータ内で計算が発散していない場合でも，部分空間に射影することで計算が発散し，意味のある結果が得られない場合がある．以下は外力項のパラメータを高く設定した例である．
+
+%\begin{figure}[htbp]
+%\includegraphics[width=140mm]{images/n128_f99_truth.png}
+%\caption{$解像度128^3，ground truth，99フレーム目$}
+%\label{fig:n128_f99_div4}
+%\end{figure}
+
+\begin{figure}[htbp]
+\caption{$解像度128^3，99フレーム目$}
+\includegraphics[width=140mm]{images/n128_f99_dev2.png}
+\subcaption{gruound truth}
+\includegraphics[width=140mm]{images/n128_f99_dev2.png}
+\subcaption{分割数2}
+\label{fig:n128_f99}
+\end{figure}
+
+\begin{figure}[htbp]
+\caption{$解像度128^3，100フレーム目$}
+\includegraphics[width=140mm]{images/n128_f99_dev2.png}
+\subcaption{gruound truth}
+\includegraphics[width=140mm]{images/n128_f100_dev2.png}
+\subcaption{分割数2}
+\label{fig:n128_f99}
+\end{figure}
 \section{考察}
-分割後の基底の条件数が異なるため，次元数が過剰であったり，不足する場合がある．次元数が過剰になった基底では条件数が大きくなり，小さな特異値に対応するモードが構築する部分空間に射影する場合がある．次元数が不足した基底では，シミュレーション計算の精度が下がる．特異値分解を用いた次元削減はの条件数は，行列を構成する列ベクトル同士の相関が強いほど悪くなることが知られている．本実験のシミュレーションの開始直後においては，タイムステップごとの流速や圧力の変化が大きくSnapshot間の相関関係が弱い．一方でシミュレーション終了付近においては，タイムステップごとの流速や圧力の変化が大きくSnapshot間の相関関係が強い．
-\chapter{結論}
-基底の計算に用いるSnapshotを$d$分割することによって，基底計算全体の計算速度を$\frac{1}{d}$に達成した．
+分割なしと比べて精度が向上している点については，分割なしでは抽出されなかったモードを抽出することができていることによって，シミュレーション後半の流れを詳細にシミュレーションできていると考えられる．特異値分解を用いた次元削減はの条件数は，行列を構成する列ベクトル同士の相関が強いほど悪くなることが知られている．本実験のシミュレーションの開始直後においては，タイムステップごとの流速や圧力の変化が大きくSnapshot間の相関関係が弱い．一方でシミュレーション終了付近においては，タイムステップごとの流速や圧力の変化が大きくSnapshot間の相関関係が強い．Snapshotの分割によって各基底の最大特異値が小さくなることによって，分割前と比較してシミュレーション後半に対応する特異値に関する条件数が改善され，詳細にシミュレーションできていると考えられる．
+
+\chapter{終わりに}
+流体シミュレーションにおける部分空間法の前処理にかかる計算時間に対し，Snapshotを分割することによって高速化する手法を提案した．特に基底計算については分割数に応じた高速化を達成し，前処理全体の高速化を達成した．Snapshot分割によるシミュレーションの結果に関して，$L_2$誤差では差が認められたものの，見た目の上では問題ない範囲であった．
+
+%今後の研究として，最適なSnapshot分割を決定する手法が考えられる．
+今後の研究として，GPUを用いた大規模高速計算の併用などを用いた高速化が挙げられる．
+部分空間法の高速化について，シミュレーション結果を離散コサイン変換（DCT）を用いて圧縮する手法\cite{subspaceDCT}が研究されている．シミュレーション結果を離散コサイン変換を用いて圧縮し，必要に応じて展開することで，GPUを用いた大規模高速計算を改善する手法である．提案した手法を組み込むことで，より高速な基底計算を達成できるかについて検討する．
+
 %計算機が登場する以前の流体力学は，実際の流体を用いて実験を繰り返さなければならなかったが，計算機が登場してからは，シミュレーションをすることで，計算機上で流体の振る舞いを確認できるようになった．計算機を使った流体力学を特別に，数値流体力学 （CFD: Computational Fluid Dynamics） と呼び分けることも多い．CFDは実験で得ることが困難な，流れ場全体の詳細な情報を得ることができる．CFDは流体に触れる製品の設計・開発に非常に大きな貢献をした．
 
 %また，コンピューターグラフィックスにおいても，流体のアニメーションを計算することができるCFDが貢献していて，映像作品やゲームなどで利用されている．コンピューターグラフィックスにおいては，それらしい流体の運動がリアルタイムでシミュレーションできることが重要視される．精度良く計算できることはそこまで重要視されておらず，場合によってはそれらしさのために，現実より大袈裟なシミュレーションをすることもある．
@@ -842,9 +951,6 @@ L_2 = \frac{||  ||_2}{||  ||_2}
 %\begin{equation}\label{eq:uncalculated_pressure_before}
 %\frac{\partial}{\partial t}\bm{u} （\bm{x},t）  = -\bm{u} （\bm{x},t） \frac{\partial}{\partial \bm{x}}\bm{u} （\bm{x},t）
 %\end{equation} 
-
-
-結論には，研究の成果や意義その他を総括的に{\em 過去形}で述べる．
 
 %謝辞
 \syaji
@@ -876,8 +982,8 @@ A. Treuille, A. Lewis, and Z. Popovic. Model Reduction for Real-time Fluids. \te
 \bibitem{subspace}
 T. Kim, J. Delaney. Subspace Fluid Re-Simulation. \textit{ACM Transactions on Graphics},32（4）: 62:1--62:9, 2013.
 
-%\bibitem{subspaceDCT}
-%A. Jones, P. Sen, and T. Kim. Compressing fluid subspaces. \textit{Proceedings of the ACM SIGGRAPH/Eurographics Symposium on Computer Animation}, pp. 77--84, 2016.
+\bibitem{subspaceDCT}
+A. Jones, P. Sen, and T. Kim. Compressing fluid subspaces. \textit{Proceedings of the ACM SIGGRAPH/Eurographics Symposium on Computer Animation}, pp. 77--84, 2016.
 
 %\bibitem{tile}
 %M. Wicke, M. Stanton, and A. Treuille, Modular Bases for Fluid Dynamics. \textit{ACM Transactions on Graphics}, 39:1--39:8, 2009.

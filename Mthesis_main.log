@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.1-u1.30-230214-2.6 (utf8.euc) (TeX Live 2024) (preloaded format=platex 2024.3.22)  7 FEB 2025 19:45
+This is e-upTeX, Version 3.141592653-p4.1.1-u1.30-230214-2.6 (utf8.euc) (TeX Live 2024) (preloaded format=platex 2024.3.22)  8 FEB 2025 18:48
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -230,13 +230,7 @@ File: l3backend-dvips.def 2024-02-20 L3 backend support: dvips
 )
 (./Mthesis_main.aux
 
-LaTeX Warning: Label `fig:pressure_model' multiply defined.
-
-
 LaTeX Warning: Label `chapter:3' multiply defined.
-
-
-LaTeX Warning: Label `tab:results' multiply defined.
 
 )
 \openout1 = `Mthesis_main.aux'.
@@ -321,48 +315,89 @@ LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <10.95> not available
 [11
 
 ] [12] [13] [14] [15]
-Overfull \hbox (2.29453pt too wide) in paragraph at lines 551--552
-[]$\OMS/cmsy/m/n/12 r\OML/cmm/m/it/12 p[]$ \JY1/mc/m/n/12 割り振られた方向の圧
-力勾配\OT1/cmr/m/n/12 . \JY1/mc/m/n/12 前方差分によ っ て ， $\OMS/cmsy/m/n/12 
-r\OML/cmm/m/it/12 p[]\JY1/mc/m/n/12 （\OML/cmm/b/it/12 x\OML/cmm/m/it/12 ; t\JY
-1/mc/m/n/12 ） \OT1/cmr/m/n/12 = []$
+Overfull \hbox (27.94934pt too wide) detected at line 621
+\OMS/cmsy/m/n/12 r ^^A \OT1/cmr/bx/n/12 u \OMS/cmsy/m/n/12 ^^Y [] \OT1/cmr/m/n/
+12 + [] + []
  []
 
-File: images/pressure_model.png Graphic file (type bmp)
-<images/pressure_model.png>
-[16]
-File: images/P2V.png Graphic file (type bmp)
-<images/P2V.png>
- [17] [18] [19] [20]
+[16] [17] [18] [19]
 第 4 章
-[21
+[20
 
-] [22] [23]
+] [21] [22]
 第 5 章
-[24
+[23
 
-] [25] [26]
+]
+File: images/64error.png Graphic file (type bmp)
+<images/64error.png>
+File: images/128error.png Graphic file (type bmp)
+<images/128error.png>
+File: images/n128_f99_dev2.png Graphic file (type bmp)
+<images/n128_f99_dev2.png>
+
+
+Package caption Warning: \setcaptionsubtype
+(caption)                outside box or environment on input line 917.
+See the caption package documentation for explanation.
+
+
+Package caption Warning: \subcaption
+(caption)                outside box or environment on input line 917.
+See the caption package documentation for explanation.
+
+LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <10> not available
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 917.
+LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <10> not available
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 917.
+File: images/n128_f99_dev2.png Graphic file (type bmp)
+<images/n128_f99_dev2.png>
+
+Package caption Warning: \subcaption
+(caption)                outside box or environment on input line 919.
+See the caption package documentation for explanation.
+
+File: images/n128_f99_dev2.png Graphic file (type bmp)
+<images/n128_f99_dev2.png>
+
+Package caption Warning: \setcaptionsubtype
+(caption)                outside box or environment on input line 926.
+See the caption package documentation for explanation.
+
+
+Package caption Warning: \subcaption
+(caption)                outside box or environment on input line 926.
+See the caption package documentation for explanation.
+
+File: images/n128_f100_dev2.png Graphic file (type bmp)
+<images/n128_f100_dev2.png>
+
+Package caption Warning: \subcaption
+(caption)                outside box or environment on input line 928.
+See the caption package documentation for explanation.
+
+[24] [25] [26] [27] [28]
 第 6 章
-LaTeX Font Info:    Kanji font shape `JY1/gt/m/it' undefined
-(Font)              No change on input line 847.
-[27
+[29
 
-] [28
+] [30
 
 ]
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 862.
+(Font)              No change on input line 968.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 865.
+(Font)              No change on input line 971.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 868.
+(Font)              No change on input line 974.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 871.
+(Font)              No change on input line 977.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 874.
+(Font)              No change on input line 980.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 877.
- [29
+(Font)              No change on input line 983.
+LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
+(Font)              No change on input line 986.
+ [31
 
 ] (./Mthesis_main.aux)
  ***********
@@ -376,12 +411,12 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 4364 strings out of 474774
- 70348 string characters out of 5758801
+ 4401 strings out of 474774
+ 71077 string characters out of 5758801
  1935032 words of memory out of 5000000
- 26681 multiletter control sequences out of 15000+600000
- 579101 words of font info for 117 fonts, out of 8000000 for 9000
+ 26714 multiletter control sequences out of 15000+600000
+ 581648 words of font info for 127 fonts, out of 8000000 for 9000
  929 hyphenation exceptions out of 8191
  57i,10n,65p,1178b,639s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on Mthesis_main.dvi (33 pages, 97096 bytes).
+Output written on Mthesis_main.dvi (35 pages, 100912 bytes).
