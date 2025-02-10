@@ -3,7 +3,7 @@
 \contentsline {section}{\numberline {2.1}流体シミュレーション}{2}{}%
 \contentsline {section}{\numberline {2.2}部分空間法}{5}{}%
 \contentsline {subsection}{\numberline {2.2.1}部分空間への射影}{6}{}%
-\contentsline {subsection}{\numberline {2.2.2}Snapshot固有直交分解}{6}{}%
+\contentsline {subsection}{\numberline {2.2.2}スナップショット固有直交分解}{6}{}%
 \contentsline {subsection}{\numberline {2.2.3}特異値分解を用いる方法}{8}{}%
 \contentsline {subsection}{\numberline {2.2.4}非線形項の計算}{8}{}%
 \contentsline {chapter}{\numberline {第3章}煙の流体シミュレーション}{11}{}%
@@ -14,17 +14,13 @@
 \contentsline {subsection}{\numberline {3.1.4}粘性項計算}{14}{}%
 \contentsline {subsection}{\numberline {3.1.5}圧力項計算}{15}{}%
 \contentsline {section}{\numberline {3.2}ボリュームデータの可視化手法}{17}{}%
-\contentsline {subsection}{\numberline {3.2.1}ボクセルの透明度計算}{18}{}%
-\contentsline {subsection}{\numberline {3.2.2}アルファブレンディング}{18}{}%
-\contentsline {subsection}{\numberline {3.2.3}スライス方向の比較}{19}{}%
-\contentsline {chapter}{\numberline {第4章}部分空間法}{20}{}%
-\contentsline {section}{\numberline {4.1}基底空間構築手法}{20}{}%
-\contentsline {section}{\numberline {4.2}フラクショナルステップ法への部分空間法の適用}{21}{}%
-\contentsline {section}{\numberline {4.3}部分空間法の課題}{22}{}%
-\contentsline {chapter}{\numberline {第5章}部分空間法の高速化手法の提案}{23}{}%
-\contentsline {section}{\numberline {5.1}Snapshotの分割による高速化}{23}{}%
-\contentsline {section}{\numberline {5.2}計算機実験}{23}{}%
-\contentsline {section}{\numberline {5.3}考察}{28}{}%
-\contentsline {chapter}{\numberline {第6章}終わりに}{29}{}%
-\contentsline {chapter}{謝辞}{30}{}%
-\contentsline {chapter}{参考文献}{31}{}%
+\contentsline {chapter}{\numberline {第4章}部分空間法とスナップショット分割による高速化}{19}{}%
+\contentsline {section}{\numberline {4.1}基底空間構築手法}{19}{}%
+\contentsline {section}{\numberline {4.2}フラクショナルステップ法への部分空間法の適用}{20}{}%
+\contentsline {section}{\numberline {4.3}部分空間法の課題}{21}{}%
+\contentsline {section}{\numberline {4.4}部分空間法の高速化手法の提案}{22}{}%
+\contentsline {chapter}{\numberline {第5章}計算機実験}{23}{}%
+\contentsline {section}{\numberline {5.1}考察}{25}{}%
+\contentsline {chapter}{\numberline {第6章}終わりに}{28}{}%
+\contentsline {chapter}{謝辞}{29}{}%
+\contentsline {chapter}{参考文献}{30}{}%

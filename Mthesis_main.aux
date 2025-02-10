@@ -20,6 +20,9 @@
 \newlabel{eq:force}{{2.5}{3}{}{}{}}
 \newlabel{eq:advect}{{2.6}{3}{}{}{}}
 \newlabel{eq:diffusion}{{2.7}{3}{}{}{}}
+\citation{EOL}
+\citation{FLIP}
+\citation{APIC}
 \newlabel{eq:pressure}{{2.8}{4}{}{}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces スタッガード格子}}{5}{}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
@@ -27,7 +30,7 @@
 \@writefile{toc}{\contentsline {section}{\numberline {2.2}部分空間法}{5}{}\protected@file@percent }
 \newlabel{sec:Subspace}{{2.2}{5}{}{}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}部分空間への射影}{6}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Snapshot固有直交分解}{6}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}スナップショット固有直交分解}{6}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}特異値分解を用いる方法}{8}{}\protected@file@percent }
 \newlabel{eq:diagonalization}{{2.9}{8}{}{}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.4}非線形項の計算}{8}{}\protected@file@percent }
@@ -56,52 +59,51 @@
 \citation{fedkiw}
 \@writefile{toc}{\contentsline {section}{\numberline {3.2}ボリュームデータの可視化手法}{17}{}\protected@file@percent }
 \citation{fedkiw}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}ボクセルの透明度計算}{18}{}\protected@file@percent }
 \newlabel{eq:cos}{{3.11}{18}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}アルファブレンディング}{18}{}\protected@file@percent }
 \newlabel{eq:alpha}{{3.12}{18}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}スライス方向の比較}{19}{}\protected@file@percent }
 \citation{fedkiw}
 \citation{subspace}
-\@writefile{toc}{\contentsline {chapter}{\numberline {第4章}部分空間法}{20}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {第4章}部分空間法とスナップショット分割による高速化}{19}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chapter:3}{{4}{20}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.1}基底空間構築手法}{20}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}フラクショナルステップ法への部分空間法の適用}{21}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}部分空間法の課題}{22}{}\protected@file@percent }
+\newlabel{chapter:3}{{4}{19}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}基底空間構築手法}{19}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}フラクショナルステップ法への部分空間法の適用}{20}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}部分空間法の課題}{21}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}部分空間法の高速化手法の提案}{22}{}\protected@file@percent }
+\newlabel{chapter:3}{{4.4}{22}{}{}{}}
 \citation{fedkiw}
 \citation{projection_base}
-\@writefile{toc}{\contentsline {chapter}{\numberline {第5章}部分空間法の高速化手法の提案}{23}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {第5章}計算機実験}{23}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chapter:3}{{5}{23}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.1}Snapshotの分割による高速化}{23}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.2}計算機実験}{23}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5.1}{\ignorespaces 基底計算における解像度と分割数ごとの実行時間（ms）}}{24}{}\protected@file@percent }
-\newlabel{tab:basis}{{5.1}{24}{}{}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {5.2}{\ignorespaces 行列の射影における解像度と分割数ごとの実行時間（ms）}}{24}{}\protected@file@percent }
-\newlabel{tab:projection}{{5.2}{24}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.1}{\ignorespaces $解像度64^3におけるL_2誤差$}}{25}{}\protected@file@percent }
-\newlabel{fig:64error}{{5.1}{25}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.2}{\ignorespaces $解像度128^3におけるL_2誤差$}}{25}{}\protected@file@percent }
-\newlabel{fig:128error}{{5.2}{25}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5.1}{\ignorespaces 基底計算における解像度と分割数ごとの実行時間(s)}}{23}{}\protected@file@percent }
+\newlabel{tab:basis}{{5.1}{23}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5.2}{\ignorespaces 行列の射影における解像度と分割数ごとの実行時間(s)}}{23}{}\protected@file@percent }
+\newlabel{tab:projection}{{5.2}{23}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.1}{\ignorespaces $解像度64^3におけるL_2誤差$}}{24}{}\protected@file@percent }
+\newlabel{fig:64error}{{5.1}{24}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.2}{\ignorespaces $解像度128^3におけるL_2誤差$}}{24}{}\protected@file@percent }
+\newlabel{fig:128error}{{5.2}{24}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}考察}{25}{}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {5.3}{\ignorespaces $解像度128^3，99フレーム目$}}{26}{}\protected@file@percent }
 \newlabel{fig:n128_f99}{{5.3}{26}{}{}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {5.4}{\ignorespaces $解像度128^3，100フレーム目$}}{27}{}\protected@file@percent }
 \newlabel{fig:n128_f100}{{5.4}{27}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.3}考察}{28}{}\protected@file@percent }
 \citation{subspaceDCT}
-\@writefile{toc}{\contentsline {chapter}{\numberline {第6章}終わりに}{29}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {第6章}終わりに}{28}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {chapter}{謝辞}{30}{}\protected@file@percent }
-\bibcite{MAC}{1}
-\bibcite{Chorin}{2}
-\bibcite{fedkiw}{3}
-\bibcite{stable fluids}{4}
-\bibcite{projection_base}{5}
-\bibcite{subspace}{6}
-\bibcite{subspaceDCT}{7}
-\@writefile{toc}{\contentsline {chapter}{参考文献}{31}{}\protected@file@percent }
-\gdef \@abspage@last{35}
+\@writefile{toc}{\contentsline {chapter}{謝辞}{29}{}\protected@file@percent }
+\bibcite{EOL}{1}
+\bibcite{MAC}{2}
+\bibcite{Chorin}{3}
+\bibcite{FLIP}{4}
+\bibcite{APIC}{5}
+\bibcite{fedkiw}{6}
+\bibcite{stam}{7}
+\bibcite{projection_base}{8}
+\bibcite{subspace}{9}
+\bibcite{subspaceDCT}{10}
+\@writefile{toc}{\contentsline {chapter}{参考文献}{30}{}\protected@file@percent }
+\gdef \@abspage@last{34}
