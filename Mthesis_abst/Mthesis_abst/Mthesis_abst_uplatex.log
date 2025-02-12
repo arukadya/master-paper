@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.1-u1.30-230214-2.6 (utf8.uptex) (TeX Live 2024) (preloaded format=uplatex 2024.3.22)  11 FEB 2025 01:51
+This is e-upTeX, Version 3.141592653-p4.1.1-u1.30-230214-2.6 (utf8.uptex) (TeX Live 2024) (preloaded format=uplatex 2024.3.22)  12 FEB 2025 00:07
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -303,122 +303,118 @@ LaTeX Font Info:    Font shape `JY2/gt/bx/n' in size <12> not available
 LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
 (Font)              scaled to size 11.09619pt on input line 48.
 LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <10> not available
-(Font)              Font shape `JT2/gt/m/n' tried instead on input line 58.
+(Font)              Font shape `JT2/gt/m/n' tried instead on input line 60.
 LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
-(Font)              scaled to size 9.24683pt on input line 58.
+(Font)              scaled to size 9.24683pt on input line 60.
 LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <10> not available
-(Font)              Font shape `JY2/gt/m/n' tried instead on input line 58.
+(Font)              Font shape `JY2/gt/m/n' tried instead on input line 60.
 LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 9.24683pt on input line 58.
+(Font)              scaled to size 9.24683pt on input line 60.
 LaTeX Font Info:    Font shape `JT2/gt/bx/n' in size <10> not available
-(Font)              Font shape `JT2/gt/m/n' tried instead on input line 58.
+(Font)              Font shape `JT2/gt/m/n' tried instead on input line 60.
 LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
-(Font)              scaled to size 9.24683pt on input line 58.
+(Font)              scaled to size 9.24683pt on input line 60.
 LaTeX Font Info:    Font shape `JY2/gt/bx/n' in size <10> not available
-(Font)              Font shape `JY2/gt/m/n' tried instead on input line 58.
+(Font)              Font shape `JY2/gt/m/n' tried instead on input line 60.
 LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 9.24683pt on input line 58.
+(Font)              scaled to size 9.24683pt on input line 60.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
-(Font)              scaled to size 6.47278pt on input line 75.
+(Font)              scaled to size 6.47278pt on input line 76.
 LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
-(Font)              scaled to size 4.62341pt on input line 75.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 75.
+(Font)              scaled to size 4.62341pt on input line 76.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 76.
 
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 75.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 76.
 
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 6.47278pt on input line 75.
+(Font)              scaled to size 6.47278pt on input line 76.
 LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 4.62341pt on input line 75.
-
-
-LaTeX Warning: Citation `MAC' on page 1 undefined on input line 83.
-
-[1
+(Font)              scaled to size 4.62341pt on input line 76.
+ [1
 
 
 ]
 LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
-(Font)              scaled to size 8.32214pt on input line 149.
+(Font)              scaled to size 8.32214pt on input line 146.
 LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
-(Font)              scaled to size 8.32214pt on input line 149.
+(Font)              scaled to size 8.32214pt on input line 146.
 LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <9> not available
-(Font)              Font shape `JT2/gt/m/n' tried instead on input line 149.
+(Font)              Font shape `JT2/gt/m/n' tried instead on input line 146.
 LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
-(Font)              scaled to size 8.32214pt on input line 149.
+(Font)              scaled to size 8.32214pt on input line 146.
 LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <9> not available
-(Font)              Font shape `JY2/gt/m/n' tried instead on input line 149.
+(Font)              Font shape `JY2/gt/m/n' tried instead on input line 146.
 LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 8.32214pt on input line 149.
+(Font)              scaled to size 8.32214pt on input line 146.
 
-Overfull \hbox (4.63484pt too wide) in paragraph at lines 151--156
+Overfull \hbox (4.63484pt too wide) in paragraph at lines 148--153
  [][][][] 
  []
 
 
-Overfull \hbox (4.63484pt too wide) in paragraph at lines 162--167
+Overfull \hbox (4.63484pt too wide) in paragraph at lines 159--164
  [][][][] 
  []
 
 File: images/64error.png Graphic file (type bmp)
 <images/64error.png>
 LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
-(Font)              scaled to size 5.5481pt on input line 172.
+(Font)              scaled to size 5.5481pt on input line 169.
 LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 5.5481pt on input line 172.
+(Font)              scaled to size 5.5481pt on input line 169.
 File: images/128error.png Graphic file (type bmp)
 <images/128error.png>
-[2]
-LaTeX Font Info:    Font shape `JT2/mc/m/it' in size <10> not available
-(Font)              Font shape `JT2/mc/m/n' tried instead on input line 191.
-LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
-(Font)              scaled to size 9.24683pt on input line 191.
-LaTeX Font Info:    Font shape `JY2/mc/m/it' in size <10> not available
-(Font)              Font shape `JY2/mc/m/n' tried instead on input line 191.
-LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
-(Font)              scaled to size 9.24683pt on input line 191.
 
-Underfull \hbox (badness 3977) in paragraph at lines 203--204
+Underfull \vbox (badness 1874) has occurred while \output is active []
+
+ [2]
+LaTeX Font Info:    Font shape `JT2/mc/m/it' in size <10> not available
+(Font)              Font shape `JT2/mc/m/n' tried instead on input line 188.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 9.24683pt on input line 188.
+LaTeX Font Info:    Font shape `JY2/mc/m/it' in size <10> not available
+(Font)              Font shape `JY2/mc/m/n' tried instead on input line 188.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 9.24683pt on input line 188.
+
+Underfull \vbox (badness 1755) has occurred while \output is active []
+
+
+Underfull \hbox (badness 3977) in paragraph at lines 200--201
 []\OT1/cmr/m/n/10 T. Kim, J. De-laney. Sub-space Fluid Re-
  []
 
 
-Underfull \hbox (badness 7667) in paragraph at lines 203--204
+Underfull \hbox (badness 7667) in paragraph at lines 200--201
 \OT1/cmr/m/n/10 Simulation. \OT1/cmr/m/it/10 ACM Trans-ac-tions on Graph-
  []
 
-Package plautopatch Info: No additional packages loaded on input line 206.
-[3
-
-] (./Mthesis_abst_uplatex.aux)
+Package plautopatch Info: No additional packages loaded on input line 203.
+[3] (./Mthesis_abst_uplatex.aux)
  ***********
 pLaTeX2e <2023-02-14u04>+1, based on
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
-
-
-LaTeX Warning: There were undefined references.
-
  ) 
 Here is how much of TeX's memory you used:
  5208 strings out of 474774
  85454 string characters out of 5758802
- 1938032 words of memory out of 5000000
+ 1942032 words of memory out of 5000000
  27526 multiletter control sequences out of 15000+600000
  576539 words of font info for 122 fonts, out of 8000000 for 9000
  934 hyphenation exceptions out of 8191
- 57i,12n,71p,1158b,532s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 57i,11n,71p,1158b,532s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on Mthesis_abst_uplatex.dvi (3 pages, 17888 bytes).
+Output written on Mthesis_abst_uplatex.dvi (3 pages, 20168 bytes).
