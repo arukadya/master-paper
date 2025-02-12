@@ -841,7 +841,7 @@ $\bm{S^T}\bm{S} = \bm{V}\bm{\Sigma^2} \bm{V}^T$
 部分空間法の基底の計算に用いるスナップショットを$d$分割することによって，基底1つの計算負荷$O(nm^2)$が$\frac{1}{d^2}$に削減される．アルゴリズム全体では$d$回計算するため，計算負荷は$\frac{1}{d}$になることが期待できる．行列の射影計算も分割した基底ごとに行う．空間計算量のボトルネックは分割前のスナップショット行列であり，分割前と変わらない．しかし，特異値分解する行列のサイズが$\frac{1}{d}$になることで，GPUを用いた大規模高速計算と併用する場合，GPUメモリの削減が期待できる．空間計算量をGPUが一度に扱うことができる値まで削減することで，並列計算による高速化が期待できる一方で，特異値分解の回数が$d$倍になることで，CPU-GPU間のデータ通信の時間が増加することに注意が必要である．
 
 \chapter{計算機実験}
-本研究では，c++と線形代数ライブラリEigenを用いて，文献\cite{fedkiw}の煙の流体シミュレーションを行うソフトウェアを実装した．立方体形状のシミュレーション空間の底面中心から，煙が立ち上る様子をシミュレーションし，そのデータを元に部分空間法による次元削減を行なった．立体求積法のNNLSソルバにはEigenのUnsupportedライブラリのソルバを用いた．また，コンピュータグラフィックスライブラリOpenGLを用いてスライスベースのボリュームレンダリングを行い，実験結果を可視化するソフトウェアを実装した．これによって得られたシミュレーション結果と，提案手法の計算負荷と削減後のデータの精度について調査を行った．計算負荷の評価は，部分空間法の基底を計算する前処理と行列の射影について実行時間を計測した．データの精度は非線形項の部分空間への射影手法\cite{projection_base}を参考に，L2誤差を用いて評価を行なった．ここでL2誤差は次元削減前後のベクトル$\bm{u}$と$\bm{\tilde{u}}$について，以下のように表される．
+本研究では，c++と線形代数ライブラリEigenを用いて，文献\cite{fedkiw}の煙の流体シミュレーションを行うソフトウェアを実装した．立方体形状のシミュレーション空間の底面中心から，煙が立ち上る様子をシミュレーションし，そのデータを元に部分空間法による次元削減を行なった．立体求積法のNNLSソルバにはEigenのUnsupportedライブラリのソルバを用いた．また，コンピュータグラフィックスライブラリOpenGLを用いてスライスベースのボリュームレンダリングを行い，実験結果を可視化するソフトウェアを実装した．これによって得られたシミュレーション結果と，提案手法の計算負荷と削減後のデータの精度について調査を行った．計算負荷の評価は，部分空間法の基底を計算する前処理と行列の射影について実行時間を計測した．データの精度は非線形項の部分空間への射影手法\cite{projection_base}を参考に，L2誤差を用いて評価を行なった．ここでL2誤差は次元削減前後のベクトル$\bm{u}$と$\bm{\tilde{u}}$について，以下のように表される．また，基底の精度を累積誤差を用いて評価した．
 
 \[
 L_2 = \frac{|| \bm{u} - \bm{\tilde{u}} ||_2}{||  \bm{u} ||_2}
@@ -866,87 +866,13 @@ L_2 = \frac{|| \bm{u} - \bm{\tilde{u}} ||_2}{||  \bm{u} ||_2}
   \begin {tabular}{rrrrr} \hline
     \multicolumn{1}{c}{解像度} 					&\multicolumn{1}{c}{分割なし} 		&\multicolumn{1}{c}{分割数2}			&\multicolumn{1}{c}{分割数4} 		&\multicolumn{1}{c}{分割数10}\\ \hline
     $64^3$ 					& 3.514 			&2.823	 		&0.846	 		&0.666\\
-    $128^3$ 				& 5.206 			& 3.061 			& 3.050 		&3.975\\ \hline
+    $128^3$ 				& 5.206 			& 3.061 			& 3.050 			&3.975\\ \hline
   \end {tabular}
 \end {table}
 
 %累積寄与率は最小のみか，最大最小を表に記載
-
-%\begin {table}[htbp]
-%    \centering
-%  \caption{基底の削減後の次元の和}
-%  \label{tab:basis_nam}
-%  \begin {tabular}{ccccc} \hline
-%    解像度 					&分割なし 		&分割数2			&分割数4 		&分割数10\\ \hline
-%    $64^3$ 					& 3,514 			&2,823	 		&846	 		&666\\
-%    $128^3$ 				& 32 				& 39 				& 47 		&63\\ \hline
-%  \end {tabular}
-%\end {table}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=140mm]{images/64error.png}
-\caption{$解像度64^3におけるL_2誤差$}
-\label{fig:64error}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=140mm]{images/128error.png}
-\caption{$解像度128^3におけるL_2誤差$}
-\label{fig:128error}
-\end{figure}
-
-\begin{figure}[htbp]
-\caption{$解像度128^3$，分割数10における，流速の分布と誤差}
-\label{fig:n128_vel}
-\centering
-\includegraphics[width=140mm]{images/velocity_plot_179.png}
-\subcaption{179フレーム目}
-\includegraphics[width=140mm]{images/velocity_plot_182.png}
-\subcaption{182フレーム目}
-\end{figure}
-
-表\ref{tab:basis}は基底の計算にかかった実行時間，表\ref{tab:projection}は行列の射影にかかった実行時間を解像度と分割数ごとに計測した結果である．基底の計算については分割数が大きくなるほど高速化に成功している．一方で，行列の射影に関しては，低解像度では分割数が大きいほど高速になっているが，高解像度における目立った高速化は見られなかった．
-
-また，図\ref{fig:64error}，図\ref{fig:128error}は，解像度$64^3$，$128^3$における，流速の$L_2$誤差の時間推移を表したグラフである．スナップショットの分割の直後に$L_2$誤差が減少している．また，流れの時間変化が少ないシミュレーションの後半では，分割なしと比べて精度が向上している．図\ref{fig:n128_vel}は速度誤差が大きく変動したフレーム目とフレーム目における位置ごとの速度誤差を計算し，誤差に基づいて流速に色をつけたものである．流速は平面$z=63$上のもののみを描画している．図\ref{fig:n128_f99}，\ref{fig:n128_f100}は，$L_2$シミュレーション結果のレンダリング画像のうち，誤差が大きく変化した99フレーム目と100フレーム目のもので，上段が元のシミュレーション結果，中段が分割なし，下段が分割数2のものである．$L_2$誤差によって煙の密度分布に変化が見られる一方で，部分空間の適用前後の変化と比べると変化量は小さい．
-
-非線形項については追加の実験を行ったところ，サンプリングされる点によって重みの計算が発散する場合がある．計算時間はスナップショット数については線形時間であるが，サンプリングする点の数が減ることによりNNLSソルバの反復回数が減ることで，実質的に高速化が見込めることもあった．
-
-%また，本手法の課題として，実験に用いるシミュレーションデータの質に左右される．シミュレーションデータ内で計算が発散していない場合でも，部分空間に射影することで計算が発散し，意味のある結果が得られない場合がある．以下は外力項のパラメータを高く設定した例である．
-
-%\begin{figure}[htbp]
-%\includegraphics[width=140mm]{images/n128_f99_truth.png}
-%\caption{$解像度128^3，ground truth，99フレーム目$}
-%\label{fig:n128_f99_div4}
-%\end{figure}
-
-\begin{figure}[htbp]
-\caption{$解像度128^3，99フレーム目$}
-\label{fig:n128_f99}
-\centering
-\includegraphics[width=100mm]{images/n128_f99_truth.png}
-\subcaption{gruound truth}
-\includegraphics[width=100mm]{images/n128_f99_dev1.png}
-\subcaption{分割数1}
-\includegraphics[width=100mm]{images/n128_f99_dev2.png}
-\subcaption{分割数2}
-\end{figure}
-
-\begin{figure}[htbp]
-\caption{$解像度128^3，100フレーム目$}
-\label{fig:n128_f100}
-\centering
-\includegraphics[width=100mm]{images/n128_f100_truth.png}
-\subcaption{gruound truth}
-\includegraphics[width=100mm]{images/n128_f100_dev1.png}
-\subcaption{分割数1}
-\includegraphics[width=100mm]{images/n128_f100_dev2.png}
-\subcaption{分割数2}
-\end{figure}
-
 %64
-%0
+%0 0.969886
 
 %0 0.972114
 %1 0.985917
@@ -967,6 +893,129 @@ L_2 = \frac{|| \bm{u} - \bm{\tilde{u}} ||_2}{||  \bm{u} ||_2}
 %7 0.99395
 %8 0.993136
 %9 0.996132
+\begin {table}[htbp]
+    \centering
+  \caption{基底の累積寄与率の最大値と最小値}
+  \label{tab:ruiseki}
+  \begin {tabular}{rrrrr} \hline
+    \multicolumn{1}{c}{解像度} 					&\multicolumn{1}{c}{分割なし} 		&\multicolumn{1}{c}{分割数2}			&\multicolumn{1}{c}{分割数4} 		&\multicolumn{1}{c}{分割数10}\\ \hline
+    $64^3$ 									& 0.969886					& 0.972114						&0.979512	 				&0.992557				\\
+    										&							&0.985917						&0.990411					&0.996893				\\ \hline
+    $128^3$ 								&		 					&	 							&	 						&0.988967				\\ 
+    										&							&								&							&0.996132				\\	\hline
+  \end {tabular}
+\end {table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=140mm]{images/64error.png}
+\caption{$解像度64^3におけるL_2誤差$}
+\label{fig:64error}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=140mm]{images/128error.png}
+\caption{$解像度128^3におけるL_2誤差$}
+\label{fig:128error}
+\end{figure}
+
+\begin{figure}[htbp]
+\caption{$解像度64^3$，分割数10における，流速の分布と誤差}
+\label{fig:n128_vel}
+\centering
+\includegraphics[width=140mm]{images/velocity_plot_100.png}
+\subcaption{100フレーム目}
+\includegraphics[width=140mm]{images/velocity_plot_101.png}
+\subcaption{101フレーム目}
+\end{figure}
+
+表\ref{tab:basis}は基底の計算にかかった実行時間，表\ref{tab:projection}は行列の射影にかかった実行時間を解像度と分割数ごとに計測した結果である．基底の計算については分割数が大きくなるほど高速化に成功している．一方で，行列の射影に関しては，低解像度では分割数が大きいほど高速になっているが，高解像度における目立った高速化は見られなかった．
+
+また，図\ref{fig:64error}，図\ref{fig:128error}は，解像度$64^3$，$128^3$における，流速の$L_2$誤差の時間推移を表したグラフである．スナップショットの分割の直後に$L_2$誤差が減少している．また，流れの時間変化が少ないシミュレーションの後半では，分割なしと比べて精度が向上している．図\ref{fig:n128_vel}は分割数2において速度誤差が大きく変動した$99$フレーム目と$100$フレーム目における位置ごとの速度誤差を計算し，誤差に基づいて流速に色をつけたものである．誤差が小さい部分は青く，誤差が大きい部分は赤く色をつけており，平面$z=63$上のもののみを描画している．特に，画像中央から中央上部において誤差が小さくなっていることがわかる．図\ref{fig:n128_f99}，\ref{fig:n128_f100}は，$L_2$シミュレーション結果のレンダリング画像のうち，誤差が大きく変化した99フレーム目と100フレーム目のもので，上段が元のシミュレーション結果，中段が分割なし，下段が分割数2のものである．また，図\ref{fig:n128_f99}，\ref{fig:n128_f100}は，上記のレンダリング画像を密度の誤差によって色付けしたものである．誤差が小さい部分は青く，誤差が大きい部分は赤く色をつけている．流速の誤差に基づいて，煙の密度分布に誤差が発生しているのがわかる．
+
+非線形項については追加の実験を行ったところ，サンプリングされる点によって重みの計算が発散する場合がある．計算時間はスナップショット数については線形時間であるが，サンプリングする点の数が減ることによりNNLSソルバの反復回数が減ることで，実質的に高速化が見込めることもあった．
+
+%また，本手法の課題として，実験に用いるシミュレーションデータの質に左右される．シミュレーションデータ内で計算が発散していない場合でも，部分空間に射影することで計算が発散し，意味のある結果が得られない場合がある．以下は外力項のパラメータを高く設定した例である．
+
+%\begin{figure}[htbp]
+%\includegraphics[width=140mm]{images/n128_f99_truth.png}
+%\caption{$解像度128^3，ground truth，99フレーム目$}
+%\label{fig:n128_f99_div4}
+%\end{figure}
+
+\begin{figure}[htbp]
+\caption{$解像度128^3，99フレーム目$}
+\label{fig:n128_f99}
+\centering
+\includegraphics[width=65mm]{images/n64_origin_f99.png}
+\subcaption{gruound truth}
+
+\begin{tabular}{cc}
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=65mm]{images/n64_div1_f99.png}
+\subcaption{分割数1}
+\end{minipage}
+
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=65mm]{images/n64_div1_f99_color.png}
+\subcaption{分割数1，誤差による色付け}
+\end{minipage}
+\\
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=65mm]{images/n64_div2_f99.png}
+\subcaption{分割数2}
+\end{minipage}
+
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=65mm]{images/n64_div2_f99_color.png}
+\subcaption{分割数2，誤差による色付け}
+\end{minipage}
+\end{tabular}
+\end{figure}
+
+\begin{figure}[htbp]
+\caption{$解像度128^3，100フレーム目$}
+\label{fig:n128_f100}
+\centering
+\includegraphics[width=65mm]{images/n64_origin_f100.png}
+\subcaption{gruound truth}
+
+\begin{tabular}{cc}
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=65mm]{images/n64_div1_f100.png}
+\subcaption{分割数1}
+\end{minipage}
+
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=65mm]{images/n64_div1_f100_color.png}
+\subcaption{分割数1，誤差による色付け}
+\end{minipage}
+\\
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=65mm]{images/n64_div2_f100.png}
+\subcaption{分割数2}
+\end{minipage}
+
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=65mm]{images/n64_div2_f100_color.png}
+\subcaption{分割数2，誤差による色付け}
+\end{minipage}
+\end{tabular}
+\end{figure}
+%\begin{figure}[htbp]
+%\caption{$解像度128^3，100フレーム目$}
+%\label{fig:n128_f100}
+%\centering
+%\includegraphics[width=100mm]{images/n128_f100_truth.png}
+%\subcaption{gruound truth}
+%\includegraphics[width=100mm]{images/n128_f100_dev1.png}
+%\subcaption{分割数1}
+%\includegraphics[width=100mm]{images/n128_f100_dev2.png}
+%\subcaption{分割数2}
+%\end{figure}
+
+
 
 %\begin{figure}[htbp]
 %\caption{$解像度128^3，180フレーム目$}
@@ -980,17 +1029,20 @@ L_2 = \frac{|| \bm{u} - \bm{\tilde{u}} ||_2}{||  \bm{u} ||_2}
 %\subcaption{分割数2}
 %\end{figure}
 \section{考察}
+
 %解像度$128^3$における計算時間が，分割なしと分割数2で劇的に向上しているのは，スナップショット行列の空間計算量が計算機のメモリを超えてしまい，メモリ領域外アクセスが発生してしまったためだと考えられる．
 
-分割なしと比べて精度が向上している点については，分割なしでは抽出されなかったモードを抽出することができていることによって，シミュレーション後半の流れを詳細にシミュレーションできていると考えられる．特異値分解を用いた次元削減はの条件数は，行列を構成する列ベクトル同士の相関が強いほど悪くなることが知られている．本実験のシミュレーションの開始直後においては，タイムステップごとの流速や圧力の変化が大きくスナップショット間の相関関係が弱い．一方でシミュレーション終了付近においては，タイムステップごとの流速や圧力の変化が大きくスナップショット間の相関関係が強い．スナップショットの分割によって各基底の最大特異値が小さくなることによって，分割前と比較してシミュレーション後半に対応する特異値に関する条件数が改善され，詳細にシミュレーションできていると考えられる．
+%分割なしと比べて精度が向上している点については，分割なしでは抽出されなかったモードを抽出することができていることによって，シミュレーション後半の流れを詳細にシミュレーションできていると考えられる．特異値分解を用いた次元削減はの条件数は，行列を構成する列ベクトル同士の相関が強いほど悪くなることが知られている．本実験のシミュレーションの開始直後においては，タイムステップごとの流速や圧力の変化が大きくスナップショット間の相関関係が弱い．一方でシミュレーション終了付近においては，タイムステップごとの流速や圧力の変化が大きくスナップショット間の相関関係が強い．スナップショットの分割によって各基底の最大特異値が小さくなることによって，分割前と比較してシミュレーション後半に対応する特異値に関する条件数が改善され，詳細にシミュレーションできていると考えられる．
 
 
+部分空間法において，基底による近似誤差が常に発生する．特に急激な流れの変動があった場合，元のデータを十分に近似するには多数のモードを用いる必要があり，用いる基底が固定されていると元の流れを再現できず，誤差が発生する．これに対して，基底を切り替えたとき精度が誤差が大きく減少する．これはスナップショットの範囲を限定した基底を用いることで，流れの特徴をよりよく再現することができたためと考えられる．一方で，流速の基底の切り替えに伴う精度向上によるシミュレーションの精度は，密度分布を観察すると影響が小さい．これは，部分空間法による誤差は蓄積していくものであり，局所的に誤差が小さくなることによる影響が小さいためと考えられる．
 \chapter{終わりに}
 流体シミュレーションにおける部分空間法の前処理にかかる計算時間に対し，スナップショットを分割することによって高速化する手法を提案した．特に基底計算については分割数に応じた高速化を達成し，前処理全体の高速化を達成した．スナップショット分割によるシミュレーションの結果に関して，$L_2$誤差では差が認められたものの，見た目の上では問題ない範囲であった．
 
 %今後の研究として，最適なスナップショット分割を決定する手法が考えられる．
 今後の研究として，GPUを用いた大規模高速計算の併用などを用いた高速化が挙げられる．
 部分空間法の高速化について，シミュレーション結果を離散コサイン変換(DCT)を用いて圧縮する手法\cite{subspaceDCT}が研究されている．シミュレーション結果を離散コサイン変換を用いて圧縮し，必要に応じて展開することで，GPUを用いた大規模高速計算を改善する手法である．提案した手法を組み込むことで，より高速な基底計算を達成できるかについて検討する．
+
 
 %謝辞
 \syaji
