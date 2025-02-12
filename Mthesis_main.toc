@@ -20,7 +20,7 @@
 \contentsline {section}{\numberline {4.3}部分空間法の課題}{21}{}%
 \contentsline {section}{\numberline {4.4}部分空間法の高速化手法の提案}{22}{}%
 \contentsline {chapter}{\numberline {第5章}計算機実験}{23}{}%
-\contentsline {section}{\numberline {5.1}考察}{25}{}%
-\contentsline {chapter}{\numberline {第6章}終わりに}{28}{}%
-\contentsline {chapter}{謝辞}{29}{}%
-\contentsline {chapter}{参考文献}{30}{}%
+\contentsline {section}{\numberline {5.1}考察}{26}{}%
+\contentsline {chapter}{\numberline {第6章}終わりに}{29}{}%
+\contentsline {chapter}{謝辞}{30}{}%
+\contentsline {chapter}{参考文献}{31}{}%
