@@ -67,7 +67,7 @@ Toshiki SUNOUCHI\\
 
 
 \begin{center} {\large \bf{概　要}} \end{center}
-本研究では部分空間法の前処理に対して，計算時間を高速化する手法を提案する．部分空間法を適用することで，シミュレーションは大幅に高速化することができるが，前処理に膨大な計算時間がかかることが課題である．そこで本研究は，前処理をシミュレーション時間に対して分割し，前処理全体の計算時間を削減する手法を提案する．計算機実験の結果，前処理のボトルネックとなっている基底計算のための特異値分解の高速化を確認し，前処理の高速化に有効であると示すことができた．
+本研究では部分空間法の前処理に対して，計算時間を高速化する手法を提案する．部分空間法を適用することで，シミュレーションは大幅に高速化することができるが，前処理に膨大な計算時間がかかることが課題である．そこで本研究は，前処理をシミュレーション時間に対して分割し，前処理全体の計算時間を削減する手法を提案する．計算機実験の結果，前処理のボトルネックとなっている基底計算のための特異値分解の高速化を確認し，前処理の高速化に有効であると示すことができた．また，計算結果の精度について，基底の累積寄与率や相対誤差を用いて評価をし，分割数によるシミュレーションのレンダリング結果の変化を確認した．
 
 \vspace{1zw} \noindent
 {\bf キーワード: }流体シミュレーション，部分空間法，スナップショット固有直交分解，立体求積法．
@@ -103,7 +103,7 @@ Toshiki SUNOUCHI\\
 
 また，計算負荷の削減手法の一つとして，前処理によりシミュレーション計算に使用する行列の次元を削減する部分空間法が存在する．部分空間法を適用することで，シミュレーション計算そのものは高速化されるが，前処理に要する計算負荷やメモリ使用量が大きくなるという課題がある．
 
-本研究では，部分空間法の計算負荷を削減することにより，前処理に要する時間の短縮を図ることを目的とする．
+本研究では，部分空間法の計算負荷を削減することにより，前処理に要する時間の短縮を目的とする．
 	%\section{流体シミュレーションの活用}
 	%\section{流体シミュレーションの課題}
 	%\section{流体シミュレーションの高速化手法}
@@ -213,27 +213,27 @@ Toshiki SUNOUCHI\\
 部分空間法は，ベクトル空間をより低次元の部分空間に射影し，数値シミュレーションにおける計算負荷を軽減する手法である．流体シミュレーションにおける部分空間法は，モデル縮約やモデル縮退とも呼ばれている．扱うベクトルデータやシミュレーションの計算を低次元の部分空間に射影して行い計算負荷を軽減する．部分空間上におけるシミュレーションでは，元のシミュレーションよりも$\varDelta t$を小さい値に設定することで，シミュレーションの時間変化をより詳細に追跡することが可能である．以下では，部分空間法の理論の概要を説明する．
 
 \subsection{部分空間への射影}
-シミュレーションの前処理として，$n$次元ベクトル$\bm{x}$を$r$次元ベクトル$\bm{\tilde{x}} $に変換する，$n \times r$直交行列$\bm{A}$を考える．直交行列の性質から，以下の2式が成り立つ．
+シミュレーションの前処理として，$n$次元ベクトル$\bm{x}$を$r$次元ベクトル$\bm{\widetilde{x}} $に変換する，$n \times r$直交行列$\bm{A}$を考える．直交行列の性質から，以下の2式が成り立つ．
  	\[
- 		\bm{\tilde{x}}  = \bm{A^T}\bm{x}
+ 		\bm{\widetilde{x}}  = \bm{A^{\mathsf T}}\bm{x}
  	\]
 	\[
-		\bm{x} = \bm{A}\bm{\tilde{x}} 
+		\bm{x} = \bm{A}\bm{\widetilde{x}} 
 	\]	
-	また，$\bm{\tilde{x'}}  = \bm{A^T}\bm{x'}$を満たす$n$次元ベクトル$\bm{x'}$，$r$次元ベクトル$\bm{\tilde{x'}} $について，以下の2式が成り立つような，任意の$m \times n$行列$\bm{F}$，任意の$m \times r$行列$\bm{\tilde{F}}$を考える．
+	また，$\bm{\widetilde{x'}}  = \bm{A^{\mathsf T}}\bm{x'}$を満たす$n$次元ベクトル$\bm{x'}$，$r$次元ベクトル$\bm{\widetilde{x'}} $について，以下の2式が成り立つような，任意の$m \times n$行列$\bm{F}$，任意の$m \times r$行列$\bm{\widetilde{F}}$を考える．
 	\[
 		\bm{x'} = \bm{F}\bm{x}
 	\]
 	\[
-		\bm{\tilde{x'}}  = \bm{\tilde{F}}\bm{\tilde{x}} 
+		\bm{\widetilde{x'}}  = \bm{\widetilde{F}}\bm{\widetilde{x}} 
 	\]
-$\bm{\tilde{x'}}  = \bm{A^T}\bm{x'}$に，$\bm{x'} = \bm{F}\bm{x}$と，$\bm{x} = \bm{A}\bm{\tilde{x}} $を代入することで，
+$\bm{\widetilde{x'}}  = \bm{A^{\mathsf T}}\bm{x'}$に，$\bm{x'} = \bm{F}\bm{x}$と，$\bm{x} = \bm{A}\bm{\widetilde{x}} $を代入することで，
 	\[
-		\bm{\tilde{x'}}  = (\bm{A^T}\bm{F}\bm{A})\bm{\tilde{x}} 
+		\bm{\widetilde{x'}}  = (\bm{A^{\mathsf T}}\bm{F}\bm{A})\bm{\widetilde{x}} 
 	\]
-	が得られる．$\bm{\tilde{x'}}  = \bm{\tilde{F}}\bm{\tilde{x}} $と比較すると，
+	が得られる．$\bm{\widetilde{x'}}  = \bm{\widetilde{F}}\bm{\widetilde{x}} $と比較すると，
 	\[
-	\bm{\tilde{F}} = \bm{A^T}\bm{F}\bm{A}
+	\bm{\widetilde{F}} = \bm{A^{\mathsf T}}\bm{F}\bm{A}
 	\]
 	が得られる．
 	
@@ -253,11 +253,11 @@ $\bm{\tilde{x'}}  = \bm{A^T}\bm{x'}$に，$\bm{x'} = \bm{F}\bm{x}$と，$\bm{x} 
 \]
 次に，行列$\bm{S}$主成分分析を行うため，$n \times r$行列$\bm{A}$について以下の最小化問題を考える．ここで$r$は抽出したい主成分の数である．
 \[
-\text{min} || \bm{S} -  \bm{A}\bm{A^T} \bm{S}||^2_F
+\text{min} || \bm{S} -  \bm{A}\bm{A^{\mathsf T}} \bm{S}||^2_F
 \]
 
 
-この最小化問題の解となる行列$\bm{A}$は，$\bm{S}\bm{S^T}$の固有ベクトル$\bm{v_i}(0 \le i \le r-1)$を用いて，以下の行列になる．
+この最小化問題の解となる行列$\bm{A}$は，$\bm{S}\bm{S^{\mathsf T}}$の固有ベクトル$\bm{v_i}(0 \le i \le r-1)$を用いて，以下の行列になる．
  \[ 
  \bm{A}  = 
         		\begin{bmatrix}
@@ -266,50 +266,50 @@ $\bm{\tilde{x'}}  = \bm{A^T}\bm{x'}$に，$\bm{x'} = \bm{F}\bm{x}$と，$\bm{x} 
    | & | &  & |
 \end{bmatrix}
 \]
-ここで，固有ベクトル$\bm{v_i}$に対応する固有値を$\lambda_i$は，$\lambda_0 \ge \lambda_1 \cdots \ge \lambda_i \ge \lambda_{n-1} $を満たすとする．$\bm{S}\bm{S^T}$は対称行列になっているため，固有ベクトルは互いに直交し，$\bm{A^{-1}} = \bm{A^T}$となる．%また，$n \times n$行列$\bm{S^T}\bm{S}$ と$m\times m$行列$\bm{S}\bm{S^T}$の固有ベクトルは
+ここで，固有ベクトル$\bm{v_i}$に対応する固有値を$\lambda_i$は，$\lambda_0 \ge \lambda_1 \cdots \ge \lambda_i \ge \lambda_{n-1} $を満たすとする．$\bm{S}\bm{S^{\mathsf T}}$は対称行列になっているため，固有ベクトルは互いに直交し，$\bm{A^{-1}} = \bm{A^{\mathsf T}}$となる．%また，$n \times n$行列$\bm{S^{\mathsf T}}\bm{S}$ と$m\times m$行列$\bm{S}\bm{S^{\mathsf T}}$の固有ベクトルは
 
-次に，行列$\bm{A}$を用いて$\bm{u}$を$\bm{\tilde{u}}$に射影するとき，$\bm{\tilde{u}}$が流体の非圧縮性条件$\nabla\boldsymbol{\cdot}\bm{\tilde{u}} = 0$を満たしていることを確かめる．行列$\bm{S}$の各列ベクトル$\bm{u_i}$は既存のシミュレーションの速度データであるため，流体の非圧縮性条件$\nabla\boldsymbol{\cdot}\bm{u_i} = 0$を満たす．このことから，
+次に，行列$\bm{A}$を用いて$\bm{u}$を$\bm{\widetilde{u}}$に射影するとき，$\bm{\widetilde{u}}$が流体の非圧縮性条件$\nabla\boldsymbol{\cdot}\bm{\widetilde{u}} = 0$を満たしていることを確かめる．行列$\bm{S}$の各列ベクトル$\bm{u_i}$は既存のシミュレーションの速度データであるため，流体の非圧縮性条件$\nabla\boldsymbol{\cdot}\bm{u_i} = 0$を満たす．このことから，
 \[
 	\nabla\boldsymbol{\cdot}\bm{S}\ = \sum_{0 \le i \le n-1}\nabla\boldsymbol{\cdot}\bm{u_i} = 0
 \]
 が成り立つ．
 
-また，行列$\bm{S}\bm{S^T}$の固有ベクトル$\bm{v_i}$と，それに対応する固有値を$\lambda_i$とすると，固有値と固有ベクトルの定義から以下が成り立つ．
+また，行列$\bm{S}\bm{S^{\mathsf T}}$の固有ベクトル$\bm{v_i}$と，それに対応する固有値を$\lambda_i$とすると，固有値と固有ベクトルの定義から以下が成り立つ．
 \[
-	\bm{S}\bm{S^T}\bm{v_i} = \lambda_i\bm{v_i}
+	\bm{S}\bm{S^{\mathsf T}}\bm{v_i} = \lambda_i\bm{v_i}
 \]
 両辺に左から$\nabla\boldsymbol{\cdot}$を取ることにより，
 \[
-	(\nabla\boldsymbol{\cdot}\bm{S})\bm{S^T}\bm{v_i} = \lambda_i\nabla\boldsymbol{\cdot}\bm{v_i}
+	(\nabla\boldsymbol{\cdot}\bm{S})\bm{S^{\mathsf T}}\bm{v_i} = \lambda_i\nabla\boldsymbol{\cdot}\bm{v_i}
 \]
-$\nabla\boldsymbol{\cdot}\bm{S}\ = 0$より，0でない$ \lambda_i$について，$\nabla\boldsymbol{\cdot}\bm{v_i} = 0$が成り立つことがわかる．$\bm{\tilde{u}} = \bm{A^T}\bm{u}$の第$i$成分は$\bm{v_i}\boldsymbol{\cdot}\bm{u}$であり，$\nabla\boldsymbol{\cdot}\bm{\tilde{u}} =  0$が成り立つことがわかる．
+$\nabla\boldsymbol{\cdot}\bm{S}\ = 0$より，0でない$ \lambda_i$について，$\nabla\boldsymbol{\cdot}\bm{v_i} = 0$が成り立つことがわかる．$\bm{\widetilde{u}} = \bm{A^{\mathsf T}}\bm{u}$の第$i$成分は$\bm{v_i}\boldsymbol{\cdot}\bm{u}$であり，$\nabla\boldsymbol{\cdot}\bm{\widetilde{u}} =  0$が成り立つことがわかる．
 
-$n \times n$行列$\bm{S}\bm{S^T}$の主成分分析を行う代わりに，$\bm{S^T}\bm{S}$の主成分分析を行い，$\bm{S}\bm{S^T}$の固有値固有ベクトルを求めることができる．$\bm{S}\bm{S^T}\bm{v_i} = \lambda_i\bm{v_i}$の両辺に左から$\bm{S^T}$をかけることにより，
+$n \times n$行列$\bm{S}\bm{S^{\mathsf T}}$の主成分分析を行う代わりに，$\bm{S^{\mathsf T}}\bm{S}$の主成分分析を行い，$\bm{S}\bm{S^{\mathsf T}}$の固有値固有ベクトルを求めることができる．$\bm{S}\bm{S^{\mathsf T}}\bm{v_i} = \lambda_i\bm{v_i}$の両辺に左から$\bm{S^{\mathsf T}}$をかけることにより，
 \[
-	(\bm{S^T}\bm{S})\bm{S^T}\bm{v_i} = \lambda_i\bm{S^T}\bm{v_i}
+	(\bm{S^{\mathsf T}}\bm{S})\bm{S^{\mathsf T}}\bm{v_i} = \lambda_i\bm{S^{\mathsf T}}\bm{v_i}
 \]
-を得る．行列$\bm{S^T}\bm{S}$の固有値は，$\bm{S}\bm{S^T}$の固有値と一致し，固有値$\lambda_i$対応する固有ベクトル$\bm{u_i}$について，$\bm{u_i} = \bm{S^T}\bm{v_i}$であることがわかる．よって，$\bm{S^T}\bm{S}$の主成分分析により得られた固有ベクトルと$\bm{S^T}$の逆行列を用いて，$\bm{S}\bm{S^T}$の主成分分析を行うことができる．
+を得る．行列$\bm{S^{\mathsf T}}\bm{S}$の固有値は，$\bm{S}\bm{S^{\mathsf T}}$の固有値と一致し，固有値$\lambda_i$対応する固有ベクトル$\bm{u_i}$について，$\bm{u_i} = \bm{S^{\mathsf T}}\bm{v_i}$であることがわかる．よって，$\bm{S^{\mathsf T}}\bm{S}$の主成分分析により得られた固有ベクトルと$\bm{S^{\mathsf T}}$の逆行列を用いて，$\bm{S}\bm{S^{\mathsf T}}$の主成分分析を行うことができる．
 
 \subsection{特異値分解を用いる方法}
 $n \times r$行列$\bm{S}$の特異値分解は，以下のように定義される．
 \[
-\bm{S} = \bm{U} \bm{\Sigma} \bm{V}^T
+\bm{S} = \bm{U} \bm{\Sigma} \bm{V}^{\mathsf T}
 \]
 ここで，\( \bm{U} \) は \( n \times n \) のユニタリ行列であり，左特異ベクトルを列ベクトルとして持つ．\( \bm{V} \) は \( r \times r \) のユニタリ行列であり，右特異ベクトルを列ベクトルとして持つ．\(\bm{ \Sigma }\) は \( n \times r \) の対角行列であり，対角成分には特異値 \( \sigma_1, \sigma_2, \dots, \sigma_r \) が非負の降順で並ぶ．
 
-以下に示す，行列$\bm{S^T}\bm{S}$の固有値や固有ベクトルと行列$\bm{S}$の特異値分解の関係により，$\bm{S}\bm{S^T}$の主成分分析を行う代わりに，行列\(\bm{S}\)の特異値分解を用いることができる．
-行列$\bm{S^T}\bm{S}$の対角化を，以下のように表す．
+以下に示す，行列$\bm{S^{\mathsf T}}\bm{S}$の固有値や固有ベクトルと行列$\bm{S}$の特異値分解の関係により，$\bm{S}\bm{S^{\mathsf T}}$の主成分分析を行う代わりに，行列\(\bm{S}\)の特異値分解を用いることができる．
+行列$\bm{S^{\mathsf T}}\bm{S}$の対角化を，以下のように表す．
 \begin{equation}\label{eq:diagonalization}
-	\bm{S^T}\bm{S} = \bm{P}\bm{A}\bm{P^{-1}}
+	\bm{S^{\mathsf T}}\bm{S} = \bm{P}\bm{A}\bm{P^{-1}}
 \end{equation}
-ここで，\(\bm{A}\)は\( n \times n \) の対角行列であり，対角成分には行列$\bm{S^T}\bm{S}$の固有値が降順に並ぶ．\(\bm{P}\)の\(i\)列は固有値\(\bm{A_{i，i}}\)に対応する固有ベクトルである．
+ここで，\(\bm{A}\)は\( n \times n \) の対角行列であり，対角成分には行列$\bm{S^{\mathsf T}}\bm{S}$の固有値が降順に並ぶ．\(\bm{P}\)の\(i\)列は固有値\(\bm{A_{i，i}}\)に対応する固有ベクトルである．
 行列\(\bm{S}\)の特異値分解より，以下が成り立つ．
 \[
-\bm{S^T}\bm{S} = (\bm{V} \bm{\Sigma} \bm{U}^T)(\bm{U} \bm{\Sigma} \bm{V}^T)
+\bm{S^{\mathsf T}}\bm{S} = (\bm{V} \bm{\Sigma} \bm{U}^{\mathsf T})(\bm{U} \bm{\Sigma} \bm{V}^{\mathsf T})
 \]
 行列\(\bm{U}\)はユニタリ行列，\(\bm{\Sigma}\)は対角行列であるから，
 \[
-\bm{S^T}\bm{S} = \bm{V}\bm{\Sigma^2} \bm{V}^T
+\bm{S^{\mathsf T}}\bm{S} = \bm{V}\bm{\Sigma^2} \bm{V}^{\mathsf T}
 \]
 式\ref{eq:diagonalization}と右辺を比較することによって，\(\bm{P} = \bm{V} \)，\(\bm{A} = \bm{\Sigma^2} \)であることがわかる．
 \subsection{非線形項の計算}\label{noLinear}
@@ -325,19 +325,19 @@ $n \times r$行列$\bm{S}$の特異値分解は，以下のように定義され
 \]
 この式は速度に関する基底を用いて以下のように部分空間へ射影することが可能である．
 \[
-	\bm{U_1}\bm{f} = \sum_{p=1}^Pw_p(\bm{U^p})^T\mathcal{F}_p(\bm{U^p}\bm{x})
+	\bm{U_1}\bm{f} = \sum_{p=1}^Pw_p(\bm{U^p})^{\mathsf T}\mathcal{F}_p(\bm{U^p}\bm{x})
 \]
-ここで，$\bm{U^p}$は$3 \times n$基底行列$\bm{U}$のサンプリング点$p$に関する行を抜粋して作成した，$3 \times r$行列である．ここで，$\bm{\tilde{f}}_p$ = $(\bm{U^p})^T\mathcal{F}_p(\bm{\tilde{u}})$とする．
+ここで，$\bm{U^p}$は$3 \times n$基底行列$\bm{U}$のサンプリング点$p$に関する行を抜粋して作成した，$3 \times r$行列である．ここで，$\bm{\widetilde{f}}_p$ = $(\bm{U^p})^{\mathsf T}\mathcal{F}_p(\bm{\widetilde{u}})$とする．
 
 以降はサンプリング点と重みを評価する手法について説明する．
-サンプリングした点集合を$\bm{P}$とし，点集合の要素数を$P$とする．また，スナップショット数を$T$とする．以下の式を解の値が全て非負になるような線形ソルバであるNNLS(Non Negative Linear Solve)ソルバを用いることで，非負の$\bm{w}$が得られる．
+サンプリングした点集合を$\bm{P}$とし，点集合の要素数を$P$とする．また，スナップショット数を$T$とする．以下の式を解の値が全て非負になるような線形ソルバであるNNLS（Non Negative Linear Solve）ソルバを用いることで，非負の$\bm{w}$が得られる．
 \begin{equation}\label{weight}
 	 \begin{bmatrix}
-	 \bm{\tilde{f}}^0_0	&\cdots	&\bm{\tilde{f}}^p_0	&\cdots	&\bm{\tilde{f}}^P_0\\
+	 \bm{\widetilde{f}}^0_0	&\cdots	&\bm{\widetilde{f}}^p_0	&\cdots	&\bm{\widetilde{f}}^P_0\\
 		\vdots		&\ddots		&\vdots		&		&\vdots			\\
-	\bm{\tilde{f}}^0_t	&\cdots	&\bm{\tilde{f}}^p_t	&\cdots	&\bm{\tilde{f}}^P_t\\
+	\bm{\widetilde{f}}^0_t	&\cdots	&\bm{\widetilde{f}}^p_t	&\cdots	&\bm{\widetilde{f}}^P_t\\
 		\vdots		&		&\vdots			&\ddots		&\vdots			\\
-	\bm{\tilde{f}}^0_T	&\cdots	&\bm{\tilde{f}}^p_T	&\cdots	&\bm{\tilde{f}}^P_T\\
+	\bm{\widetilde{f}}^0_T	&\cdots	&\bm{\widetilde{f}}^p_T	&\cdots	&\bm{\widetilde{f}}^P_T\\
 	\end{bmatrix}
 	\begin{bmatrix}
 	w_0 	\\
@@ -347,14 +347,14 @@ $n \times r$行列$\bm{S}$の特異値分解は，以下のように定義され
 	w_P
 	\end{bmatrix}=
 	\begin{bmatrix}
-	\bm{\tilde{f}}_0 	\\
+	\bm{\widetilde{f}}_0 	\\
 	\vdots \\
-	\bm{\tilde{f}}_t \\
+	\bm{\widetilde{f}}_t \\
 	\vdots \\
-	\bm{\tilde{f}}_T
+	\bm{\widetilde{f}}_T
 	\end{bmatrix}
 \end{equation}
-ここで，$\bm{\tilde{f}}_t $をシミュレーションのスナップショット行列$\bm{S}$から抜粋した$t$番目の速度$\bm{u}_t$を用いて$\bm{\tilde{f}}_t = \bm{U}\bm{u}_t$とする．$\bm{\tilde{f}}^p_t$はサンプリング点に関する値$\bm{U^p}\bm{u^p}_t$である．それぞれ次元削減後の速度ベクトルを表す．式\ref{weight}を線形方程式$\bm{A}\bm{w} = \bm{b}$とすると，$\bm{A}$は$rT\times P$行列である．
+ここで，$\bm{\widetilde{f}}_t $をシミュレーションのスナップショット行列$\bm{S}$から抜粋した$t$番目の速度$\bm{u}_t$を用いて$\bm{\widetilde{f}}_t = \bm{U}\bm{u}_t$とする．$\bm{\widetilde{f}}^p_t$はサンプリング点に関する値$\bm{U^p}\bm{u^p}_t$である．それぞれ次元削減後の速度ベクトルを表す．式\ref{weight}を線形方程式$\bm{A}\bm{w} = \bm{b}$とすると，$\bm{A}$は$rT\times P$行列である．
 空集合の状態からランダムに点集合を選び，残差のノルム$||\bm{r}||_2 = ||\bm{b} - \bm{A}\bm{w}||_2$が閾値以下になるまでサンプリング点を追加する．サンプリングされた点を点集合に追加する際に，以下の式によって求められる確率関数を用いて追加するモンテカルロ法により，更なる効率化を達成できる．
 
 \[
@@ -380,9 +380,9 @@ f(\bm{x_p}) = R(\frac{\bm{a_p}・\bm{r}}{\bm{r}・\bm{r}})
 \end{algorithm}
 
 サンプリング点の集合と重みの計算にかかる計算量は，式\ref{weight}を$P$回解くため，$O(P\times rTP^2) = O(rTP^3)$である．
-%$\bm{A}$を用いて$\bm{u}$を$\bm{\tilde{u}}$に射影するとすると，$\bm{\tilde{u}} = \bm{A^T}\bm{u}$より，以下が成り立つ．
+%$\bm{A}$を用いて$\bm{u}$を$\bm{\widetilde{u}}$に射影するとすると，$\bm{\widetilde{u}} = \bm{A^{\mathsf T}}\bm{u}$より，以下が成り立つ．
 %\[
-%	\bm{\tilde{u}} =  \begin{bmatrix}
+%	\bm{\widetilde{u}} =  \begin{bmatrix}
 %	\bm{v_0}\boldsymbol{\cdot}\bm{u}\\
 %	\bm{v_1}\boldsymbol{\cdot}\bm{u}\\
 %	\vdots\\
@@ -758,21 +758,21 @@ I_n( \bm{x}) = \alpha_n( \bm{x}) c_n( \bm{x}) + ( 1-\alpha_n( \bm{x}) ) I_{n-1}(
 ここで，行列$\bm{Q}$は$n \times m$直交行列であり，行列$\bm{R}$は$m \times m$上三角行列である．
 その後，行列$\bm{R}$を以下のように特異値分解する．
 \[
-\bm{R} = \bm{U_R} \bm{\Sigma_R} \bm{V_R}^T
+\bm{R} = \bm{U_R} \bm{\Sigma_R} \bm{V_R}^{\mathsf T}
 \]
 
-ここで，$\bm{S^T}\bm{S}$を計算する．
+ここで，$\bm{S^{\mathsf T}}\bm{S}$を計算する．
 \[
-	\bm{S^T}\bm{S} =  \bm{V_R}  \bm{\Sigma_R}^T \bm{U_R}^T\bm{Q}^T (\bm{Q}\bm{U_R} \bm{\Sigma_R} \bm{V_R}^T)
+	\bm{S^{\mathsf T}}\bm{S} =  \bm{V_R}  \bm{\Sigma_R}^{\mathsf T} \bm{U_R}^{\mathsf T}\bm{Q}^{\mathsf T} (\bm{Q}\bm{U_R} \bm{\Sigma_R} \bm{V_R}^{\mathsf T})
 \]
 $\bm{Q}と\bm{U_R}$は直交行列であることから，以下が得られる．
 
 \[
-\bm{S^T}\bm{S} = \bm{V_R}\bm{\Sigma_R^2} \bm{V_R}^T
+\bm{S^{\mathsf T}}\bm{S} = \bm{V_R}\bm{\Sigma_R^2} \bm{V_R}^{\mathsf T}
 \]
 
 \ref{sec:Subspace}にて
-$\bm{S^T}\bm{S} = \bm{V}\bm{\Sigma^2} \bm{V}^T$
+$\bm{S^{\mathsf T}}\bm{S} = \bm{V}\bm{\Sigma^2} \bm{V}^{\mathsf T}$
 となることを利用して基底を求めることができることを紹介した．同様にしてQR分解後の特異値分解を利用して基底を求めることができる．この手法により，特異値分解する行列は各列に相関がある$n \times m$行列からQR分解後の$m \times m$上三角行列になり，空間計算量と行列の条件数が改善される．
 
 \section{フラクショナルステップ法への部分空間法の適用}
@@ -808,26 +808,26 @@ $\bm{S^T}\bm{S} = \bm{V}\bm{\Sigma^2} \bm{V}^T$
 フラクショナルステップ法の線形項の計算を部分空間に射影すると，以下のようになる．
 %\[
 %\begin{aligned}
-%	\bm{U_2^T}\bm{u_2}   =  (\bm{U_2^T}\bm{V}\bm{U_1})\bm{U_1^T}\bm{u_1}				& \bm{\tilde{u_2}} = \bm{\tilde{V}}\bm{\tilde{u_1}\\
-%	\bm{P^T}\bm{b} = (\bm{P^T}\bm{W}\bm{U_2})\bm{U_2^T}\bm{u_2}						&a\\
-%	\bm{P^T}\bm{p} = (\bm{P^T}\bm{A^{-1}}\bm{P})\bm{P^T}\bm{b}						&b\\
-%	\bm{U_3^T}\bm{u_3}  =  \bm{U_2^T}\bm{u_2} - (\bm{U_3^T}\bm{Y}\bm{P})\bm{P^T}\bm{p}&c
+%	\bm{U_2^{\mathsf T}}\bm{u_2}   =  (\bm{U_2^{\mathsf T}}\bm{V}\bm{U_1})\bm{U_1^{\mathsf T}}\bm{u_1}				& \bm{\widetilde{u_2}} = \bm{\widetilde{V}}\bm{\widetilde{u_1}\\
+%	\bm{P^{\mathsf T}}\bm{b} = (\bm{P^{\mathsf T}}\bm{W}\bm{U_2})\bm{U_2^{\mathsf T}}\bm{u_2}						&a\\
+%	\bm{P^{\mathsf T}}\bm{p} = (\bm{P^{\mathsf T}}\bm{A^{-1}}\bm{P})\bm{P^{\mathsf T}}\bm{b}						&b\\
+%	\bm{U_3^{\mathsf T}}\bm{u_3}  =  \bm{U_2^{\mathsf T}}\bm{u_2} - (\bm{U_3^{\mathsf T}}\bm{Y}\bm{P})\bm{P^{\mathsf T}}\bm{p}&c
 %\end{aligned}
 %\]
 \begin{align*}
- \bm{U_2^T}\bm{u_2}	& = (\bm{U_2^T}\bm{V}\bm{U_1})\bm{U_1^T}\bm{u_1} 					&\bm{\tilde{u_2}} 		&= \bm{\tilde{V}}\bm{\tilde{u_1}}	\\
- \bm{P^T}\bm{b}		& = (\bm{P^T}\bm{W}\bm{U_2})\bm{U_2^T}\bm{u_2}        				&\bm{\tilde{b}}			&= \bm{\tilde{W}}\bm{\tilde{u_2}}	\\
- \bm{P^T}\bm{p} 		&= (\bm{P^T}\bm{A}^{-1}\bm{P})\bm{P^T}\bm{b}						&\bm{\tilde{p}}			&= \bm{\tilde{A}}\bm{\tilde{b}}\\
- \bm{U_3^T}\bm{u_3} 	&=  \bm{U_2^T}\bm{u_2} - (\bm{U_3^T}\bm{Y}\bm{P})\bm{P^T}\bm{p}	&\bm{\tilde{u_3}}		&= \bm{\tilde{u_2}}  -  \bm{\tilde{Y}}\bm{\tilde{p}}
+ \bm{U_2^{\mathsf T}}\bm{u_2}	& = (\bm{U_2^{\mathsf T}}\bm{V}\bm{U_1})\bm{U_1^{\mathsf T}}\bm{u_1} 					&\bm{\widetilde{u_2}} 		&= \bm{\widetilde{V}}\bm{\widetilde{u_1}}	\\
+ \bm{P^{\mathsf T}}\bm{b}		& = (\bm{P^{\mathsf T}}\bm{W}\bm{U_2})\bm{U_2^{\mathsf T}}\bm{u_2}        				&\bm{\widetilde{b}}			&= \bm{\widetilde{W}}\bm{\widetilde{u_2}}	\\
+ \bm{P^{\mathsf T}}\bm{p} 		&= (\bm{P^{\mathsf T}}\bm{A}^{-1}\bm{P})\bm{P^{\mathsf T}}\bm{b}						&\bm{\widetilde{p}}			&= \bm{\widetilde{A}}\bm{\widetilde{b}}\\
+ \bm{U_3^{\mathsf T}}\bm{u_3} 	&=  \bm{U_2^{\mathsf T}}\bm{u_2} - (\bm{U_3^{\mathsf T}}\bm{Y}\bm{P})\bm{P^{\mathsf T}}\bm{p}	&\bm{\widetilde{u_3}}		&= \bm{\widetilde{u_2}}  -  \bm{\widetilde{Y}}\bm{\widetilde{p}}
 \end{align*}
-ただし，$\bm{P^T}\bm{A}^{-1}\bm{P} = (\bm{P^T}\bm{A}\bm{P})^{-1}$であり，圧力ベクトルの次元数を$n$として$\bm{A}$は$n\times n$疎行列であり，$(\bm{P^T}\bm{A}\bm{P})$は$m\times m$密行列である．密行列であることに注意が必要だが，逆行列を高速に求められるため，$\bm{\tilde{A}} = (\bm{P^T}\bm{A}\bm{P})^{-1}$とする．
+ただし，$\bm{P^{\mathsf T}}\bm{A}^{-1}\bm{P} = (\bm{P^{\mathsf T}}\bm{A}\bm{P})^{-1}$であり，圧力ベクトルの次元数を$n$として$\bm{A}$は$n\times n$疎行列であり，$(\bm{P^{\mathsf T}}\bm{A}\bm{P})$は$m\times m$密行列である．密行列であることに注意が必要だが，逆行列を高速に求められるため，$\bm{\widetilde{A}} = (\bm{P^{\mathsf T}}\bm{A}\bm{P})^{-1}$とする．
 
 部分空間法によるシミュレーション計算は，前処理として基底と部分空間に射影した行列を計算する．基底を計算するステップの計算量のボトルネックは，QR分解の$O(nm^2)$である．部分空間に射影した行列を計算するステップについては，射影前のそれぞれの行列が非常に疎であるため，基底の計算ほど時間はかからない．
 
 非線形項は\ref{noLinear}にて紹介した立体求積法を用いて計算する．立体求積法に用いる基底は，外力項は$\bm{U}_0$であり，移流項は$\bm{U}_1$である．
 例えば，移流項を最終的な部分空間に射影した移流項計算は以下のようになる．
 \[
-	\bm{\tilde{u_2}} = \sum_{p=1}^Pw_p\bm{\tilde{f}}_p =   \sum_{p=1}^Pw_p(\bm{U^p_1})^T\mathcal{F}_p(\bm{\tilde{u_1}})
+	\bm{\widetilde{u_2}} = \sum_{p=1}^Pw_p\bm{\widetilde{f}}_p =   \sum_{p=1}^Pw_p(\bm{U^p_1})^{\mathsf T}\mathcal{F}_p(\bm{\widetilde{u_1}})
 \]
 
 \section{部分空間法の課題}
@@ -841,20 +841,29 @@ $\bm{S^T}\bm{S} = \bm{V}\bm{\Sigma^2} \bm{V}^T$
 部分空間法の基底の計算に用いるスナップショットを$d$分割することによって，基底1つの計算負荷$O(nm^2)$が$\frac{1}{d^2}$に削減される．アルゴリズム全体では$d$回計算するため，計算負荷は$\frac{1}{d}$になることが期待できる．行列の射影計算も分割した基底ごとに行う．空間計算量のボトルネックは分割前のスナップショット行列であり，分割前と変わらない．しかし，特異値分解する行列のサイズが$\frac{1}{d}$になることで，GPUを用いた大規模高速計算と併用する場合，GPUメモリの削減が期待できる．空間計算量をGPUが一度に扱うことができる値まで削減することで，並列計算による高速化が期待できる一方で，特異値分解の回数が$d$倍になることで，CPU-GPU間のデータ通信の時間が増加することに注意が必要である．
 
 \chapter{計算機実験}
-本研究では，c++と線形代数ライブラリEigenを用いて，文献\cite{fedkiw}の煙の流体シミュレーションを行うソフトウェアを実装した．立方体形状のシミュレーション空間の底面中心から，煙が立ち上る様子をシミュレーションし，そのデータを元に部分空間法による次元削減を行なった．立体求積法のNNLSソルバにはEigenのUnsupportedライブラリのソルバを用いた．また，コンピュータグラフィックスライブラリOpenGLを用いてスライスベースのボリュームレンダリングを行い，実験結果を可視化するソフトウェアを実装した．これによって得られたシミュレーション結果と，提案手法の計算負荷と削減後のデータの精度について調査を行った．計算負荷の評価は，部分空間法の基底を計算する前処理と行列の射影について実行時間を計測した．データの精度は非線形項の部分空間への射影手法\cite{projection_base}を参考に，L2誤差を用いて評価を行なった．ここでL2誤差は次元削減前後のベクトル$\bm{u}$と$\bm{\tilde{u}}$について，以下のように表される．また，基底の精度を累積誤差を用いて評価した．
+本研究では，C++と線形代数ライブラリEigenを用いて，文献\cite{fedkiw}の煙の流体シミュレーションを行うソフトウェアを実装した．立方体形状のシミュレーション空間の底面中心から，煙が立ち上る様子をシミュレーションし，そのデータを元に部分空間法による次元削減を行なった．また，シミュレーション空間中央に障害物を設置した状況でもシミュレーションを行った．立体求積法のNNLSソルバにはEigenのUnsupportedライブラリのソルバを用いた．また，コンピュータグラフィックスライブラリOpenGLを用いてスライスベースのボリュームレンダリングを行い，実験結果を可視化するソフトウェアを実装した．これによって得られたシミュレーション結果と，提案手法の計算負荷と削減後のデータの精度について調査を行った．計算負荷の評価は，部分空間法の基底を計算する前処理と行列の射影について実行時間を計測した．データの精度は相対誤差を用いて評価を行なった．ここで相対誤差$L_2$は次元削減前後のベクトル$\bm{u}$と$\bm{\widetilde{u}}$について，以下のように表される．また，基底の精度を累積誤差を用いて評価した．
 
 \[
-L_2 = \frac{|| \bm{u} - \bm{\tilde{u}} ||_2}{||  \bm{u} ||_2}
+L_2 = \frac{|| \bm{u} - \bm{\widetilde{u}} ||_2}{||  \bm{u} ||_2}
 \]
 
+表\ref{tab:basis}は基底の計算にかかった実行時間，表\ref{tab:projection}は行列の射影にかかった実行時間を解像度と分割数ごとに計測した結果である．基底の計算については分割数が大きくなるほど高速化に成功している．一方で，行列の射影に関しては，低解像度では分割数が大きいほど高速になっているが，高解像度における目立った高速化は見られなかった．
+
+表\ref{tab:ruiseki}は，基底の累積寄与率を解像度と分割数ごとに計測した結果である．分割数が大きい基底の累積寄与率は，最大値最小値ともに大きくなっているのがわかる．
+
+また，図\ref{fig:128error}，図\ref{fig:128error_obstacle}は，解像度$128^3$における，流速の相対誤差の時間推移を表したグラフである．障害物の有無に関わらず，スナップショットの分割の直後に相対誤差が減少している．また，流れの時間変化が少ないシミュレーションの後半では，分割なしと比べて精度が向上している．図\ref{fig:n128_obst_vel}は，解像度$128^3$，障害物あり，分割数2において，相対誤差が大きく変動した$100$フレーム目と$101$フレーム目における位置ごとの速度誤差を計算し，誤差に基づいて流速に色をつけたものである．誤差が小さい部分は青く，誤差が大きい部分は赤く色をつけており，平面$z=63$上のもののみを描画している．特に，画像中央から中央上部において誤差が小さくなっていることがわかる．
+
+図\ref{fig:n128_f99}，\ref{fig:n128_f100}は，シミュレーション結果のレンダリング画像のうち，誤差が大きく変化した100フレーム目と101フレーム目のもので，上段が元のシミュレーション結果，中段が分割なし，下段が分割数2のものである．また，図\ref{fig:n128_f99}，\ref{fig:n128_f100}は，上記のレンダリング画像を密度の誤差によって色付けしたものである．誤差が小さい部分は青く，誤差が大きい部分は赤く色をつけている．図\ref{fig:n128_f99_obstacle}，\ref{fig:n128_f100_obstacle}は，障害物ありのレンダリング結果である．流速の誤差に基づいて，煙の密度分布に誤差が発生しているのがわかる．特に障害物ありの結果において，障害物衝突後の煙の流れの誤差が大きくなっていることが確認できる．また，分割2の方が誤差が少なく，元のシミュレーションに近い結果になっている．
+
+非線形項については追加の実験を行ったところ，サンプリングされる点によって重みの計算が発散する場合がある．計算時間はスナップショット数については線形時間であるが，サンプリングする点の数が減ることによりNNLSソルバの反復回数が減ることで，実質的に高速化が見込めることもあった．
 \begin {table}[htbp]
     \centering
   \caption{基底計算における解像度と分割数ごとの実行時間(秒)}
   \label{tab:basis}
   \begin {tabular}{rrrrr} \hline
     \multicolumn{1}{c}{解像度} 					&\multicolumn{1}{c}{分割なし} 		&\multicolumn{1}{c}{分割数2}			&\multicolumn{1}{c}{分割数4} 		&\multicolumn{1}{c}{分割数10}\\ \hline
-    $64^3$ 					& 23.428 			&14.564	 		&8.981	 	&3.780\\
-    $128^3$ 				& 190.541 		&118.489 			& 69.615 		&33.427\\ \hline
+    $64^3$ 					& 23.43 			&14.56	 		&8.98	 	&3.78\\
+    $128^3$ 				& 190.54 			&118.49 			& 69.62 		&33.43\\ \hline
   \end {tabular}
 \end {table}
 
@@ -865,8 +874,8 @@ L_2 = \frac{|| \bm{u} - \bm{\tilde{u}} ||_2}{||  \bm{u} ||_2}
   \label{tab:projection}
   \begin {tabular}{rrrrr} \hline
     \multicolumn{1}{c}{解像度} 					&\multicolumn{1}{c}{分割なし} 		&\multicolumn{1}{c}{分割数2}			&\multicolumn{1}{c}{分割数4} 		&\multicolumn{1}{c}{分割数10}\\ \hline
-    $64^3$ 					& 3.514 			&2.823	 		&0.846	 		&0.666\\
-    $128^3$ 				& 5.206 			& 3.061 			& 3.050 			&3.975\\ \hline
+    $64^3$ 					& 3.51 			&2.82	 		&0.85	 		&0.67\\
+    $128^3$ 				& 5.21 			& 3.06 			& 3.05 			&3.98\\ \hline
   \end {tabular}
 \end {table}
 
@@ -895,46 +904,59 @@ L_2 = \frac{|| \bm{u} - \bm{\tilde{u}} ||_2}{||  \bm{u} ||_2}
 %9 0.996132
 \begin {table}[htbp]
     \centering
-  \caption{基底の累積寄与率の最大値と最小値}
+  \caption{基底の累積寄与率の最小値と最大値}
   \label{tab:ruiseki}
   \begin {tabular}{rrrrr} \hline
     \multicolumn{1}{c}{解像度} 					&\multicolumn{1}{c}{分割なし} 		&\multicolumn{1}{c}{分割数2}			&\multicolumn{1}{c}{分割数4} 		&\multicolumn{1}{c}{分割数10}\\ \hline
     $64^3$ 									& 0.969886					& 0.972114						&0.979512	 				&0.992557				\\
     										&							&0.985917						&0.990411					&0.996893				\\ \hline
-    $128^3$ 								&		 					&	 							&	 						&0.988967				\\ 
-    										&							&								&							&0.996132				\\	\hline
+    $128^3$ 								&0.940446 					&0.954735						&0.971454	 				&0.988967				\\ 
+    										&							&0.96489							&0.976306					&0.996132				\\	\hline
   \end {tabular}
 \end {table}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=140mm]{images/64error.png}
-\caption{$解像度64^3におけるL_2誤差$}
-\label{fig:64error}
-\end{figure}
+%128 dev10 obstacle 0.988735
+%128 dev10 obstacle 0.9941
+%\begin{figure}[htbp]
+%\centering
+%\includegraphics[width=140mm]{images/64error.png}
+%\caption{$解像度64^3，障害物なしにおける相対誤差$}
+%\label{fig:128error}
+%\end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=140mm]{images/128error.png}
-\caption{$解像度128^3におけるL_2誤差$}
-\label{fig:128error}
+\caption{$解像度128^3，障害物ありにおける相対誤差$}
+\label{fig:128error_obstacle}
 \end{figure}
 
 \begin{figure}[htbp]
-\caption{$解像度64^3$，分割数10における，流速の分布と誤差}
-\label{fig:n128_vel}
 \centering
-\includegraphics[width=140mm]{images/velocity_plot_100.png}
-\subcaption{100フレーム目}
-\includegraphics[width=140mm]{images/velocity_plot_101.png}
-\subcaption{101フレーム目}
+\includegraphics[width=140mm]{images/128error_obstacle.png}
+\caption{$解像度128^3，障害物ありにおける相対誤差$}
+\label{fig:128error_obstacle}
 \end{figure}
 
-表\ref{tab:basis}は基底の計算にかかった実行時間，表\ref{tab:projection}は行列の射影にかかった実行時間を解像度と分割数ごとに計測した結果である．基底の計算については分割数が大きくなるほど高速化に成功している．一方で，行列の射影に関しては，低解像度では分割数が大きいほど高速になっているが，高解像度における目立った高速化は見られなかった．
 
-また，図\ref{fig:64error}，図\ref{fig:128error}は，解像度$64^3$，$128^3$における，流速の$L_2$誤差の時間推移を表したグラフである．スナップショットの分割の直後に$L_2$誤差が減少している．また，流れの時間変化が少ないシミュレーションの後半では，分割なしと比べて精度が向上している．図\ref{fig:n128_vel}は分割数2において速度誤差が大きく変動した$99$フレーム目と$100$フレーム目における位置ごとの速度誤差を計算し，誤差に基づいて流速に色をつけたものである．誤差が小さい部分は青く，誤差が大きい部分は赤く色をつけており，平面$z=63$上のもののみを描画している．特に，画像中央から中央上部において誤差が小さくなっていることがわかる．図\ref{fig:n128_f99}，\ref{fig:n128_f100}は，$L_2$シミュレーション結果のレンダリング画像のうち，誤差が大きく変化した99フレーム目と100フレーム目のもので，上段が元のシミュレーション結果，中段が分割なし，下段が分割数2のものである．また，図\ref{fig:n128_f99}，\ref{fig:n128_f100}は，上記のレンダリング画像を密度の誤差によって色付けしたものである．誤差が小さい部分は青く，誤差が大きい部分は赤く色をつけている．流速の誤差に基づいて，煙の密度分布に誤差が発生しているのがわかる．
+%\begin{figure}[htbp]
+%\caption{$解像度64^3$，分割数10における，流速の分布と誤差}
+%\label{fig:n128_vel}
+%\centering
+%\includegraphics[width=140mm]{images/velocity_plot_100.png}
+%\subcaption{100フレーム目}
+%\includegraphics[width=140mm]{images/velocity_plot_101.png}
+%\subcaption{101フレーム目}
+%\end{figure}
 
-非線形項については追加の実験を行ったところ，サンプリングされる点によって重みの計算が発散する場合がある．計算時間はスナップショット数については線形時間であるが，サンプリングする点の数が減ることによりNNLSソルバの反復回数が減ることで，実質的に高速化が見込めることもあった．
+\begin{figure}[htbp]
+\caption{$解像度128^3$，分割数2，障害物ありのシミュレーションにおける，流速の分布と誤差}
+\label{fig:n128_obst_vel}
+\centering
+\includegraphics[width=140mm]{images/velocity_plot_100_obst.png}
+\subcaption{100フレーム目}
+\includegraphics[width=140mm]{images/velocity_plot_101_obst.png}
+\subcaption{101フレーム目}
+\end{figure}
 
 %また，本手法の課題として，実験に用いるシミュレーションデータの質に左右される．シミュレーションデータ内で計算が発散していない場合でも，部分空間に射影することで計算が発散し，意味のある結果が得られない場合がある．以下は外力項のパラメータを高く設定した例である．
 
@@ -945,7 +967,7 @@ L_2 = \frac{|| \bm{u} - \bm{\tilde{u}} ||_2}{||  \bm{u} ||_2}
 %\end{figure}
 
 \begin{figure}[htbp]
-\caption{$解像度128^3，99フレーム目$}
+\caption{$解像度128^3，障害物なし，100フレーム目$}
 \label{fig:n128_f99}
 \centering
 \includegraphics[width=65mm]{images/n64_origin_f99.png}
@@ -975,7 +997,7 @@ L_2 = \frac{|| \bm{u} - \bm{\tilde{u}} ||_2}{||  \bm{u} ||_2}
 \end{figure}
 
 \begin{figure}[htbp]
-\caption{$解像度128^3，100フレーム目$}
+\caption{$解像度128^3，障害物なし，101フレーム目$}
 \label{fig:n128_f100}
 \centering
 \includegraphics[width=65mm]{images/n64_origin_f100.png}
@@ -999,6 +1021,72 @@ L_2 = \frac{|| \bm{u} - \bm{\tilde{u}} ||_2}{||  \bm{u} ||_2}
 
 \begin{minipage}[b]{0.45\linewidth}
 \includegraphics[width=65mm]{images/n64_div2_f100_color.png}
+\subcaption{分割数2，誤差による色付け}
+\end{minipage}
+\end{tabular}
+\end{figure}
+
+%\begin{figure}[htbp]
+%\includegraphics[width=140mm]{images/n128_f99_truth.png}
+%\caption{$解像度128^3，ground truth，99フレーム目$}
+%\label{fig:n128_f99_div4}
+%\end{figure}
+
+\begin{figure}[htbp]
+\caption{$解像度128^3，障害物あり，100フレーム目$}
+\label{fig:n128_f99_obstacle}
+\centering
+\includegraphics[width=65mm]{images/n128_origin_f99_obstacle.png}
+\subcaption{gruound truth}
+
+\begin{tabular}{cc}
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=65mm]{images/n128_dev1_f99_obstacle.png}
+\subcaption{分割数1}
+\end{minipage}
+
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=65mm]{images/n128_dev1_f99_obstacle_color.png}
+\subcaption{分割数1，誤差による色付け}
+\end{minipage}
+\\
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=65mm]{images/n128_dev2_f99_obstacle.png}
+\subcaption{分割数2}
+\end{minipage}
+
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=65mm]{images/n128_dev2_f99_obstacle_color.png}
+\subcaption{分割数2，誤差による色付け}
+\end{minipage}
+\end{tabular}
+\end{figure}
+
+\begin{figure}[htbp]
+\caption{$解像度128^3，障害物あり，101フレーム目$}
+\label{fig:n128_f100_obstacle}
+\centering
+\includegraphics[width=65mm]{images/n128_origin_f100_obstacle.png}
+\subcaption{gruound truth}
+
+\begin{tabular}{cc}
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=65mm]{images/n128_dev1_f100_obstacle.png}
+\subcaption{分割数1}
+\end{minipage}
+
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=65mm]{images/n128_dev1_f100_obstacle_color.png}
+\subcaption{分割数1，誤差による色付け}
+\end{minipage}
+\\
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=65mm]{images/n128_dev2_f100_obstacle.png}
+\subcaption{分割数2}
+\end{minipage}
+
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=65mm]{images/n128_dev2_f100_obstacle_color.png}
 \subcaption{分割数2，誤差による色付け}
 \end{minipage}
 \end{tabular}
@@ -1035,13 +1123,17 @@ L_2 = \frac{|| \bm{u} - \bm{\tilde{u}} ||_2}{||  \bm{u} ||_2}
 %分割なしと比べて精度が向上している点については，分割なしでは抽出されなかったモードを抽出することができていることによって，シミュレーション後半の流れを詳細にシミュレーションできていると考えられる．特異値分解を用いた次元削減はの条件数は，行列を構成する列ベクトル同士の相関が強いほど悪くなることが知られている．本実験のシミュレーションの開始直後においては，タイムステップごとの流速や圧力の変化が大きくスナップショット間の相関関係が弱い．一方でシミュレーション終了付近においては，タイムステップごとの流速や圧力の変化が大きくスナップショット間の相関関係が強い．スナップショットの分割によって各基底の最大特異値が小さくなることによって，分割前と比較してシミュレーション後半に対応する特異値に関する条件数が改善され，詳細にシミュレーションできていると考えられる．
 
 
-部分空間法において，基底による近似誤差が常に発生する．特に急激な流れの変動があった場合，元のデータを十分に近似するには多数のモードを用いる必要があり，用いる基底が固定されていると元の流れを再現できず，誤差が発生する．これに対して，基底を切り替えたとき精度が誤差が大きく減少する．これはスナップショットの範囲を限定した基底を用いることで，流れの特徴をよりよく再現することができたためと考えられる．一方で，流速の基底の切り替えに伴う精度向上によるシミュレーションの精度は，密度分布を観察すると影響が小さい．これは，部分空間法による誤差は蓄積していくものであり，局所的に誤差が小さくなることによる影響が小さいためと考えられる．
+部分空間法において，基底による近似誤差が常に発生する．特に急激な流れの変動があった場合，元のデータを十分に近似するには多数のモードを用いる必要があり，用いる基底が固定されていると元の流れを再現できず，誤差が発生する．これに対して，基底を切り替えたとき精度が誤差が大きく減少する．これはスナップショットの範囲を限定した基底を用いることで，流れの特徴をよりよく再現することができたためと考えられる．特に障害物ありのシミュレーションにおいて，障害物との衝突により流れが急速に変化するため，基底を切り替えたことでより良い再現ができたと考えられる．一方で，速度の局所的な精度向上は，密度分布にはすぐに反映されない．これは密度は流速に従って逐次的に変化するためである．
+
+分割後の累積寄与率は分割前よりも大きいのに対して，シミュレーションの相対誤差は分割後の方が大きい場合がある．これは，累積寄与率は直接シミュレーションの誤差を測る指標ではないためである．特に抽出するモードが細部の流れを再現できない場合に誤差が大きくなる可能性がある．
+
+
 \chapter{終わりに}
-流体シミュレーションにおける部分空間法の前処理にかかる計算時間に対し，スナップショットを分割することによって高速化する手法を提案した．特に基底計算については分割数に応じた高速化を達成し，前処理全体の高速化を達成した．スナップショット分割によるシミュレーションの結果に関して，$L_2$誤差では差が認められたものの，見た目の上では問題ない範囲であった．
+流体シミュレーションにおける部分空間法の前処理にかかる計算時間に対し，スナップショットを分割することによって高速化する手法を提案した．特に基底計算については分割数に応じた高速化を達成し，前処理全体の高速化を達成した．スナップショット分割によるシミュレーションの結果の精度に関しては，既存手法と提案手法の間の相対誤差を計算し，煙のアニメーションの誤差について計測を行った．
 
 %今後の研究として，最適なスナップショット分割を決定する手法が考えられる．
 今後の研究として，GPUを用いた大規模高速計算の併用などを用いた高速化が挙げられる．
-部分空間法の高速化について，シミュレーション結果を離散コサイン変換(DCT)を用いて圧縮する手法\cite{subspaceDCT}が研究されている．シミュレーション結果を離散コサイン変換を用いて圧縮し，必要に応じて展開することで，GPUを用いた大規模高速計算を改善する手法である．提案した手法を組み込むことで，より高速な基底計算を達成できるかについて検討する．
+部分空間法の高速化について，シミュレーション結果を離散コサイン変換(DCT)を用いて圧縮する手法\cite{subspaceDCT}が研究されている．この手法はシミュレーション結果を離散コサイン変換を用いて圧縮し，必要に応じて展開することで，GPUを用いた大規模高速計算を改善する手法である．提案した手法を組み込むことで，より高速な基底計算を達成できるかについて検討する．
 
 
 %謝辞
@@ -1053,58 +1145,36 @@ L_2 = \frac{|| \bm{u} - \bm{\tilde{u}} ||_2}{||  \bm{u} ||_2}
 %参考文献
 \begin{thebibliography}{99}
 \addcontentsline{toc}{chapter}{参考文献}
-\bibitem{EOL}
-Y. Teng, David I.W. Levin, T. Kim.Eulerian Solid-Fluid Coupling. \textit{ACM Transactions on Graphics}, 35, (6):  200:1--200:8, 2016.
-
-\bibitem{MAC}
-F. H. Harlow and J. E. Welch. Numerical calculation of time-dependent viscous incompressible flow of fluid with a free surface. \textit{Physics of Fluids}, 8(12): 2182--2189, 1965.
+\bibitem{subspaceDCT}
+A. D. Jones, P. Sen, and T. Kim. Compressing fluid subspaces. \textit{Proceedings of the ACM SIGGRAPH/Eurographics Symposium on Computer Animation}, 77--84, 2016.
 
 \bibitem{Chorin}
 A. J. Chorin. Numerical Solution of the Navier-Stokes Equations. \textit{Mathematics of Computation}, 22(104): 745--762, 1968.
 
-\bibitem{FLIP}
-J.U.Brackbill. D.B.KotheH.M.Ruppel. Flip: A low-dissipation, particle-in-cell method for fluid flow, \textit{Computer Physics Communications}, 48(1),25--38, January 1988.
+\bibitem{projection_base}
+A. Treuille, A. Lewis, and Z. Popovic. Model Reduction for Real-time Fluids. \textit{ACM Transactions on Graphics},25(3)：826--834, 2006.
 
 \bibitem{APIC}
-K. Iwama, A. Kawachi, and S. Yamashita, The affine particle-in-cell method, IPSJ Digital Courier, \textit{ACM Transactions on Graphics}, 82,(4), 51：1--51：10 August 2015.
+C. Jiang, C. Schroeder, A. Selle, J. Teran, A. Stomakhin, The affine particle-in-cell method. \textit{ACM Transactions on Graphics},34(4)：51:1 -- 51:10, 2015.
 
-\bibitem{fedkiw}
-R. Fedkiew, J. stam, H. Jensen. Visual simulation of smoke. In \textit{Proceedings of SIGGRAPH 01}, 15--22, 2001.
+\bibitem{MAC}
+F. H. Harlow and J. E. Welch. Numerical calculation of time-dependent viscous incompressible flow of fluid with a free surface. \textit{Physics of Fluids}, 8(12): 2182--2189, 1965.
 
 \bibitem{stam}
 J. Stam. Stable Fluids. In \textit{SIGGRAPH 99 Conference Proceedings, Annual Conference Series}, pages 121--128, 1999.
 
-\bibitem{projection_base}
-A. Treuille, A. Lewis, and Z. Popovic. Model Reduction for Real-time Fluids. \textit{ACM Transactions on Graphics},25(3)：826--834, 2006.
+\bibitem{FLIP}
+J. U. Brackbill. D. B. KotheH.M.Ruppel. Flip: A low-dissipation, particle-in-cell method for fluid flow, \textit{Computer Physics Communications}, 48(1),25--38, 1988.
+
+\bibitem{fedkiw}
+R. Fedkiew, J. stam, H. Jensen. Visual simulation of smoke. In \textit{Proceedings of SIGGRAPH 01}, 15--22, 2001.
 
 \bibitem{subspace}
 T. Kim, J. Delaney. Subspace Fluid Re-Simulation. \textit{ACM Transactions on Graphics},32(4): 62：1--62：9, 2013.
 
-\bibitem{subspaceDCT}
-A. Jones, P. Sen, and T. Kim. Compressing fluid subspaces. \textit{Proceedings of the ACM SIGGRAPH/Eurographics Symposium on Computer Animation}, 77--84, 2016.
-
-%\bibitem{tile}
-%M. Wicke, M. Stanton, and A. Treuille, Modular Bases for Fluid Dynamics. \textit{ACM Transactions on Graphics}, 39:1--39:8, 2009.
+\bibitem{EOL}
+Y. Teng, David I.W. Levin, T. Kim.Eulerian Solid-Fluid Coupling. \textit{ACM Transactions on Graphics}, 35, (6):  200:1--200:8, 2016.
 
 \end{thebibliography}
 
-%関連論文, 仕様はthebibliographyと同一. 
-%\begin{therelatedreference}{99}
-%\end{therelatedreference}
-
-
-%偏微分演算子を前進差分$\frac{\partial}{\partial \bm{x}}\bm{u} (\bm{x},t)  = \frac{\bm{u} (\bm{x}+\varDelta \bm{x},t)  - \bm{u} (\bm{x},t) }{\varDelta \bm{x}}$を用いて離散化すると,
-%$$\frac{\partial}{\partial t}\bm{u} (\bm{x},t)  =  -\bm{u} (\bm{x},t) \frac{\bm{u} (\bm{x}+\varDelta \bm{x},t)  - \bm{u} (\bm{x},t) }{\varDelta \bm{x}}$$
-%が得られる．
-%二変数のテーラー展開$f (a+h,b+k)  \fallingdotseq \sum\limits_{t=0}^n \frac{1}{t!} (h\frac{\partial}{\partial \bm{x}} + k\frac{\partial}{\partial y}) ^t f (a,b) $を二次まで行い，式を整理すると，
-%$$\frac{\partial}{\partial t}\bm{u}(\bm{x},t)= -\frac{1}{2!\varDelta \bm{x}}\bm{u}(\bm{x},t)\left((\bm{u} (\bm{x},t) +\varDelta t\frac{\partial}{\partial \bm{x}}\bm{u} (\bm{x},t)+(\varDelta \bm{x})^2\frac{\partial^2}{\partial \bm{x}^2}\bm{u} (\bm{x},t)  \right) $$
-            
-%$$\frac{\partial}{\partial t}\bm{u} (\bm{x},t)  =  -\bm{u} (\bm{x},t) \left(\frac{\partial}{\partial \bm{x}}\bm{u} (\bm{x},t)  + \varDelta \bm{x}\frac{\partial^2}{\partial \bm{x}^2}\bm{u} (\bm{x},t)  \right) $$
-
-%$$ \frac{\partial}{\partial t}\bm{u} (\bm{x},t)  =  -\bm{u} (\bm{x},t) \frac{\partial}{\partial \bm{x}}\bm{u} (\bm{x},t)  -\bm{u} (\bm{x},t) \varDelta \bm{x}\frac{\partial^2}{\partial \bm{x}^2}\bm{u} (\bm{x},t) $$
-
-%が得られる．ここで,$ -\bm{u} (\bm{x},t) \varDelta \bm{x} = \mu$とし,$\frac{\partial^2}{\partial \bm{x}^2}\bm{u} (\bm{x},t)  = \nabla^2\bm{u} (\bm{x},t) $とすれば,
-%$$\frac{\partial}{\partial t}\bm{u} (\bm{x},t)  =  -\bm{u} (\bm{x},t) \frac{\partial}{\partial \bm{x}}\bm{u} (\bm{x},t)  +\mu\nabla^2\bm{u} (\bm{x},t) ) $$
-
-%が得られる．式( \ref{eq:uncalculated_pressure_before}) と式( \ref{eq:uncalculated_pressure_before}) を比較すると，右辺の二項目が数値拡散であること，そして数値拡散は粘性項の式とよく似ていることがわかる．
 \end{document}
