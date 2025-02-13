@@ -178,7 +178,7 @@ L_2 = \frac{|| \bm{u} - \bm{\widetilde{u}} ||_2}{||  \bm{u} ||_2}
 
 表\ref{tab:ruiseki}は，基底の累積寄与率を解像度と分割数ごとに計測した結果である．分割数が大きい基底の累積寄与率は，最大値最小値ともに大きくなっているのがわかる．
 
-また，図\ref{fig:128error}は，解像度$128^3$における，流速の$L_2$誤差の時間推移を表したグラフである．スナップショットの分割の直後に$L_2$誤差が減少している．また，流れの時間変化が少ないシミュレーションの後半では，分割なしと比べて精度が向上している．図\ref{fig:n128_f99}は，シミュレーション結果のレンダリング画像のうち，誤差が大きく変化した99フレーム目と100フレーム目のもので，上段が元のシミュレーション結果，中段が分割なし，下段が分割数2のものである．また，密度の誤差によって誤差が小さい部分は青く，誤差が大きい部分は赤く色をつけている．流速の誤差に基づいて，煙の密度分布に誤差が発生しているのがわかる．
+また，図\ref{fig:128error}は，解像度$128^3$における，流速の$L_2$誤差の時間推移を表したグラフである．スナップショットの分割の直後に$L_2$誤差が減少している．また，流れの時間変化が少ないシミュレーションの後半では，分割なしと比べて精度が向上している．図\ref{fig:n128_f99}は，シミュレーション結果のレンダリング画像のうち，誤差が大きく変化した100フレーム目と101フレーム目のもので，上段が元のシミュレーション結果，中段が分割なし，下段が分割数2のものである．また，密度の誤差によって誤差が小さい部分は青く，誤差が大きい部分は赤く色をつけている．流速の誤差に基づいて，煙の密度分布に誤差が発生しているのがわかる．
 
 非線形項については追加の実験を行ったところ，サンプリングされる点によって重みの計算が発散する場合がある．計算時間はスナップショット数については線形時間であるが，サンプリングする点の数が減ることによりNNLSソルバの反復回数が減ることで，実質的に高速化が見込めることもあった．
 
@@ -218,8 +218,8 @@ L_2 = \frac{|| \bm{u} - \bm{\widetilde{u}} ||_2}{||  \bm{u} ||_2}
 \end {table}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=80mm]{images/128error.png}
-\caption{$解像度128^3におけるL_2誤差$}
+\includegraphics[width=80mm]{images/128error_obstacle.png}
+\caption{$解像度128^3における相対誤差$}
 \label{fig:128error}
 \end{figure}
 
@@ -235,38 +235,38 @@ L_2 = \frac{|| \bm{u} - \bm{\widetilde{u}} ||_2}{||  \bm{u} ||_2}
 \label{fig:n128_f99}
 \begin{tabular}{cc}
 \begin{minipage}[b]{0.45\linewidth}
-\includegraphics[width=35mm]{images/n64_origin_f99.png}
-\subcaption{gruound truth 99フレーム目}
-\label{fig:ground_truth_99}
-\end{minipage}
-
-\begin{minipage}[b]{0.45\linewidth}
-\includegraphics[width=35mm]{images/n64_origin_f100.png}
+\includegraphics[width=35mm]{images/n128_origin_f99_obstacle.png}
 \subcaption{gruound truth 100フレーム目}
 \label{fig:ground_truth_99}
 \end{minipage}
 
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=35mm]{images/n128_origin_f100_obstacle.png}
+\subcaption{gruound truth 101フレーム目}
+\label{fig:ground_truth_99}
+\end{minipage}
+
 \\
 \begin{minipage}[b]{0.45\linewidth}
-\includegraphics[width=35mm]{images/n64_div1_f99_color.png}
-\subcaption{分割数1，99フレーム目}
-\label{fig:div1_f100}
-\end{minipage}
-\begin{minipage}[b]{0.45\linewidth}
-\includegraphics[width=35mm]{images/n64_div1_f100_color.png}
+\includegraphics[width=35mm]{images/n128_dev1_f99_obstacle_color.png}
 \subcaption{分割数1，100フレーム目}
 \label{fig:div1_f100}
 \end{minipage}
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=35mm]{images/n128_dev1_f100_obstacle_color.png}
+\subcaption{分割数1，101フレーム目}
+\label{fig:div1_f100}
+\end{minipage}
 \\
 \begin{minipage}[b]{0.45\linewidth}
-\includegraphics[width=35mm]{images/n64_div2_f99_color.png}
-\subcaption{分割数2，99フレーム目}
+\includegraphics[width=35mm]{images/n128_dev2_f99_obstacle_color.png}
+\subcaption{分割数2，100フレーム目}
 \label{fig:div2_f99}
 \end{minipage}
 
 \begin{minipage}[b]{0.45\linewidth}
-\includegraphics[width=35mm]{images/n64_div2_f100_color.png}
-\subcaption{分割数2，100フレーム目}
+\includegraphics[width=35mm]{images/n128_dev2_f100_obstacle_color.png}
+\subcaption{分割数2，101フレーム目}
 \label{fig:div2_f100}
 \end{minipage}
 \end{tabular}
@@ -282,7 +282,7 @@ L_2 = \frac{|| \bm{u} - \bm{\widetilde{u}} ||_2}{||  \bm{u} ||_2}
 
 %\end{comment}
 \section{考察}
-部分空間法において，基底による近似誤差が常に発生する．特に急激な流れの変動があった場合，元のデータを十分に近似するには多数のモードを用いる必要があり，用いる基底が固定されていると元の流れを再現できず，誤差が発生する．これに対して，基底を切り替えたとき精度が誤差が大きく減少する．これはスナップショットの範囲を限定した基底を用いることで，流れの特徴をよりよく再現することができたためと考えられる．一方で，流速の基底の切り替えに伴う精度向上によるシミュレーションの精度は，密度分布を観察すると影響が小さい．これは，部分空間法による誤差は蓄積していくものであり，局所的に誤差が小さくなることによる影響が小さいためと考えられる．
+部分空間法において，基底による近似誤差が常に発生する．特に急激な流れの変動があった場合，元のデータを十分に近似するには多数のモードを用いる必要があり，用いる基底が固定されていると元の流れを再現できず，誤差が発生する．これに対して，基底を切り替えたとき精度が誤差が大きく減少する．これはスナップショットの範囲を限定した基底を用いることで，流れの特徴をよりよく再現することができたためと考えられる．特に障害物ありのシミュレーションにおいて，障害物との衝突により流れが急速に変化するため，基底を切り替えたことでより良い再現ができたと考えられる．一方で，速度の局所的な精度向上は，密度分布にはすぐに反映されない．これは密度は流速に従って逐次的に変化するためである．
 
 分割後の累積寄与率は分割前よりも大きいのに対して，シミュレーションの相対誤差は分割後の方が大きい場合がある．これは，累積寄与率は直接シミュレーションの誤差を測る指標ではないためである．特に抽出するモードが細部の流れを再現できない場合に誤差が大きくなる可能性がある．
 
