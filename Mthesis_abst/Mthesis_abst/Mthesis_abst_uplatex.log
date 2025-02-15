@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.1-u1.30-230214-2.6 (utf8.uptex) (TeX Live 2024) (preloaded format=uplatex 2024.3.22)  13 FEB 2025 22:00
+This is e-upTeX, Version 3.141592653-p4.1.1-u1.30-230214-2.6 (utf8.uptex) (TeX Live 2024) (preloaded format=uplatex 2024.3.22)  14 FEB 2025 13:32
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -378,25 +378,25 @@ LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
-(Font)              scaled to size 6.47278pt on input line 85.
+(Font)              scaled to size 6.47278pt on input line 84.
 LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
-(Font)              scaled to size 4.62341pt on input line 85.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 85.
+(Font)              scaled to size 4.62341pt on input line 84.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 84.
 
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 85.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 84.
 
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 6.47278pt on input line 85.
+(Font)              scaled to size 6.47278pt on input line 84.
 LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 4.62341pt on input line 85.
+(Font)              scaled to size 4.62341pt on input line 84.
  [1
 
 
@@ -474,17 +474,22 @@ LaTeX Font Info:    Font shape `JY2/mc/m/it' in size <10> not available
 LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
 (Font)              scaled to size 9.24683pt on input line 298.
 
-Underfull \hbox (badness 3977) in paragraph at lines 307--308
-[]\OT1/cmr/m/n/10 T. Kim, J. De-laney. Sub-space Fluid Re-
+Underfull \hbox (badness 1117) in paragraph at lines 307--308
+[]\OT1/cmr/m/n/10 T. Kim and J. De-laney. Sub-space fluid re-
  []
 
 
-Underfull \hbox (badness 7667) in paragraph at lines 307--308
-\OT1/cmr/m/n/10 Simulation. \OT1/cmr/m/it/10 ACM Trans-ac-tions on Graph-
+Underfull \hbox (badness 2096) in paragraph at lines 307--308
+\OT1/cmr/m/n/10 simulation. \OT1/cmr/m/it/10 ACM Trans-ac-tions on Graph-ics\OT
+1/cmr/m/n/10 ,
  []
 
 Package plautopatch Info: No additional packages loaded on input line 310.
-[4] (./Mthesis_abst_uplatex.aux)
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [4]
+(./Mthesis_abst_uplatex.aux)
  ***********
 pLaTeX2e <2023-02-14u04>+1, based on
 LaTeX2e <2023-11-01> patch level 1
@@ -496,12 +501,12 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 5760 strings out of 474774
- 95985 string characters out of 5758802
- 1939032 words of memory out of 5000000
- 28042 multiletter control sequences out of 15000+600000
- 579223 words of font info for 132 fonts, out of 8000000 for 9000
+ 5757 strings out of 474774
+ 95939 string characters out of 5758802
+ 1938032 words of memory out of 5000000
+ 28040 multiletter control sequences out of 15000+600000
+ 578341 words of font info for 129 fonts, out of 8000000 for 9000
  934 hyphenation exceptions out of 8191
  57i,13n,71p,1168b,776s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on Mthesis_abst_uplatex.dvi (4 pages, 32756 bytes).
+Output written on Mthesis_abst_uplatex.dvi (4 pages, 32856 bytes).
