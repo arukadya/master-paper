@@ -1,10 +1,10 @@
-This is e-upTeX, Version 3.141592653-p4.1.1-u1.30-230214-2.6 (utf8.euc) (TeX Live 2024) (preloaded format=platex 2024.3.22)  17 FEB 2025 15:58
+This is e-upTeX, Version 3.141592653-p4.1.1-u1.30-230214-2.6 (utf8.euc) (TeX Live 2024) (preloaded format=platex 2024.3.22)  17 FEB 2025 19:01
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**A10.tex
-(./A10.tex
+**A13.tex
+(./A13.tex
 pLaTeX2e <2023-02-14>+1, based on
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
@@ -840,8 +840,8 @@ File: l3backend-dvipdfmx.def 2024-02-20 L3 backend support: dvipdfmx
 \g__pdf_backend_object_int=\count350
 \g__pdf_backend_annotation_int=\count351
 \g__pdf_backend_link_int=\count352
-) (./A10.aux)
-\openout1 = `A10.aux'.
+) (./A13.aux)
+\openout1 = `A13.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 26.
 LaTeX Font Info:    ... okay on input line 26.
@@ -900,9 +900,9 @@ LaTeX Font Info:    ... okay on input line 26.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 Package hyperref Info: Link coloring OFF on input line 26.
-(./A10.out) (./A10.out)
+(./A13.out) (./A13.out)
 \@outlinefile=\write6
-\openout6 = `A10.out'.
+\openout6 = `A13.out'.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/cmr/m/n --> OT1/cmss/m/n on input line 26.
@@ -982,76 +982,76 @@ Dictionary: translator-numbers-dictionary, Language: English
 (/usr/local/texlive/2024/texmf-dist/tex/latex/translator/translator-theorem-dic
 tionary-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
-) (./A10.nav) [1
+) (./A13.nav) [1
 
 ] [2
 
 ] [3
 
 ]
-LaTeX Font Info:    Trying to load font information for U+msa on input line 94.
-
+LaTeX Font Info:    Trying to load font information for U+msa on input line 125
+.
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 94.
-
+LaTeX Font Info:    Trying to load font information for U+msb on input line 125
+.
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Trying to load font information for OT1+mathkerncmss on inp
-ut line 94.
+ut line 125.
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/sansmathaccent/ot1mathkerncmss.fd
 File: ot1mathkerncmss.fd 2020/01/31 Fontinst v1.933 font definitions for OT1/ma
 thkerncmss.
-) [4
-
-]
+)
 File: images/3dstaggerd.png Graphic file (type bmp)
 <images/3dstaggerd.png>
 
-Overfull \hbox (15.16823pt too wide) in paragraph at lines 123--123
+Overfull \hbox (15.16823pt too wide) in paragraph at lines 125--125
 [][] 
  []
 
 
-Overfull \vbox (13.96243pt too high) detected at line 123
+Overfull \vbox (14.53937pt too high) detected at line 125
  []
 
-[5
+[4
 
-] [6
+] [5
 
 ]
-Overfull \vbox (8.99771pt too high) detected at line 175
+Overfull \vbox (8.99771pt too high) detected at line 177
+ []
+
+[6
+
+]
+Overfull \vbox (0.47649pt too high) detected at line 208
  []
 
 [7
 
-]
-Overfull \vbox (0.47649pt too high) detected at line 206
- []
-
-[8
-
 ] Excluding 'comment' comment.
 LaTeX Font Info:    Font shape `JT1/gt/bx/n' in size <10.95> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 261.
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 264.
 LaTeX Font Info:    Font shape `JY1/gt/bx/n' in size <10.95> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 261.
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 264.
 LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <10.95> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 261.
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 264.
 
 LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <8> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 261.
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 264.
 
 LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <6> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 261.
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 264.
 
- [9
+ [8
+
+] [9
 
 ] [10
 
@@ -1061,32 +1061,39 @@ LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <6> not available
 
 ] [13
 
-] [14
+]
+File: images/128error.png Graphic file (type bmp)
+<images/128error.png>
+
+Overfull \vbox (50.2888pt too high) detected at line 436
+ []
+
+[14
 
 ] [15
 
 ]
 LaTeX Font Info:    Kanji font shape `JY1/gt/m/it' undefined
-(Font)              No change on input line 373.
+(Font)              No change on input line 462.
 LaTeX Font Info:    Kanji font shape `JY1/gt/m/it' undefined
-(Font)              No change on input line 376.
+(Font)              No change on input line 465.
 LaTeX Font Info:    Kanji font shape `JY1/gt/m/it' undefined
-(Font)              No change on input line 379.
+(Font)              No change on input line 468.
 LaTeX Font Info:    Kanji font shape `JY1/gt/m/it' undefined
-(Font)              No change on input line 382.
+(Font)              No change on input line 471.
 LaTeX Font Info:    Kanji font shape `JY1/gt/m/it' undefined
-(Font)              No change on input line 385.
+(Font)              No change on input line 474.
  [16
 
 ]
 \tf@nav=\write7
-\openout7 = `A10.nav'.
+\openout7 = `A13.nav'.
 
 \tf@toc=\write8
-\openout8 = `A10.toc'.
+\openout8 = `A13.toc'.
 
 \tf@snm=\write9
-\openout9 = `A10.snm'.
+\openout9 = `A13.snm'.
 
 
 
@@ -1094,29 +1101,22 @@ Package movie15 Warning: @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 (movie15)                @@ Rerun to get object references right! @@
 (movie15)                @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.
 
-(./A10.aux)
+(./A13.aux)
  ***********
 pLaTeX2e <2023-02-14>+1, based on
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
-
-
-Package rerunfilecheck Warning: File `A10.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `A10.out':
-(rerunfilecheck)             Before: 45125CFEE111D0D8A8CF3361600C4A99;522
-(rerunfilecheck)             After:  DD3D682CD763A3160C324C956F0C6361;522.
+Package rerunfilecheck Info: File `A13.out' has not changed.
+(rerunfilecheck)             Checksum: A705231EA5CABEE336B4F9A87E9E5FE6;597.
  ) 
 Here is how much of TeX's memory you used:
- 23213 strings out of 474774
- 452065 string characters out of 5758801
- 1935032 words of memory out of 5000000
- 45060 multiletter control sequences out of 15000+600000
- 609609 words of font info for 111 fonts, out of 8000000 for 9000
+ 23268 strings out of 474774
+ 452962 string characters out of 5758801
+ 1939032 words of memory out of 5000000
+ 45114 multiletter control sequences out of 15000+600000
+ 609914 words of font info for 112 fonts, out of 8000000 for 9000
  929 hyphenation exceptions out of 8191
- 128i,17n,123p,410b,925s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,18n,123p,410b,925s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on A10.dvi (16 pages, 164744 bytes).
+Output written on A13.dvi (16 pages, 170688 bytes).
