@@ -389,7 +389,7 @@ $O(nT^2)$の計算負荷が，$O(n(T/2)^2)$に削減できる
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  \begin{frame}
- \frametitle{提案手法}
+ \frametitle{実験結果}
  \begin {table}[htbp]
     \centering
   \caption{基底計算の解像度と分割数ごとの実行時間(秒)}
@@ -411,15 +411,11 @@ $O(nT^2)$の計算負荷が，$O(n(T/2)^2)$に削減できる
     $128^3$ 				& 5.21 			& 3.06 			& 3.05 			&3.98\\ \hline
   \end {tabular}
 \end {table}
-%sub diff 6micro
-%sub proj 4micro
-%sub restore 1800micro
-
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{提案手法}
 \begin{frame}
-\frametitle{提案手法}
+\frametitle{実験結果}
 \begin {table}[htbp]
     \centering
   \caption{基底の累積寄与率の最小値と最大値}
@@ -432,16 +428,28 @@ $O(nT^2)$の計算負荷が，$O(n(T/2)^2)$に削減できる
     										&							&0.96489							&0.976306					&0.996132				\\	\hline
   \end {tabular}
 \end {table}
-	\includegraphics[width=0.5\linewidth]{images/128error.png}
+\begin{columns}[T]
+	\begin{column}{0.4\linewidth}
+	\begin{block}{}
+	平均誤差$L_2 = \frac{|| \bm{u} - \bm{\widetilde{u}} ||_2}{||  \bm{u} ||_2}$
+	\end{block}
+    	\end{column}
+	\begin{column}{0.6\linewidth}
+		\includegraphics[width=0.7\linewidth]{images/128error.png}
+	   \end{column}
+    \end{columns}
+
+
  \end{frame}
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  \begin{frame}
- \frametitle{提案手法}
- \framesubtitle{計算機実験}
+ \frametitle{実験結果}
 %sub diff 6micro
 %sub proj 4micro
 %sub restore 1800micro
-
+\begin{block}{}
+解像度$128^3$，$200$フレーム
+\end{block}
 \begin{columns}
     \begin{column}{0.33\textwidth}
 \includemovie[autoplay, label=origin]{40mm}{40mm}{movies/obstacle_origin.mp4}

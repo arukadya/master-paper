@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.1-u1.30-230214-2.6 (utf8.euc) (TeX Live 2024) (preloaded format=platex 2024.3.22)  17 FEB 2025 19:01
+This is e-upTeX, Version 3.141592653-p4.1.1-u1.30-230214-2.6 (utf8.euc) (TeX Live 2024) (preloaded format=platex 2024.3.22)  17 FEB 2025 19:16
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1065,7 +1065,7 @@ LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <6> not available
 File: images/128error.png Graphic file (type bmp)
 <images/128error.png>
 
-Overfull \vbox (50.2888pt too high) detected at line 436
+Overfull \vbox (19.4266pt too high) detected at line 443
  []
 
 [14
@@ -1074,15 +1074,15 @@ Overfull \vbox (50.2888pt too high) detected at line 436
 
 ]
 LaTeX Font Info:    Kanji font shape `JY1/gt/m/it' undefined
-(Font)              No change on input line 462.
+(Font)              No change on input line 470.
 LaTeX Font Info:    Kanji font shape `JY1/gt/m/it' undefined
-(Font)              No change on input line 465.
+(Font)              No change on input line 473.
 LaTeX Font Info:    Kanji font shape `JY1/gt/m/it' undefined
-(Font)              No change on input line 468.
+(Font)              No change on input line 476.
 LaTeX Font Info:    Kanji font shape `JY1/gt/m/it' undefined
-(Font)              No change on input line 471.
+(Font)              No change on input line 479.
 LaTeX Font Info:    Kanji font shape `JY1/gt/m/it' undefined
-(Font)              No change on input line 474.
+(Font)              No change on input line 482.
  [16
 
 ]
@@ -1095,13 +1095,7 @@ LaTeX Font Info:    Kanji font shape `JY1/gt/m/it' undefined
 \tf@snm=\write9
 \openout9 = `A13.snm'.
 
-
-
-Package movie15 Warning: @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-(movie15)                @@ Rerun to get object references right! @@
-(movie15)                @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.
-
-(./A13.aux)
+ (./A13.aux)
  ***********
 pLaTeX2e <2023-02-14>+1, based on
 LaTeX2e <2023-11-01> patch level 1
@@ -1111,12 +1105,12 @@ Package rerunfilecheck Info: File `A13.out' has not changed.
 (rerunfilecheck)             Checksum: A705231EA5CABEE336B4F9A87E9E5FE6;597.
  ) 
 Here is how much of TeX's memory you used:
- 23268 strings out of 474774
- 452962 string characters out of 5758801
+ 23283 strings out of 474774
+ 453612 string characters out of 5758801
  1939032 words of memory out of 5000000
- 45114 multiletter control sequences out of 15000+600000
+ 45129 multiletter control sequences out of 15000+600000
  609914 words of font info for 112 fonts, out of 8000000 for 9000
  929 hyphenation exceptions out of 8191
  128i,18n,123p,410b,925s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on A13.dvi (16 pages, 170688 bytes).
+Output written on A13.dvi (16 pages, 182172 bytes).
