@@ -34,12 +34,33 @@
 % \frametitle{目次}
  %\end{frame}
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  %1
      \section{概要}
  \begin{frame}
  \frametitle{概要}
+ \begin{columns}[]
+  %\vspace{-100pt}
+ %\hspace{40pt}
+	\begin{column}{0.3\linewidth}
+	 \includemovie[autoplay, label=headorigin]{40mm}{40mm}{movies/obstacle_origin.mp4}
+	\end{column}
+	\begin{column}{0.3\linewidth}
+	\includemovie[autoplay, label=headdev2]{40mm}{40mm}{movies/obstacle_dev2.mp4}
+    \end{column}
+
+	\begin{column}{0.35\linewidth}
+	  \begin{block}{}
+  		\begin{itemize}
+			\item 
+			\item 
+		\end{itemize}
+	\end{block}
+    \end{column}
+   \end{columns}
+
   \begin{block}{}
   \begin{itemize}
-	%\item 流体と接する製品の設計・製造，流体の映像の生成などに利用．
 	\item 部分空間法：流体シミュレーションの高速化手法
 	\item 部分空間法の前処理の計算負荷が膨大
 	\item 提案手法による計算負荷の軽減と，シミュレーションの変化を評価
@@ -48,17 +69,19 @@
 
  \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%2
    \section{研究背景}
  \begin{frame}
  \frametitle{研究背景}
    \framesubtitle{流体シミュレーション}
  \subsection{流体シミュレーション}
-  \begin{block}{工業分野}
-  \begin{itemize}
-	\item 流体と接する製品の設計・製造
-	\item 物理的な正確さ
-\end{itemize}
-\end{block}
+%  \begin{block}{工業分野}
+%  \begin{itemize}
+%	\item 流体と接する製品の設計・製造
+%	\item 物理的な正確さ
+%\end{itemize}
+%\end{block}
 \begin{block}{CG分野}
 \begin{itemize}
 	\item 流体の映像の生成に利用
@@ -94,9 +117,11 @@
 %\end{block}
 %\end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%3
   \begin{frame}
   \frametitle{研究背景}
-  \framesubtitle{流体シミュレーションの数理モデル}
+  \framesubtitle{流体シミュレーション（煙，液体）の数理モデル}
 
 \begin{columns}[T]
 	\begin{column}{0.6\linewidth}
@@ -104,6 +129,7 @@
     	\[
 	\bm{u}(t + \varDelta t)  =\bm{u}(t) -\varDelta t( (\bm{u} \boldsymbol{\cdot}\nabla) \bm{u} - \frac{1}{\rho}\nabla p + \nu\nabla^2\bm{u} + \bm{f})
 	\]
+	\vspace{-10pt}
 	\begin{itemize}
 	\item $\bm{u}$，$\bm{f}$:流体の速度，外力
 	\item $p$，$\rho$，$\nu$:流体の圧力，密度，粘性
@@ -124,20 +150,23 @@
     \end{columns}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%4
   \begin{frame}
   \frametitle{研究背景}
-  \framesubtitle{流体シミュレーションの数理モデル}
+  \framesubtitle{流体シミュレーション（煙，液体）の数理モデル}
     \begin{block}{部分段階法}
     	\[
 	\bm{u}(t + \varDelta t)  =\bm{u}(t) -\varDelta t( (\bm{u} \boldsymbol{\cdot}\nabla) \bm{u} - \frac{1}{\rho}\nabla p + \nu\nabla^2\bm{u} + \bm{f})
 	\]
 中間子$\bm{u}_0$から$\bm{u}_3$を用いて，以下のように各項ごとに分割して計算する
+
 \begin{align*}
 	\bm{u}_0				& =  \bm{u} (t)  - \varDelta t \bm{f} 				\\
 	\bm{u}_1 (\bm{x}) 		&= \bm{u}_0 (\bm{x}) - \varDelta t (\bm{u}_0(\bm{x})  \boldsymbol{\cdot}\nabla) \bm{u}_0(\bm{x})	\\
 	\bm{u}_2  		 		&=  \bm{u}_1 - \varDelta t \nu\nabla^2\bm{u}_1		\\
 	\bm{u} (t + \varDelta t) = \bm{u}_3  &=  \bm{u}_2 - \varDelta t \frac{1}{\rho}\nabla \bm{p}
-	\end{align*}
+\end{align*}
 %\[
 %	\bm{u}_0 =  \bm{u} (t)  - \varDelta t \bm{f} 
 %\]
@@ -154,9 +183,11 @@
 \end{block}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%5
   \begin{frame}
   \frametitle{研究背景}
-  \framesubtitle{流体シミュレーションの数理モデル}
+  \framesubtitle{流体シミュレーション（煙，液体）の数理モデル}
     \begin{block}{部分段階法}
 \begin{align}
 	\bm{u}_0	& =  \bm{u} (t)  - \varDelta t \bm{f}\notag \\ 
@@ -169,20 +200,21 @@
 	\bm{u} (t + \varDelta t) = \bm{u}_3  	&=  \bm{u}_2 - \bm{Y}\bm{p}\notag
 \end{align}
 \begin{itemize}
-\item 式\ref{eq:semi-Lagrangian}はsemi-Lagrangian法\cite{stam}，式\ref{eq:v2p}，\ref{eq:poisson}はコリンの射影法\cite{Chorin}
+\item 式\ref{eq:semi-Lagrangian}はsemi-Lagrangian法[Stam 1999]，式\ref{eq:v2p}，\ref{eq:poisson}はコリンの射影法[Chorin 1968]
 \item $\bm{V}$，$\bm{A}$は離散ラプラシアン行列を用いて$\nabla^2$を離散化
 \item $\bm{W}$，$\bm{Y}$は勾配演算子$\nabla$を離散化
 \end{itemize}
 \end{block}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%6
 
 \begin{frame}
  \frametitle{研究背景}
    \framesubtitle{先行研究}
 \begin{columns}[T]
 	\begin{column}{0.6\linewidth}
-	\begin{block}{Visual Simulaton of Smoke \cite{fedkiw} [Fedkiw et al. 2001]}
+	\begin{block}{Visual Simulaton of Smoke [Fedkiw et al. 2001]}
 		\begin{itemize}
 		\item CGにおいて広く用いられる煙のオフラインシミュレーション手法
 		\item 密度を計算した後，ボリュームレンダリングを用いて描画
@@ -192,7 +224,7 @@
 	
 	\begin{block}{計算機実験}
 	\begin{itemize}
-	\item OS:Apple M4 pro，メモリ:64GB
+%	\item CPU:Apple M4 Pro，メモリ:64GB
 	\item 解像度$128^3$，$200$フレーム
 	\item シミュレーション\text{1800ms/f}
 	%\item 圧力項$\bm{p} = \bm{A}^{-1}\bm{b}$は反復回数20回，\text{330ms/f}
@@ -207,6 +239,8 @@
     \end{columns}
  \end{frame}
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  %7
   \begin{comment}
 \begin{frame}
  \frametitle{研究背景}
@@ -238,6 +272,8 @@
  \end{frame}
 \end{comment}
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  %8
    \begin{frame}
   \frametitle{研究背景}
       \framesubtitle{部分空間法}
@@ -253,9 +289,9 @@
 \begin{itemize}
  \item シミュレーションの前処理として，$\bm{A}^{\mathsf T} \bm{A} = \bm{I}$を満たし，$\bm{x} = \bm{A}\bm{\widetilde{x}} $が成り立つような，$n \times r$行列$\bm{A}$を考える
  \[
- \bm{\widetilde{x}} = \bm{A}\bm{x}
+ \bm{\widetilde{x}} = \bm{A}^{\mathsf T}\bm{x}
  \]
-\item $\bm{\widetilde{x}}$を用いてシミュレーションを行い，$\bm{x} = \bm{A}^{T}\bm{\widetilde{x}}$を用いて$\bm{x}$を求める
+\item $\bm{\widetilde{x}}$を用いてシミュレーションを行い，$\bm{x} = \bm{A}\bm{\widetilde{x}}$を用いて$\bm{x}$を求める
 \item $\bm{\widetilde{u}}$は，流体の非圧縮条件$\nabla\boldsymbol{\cdot}\bm{\widetilde{u}}$ = 0を満たしていなければならない
 \item 本研究の高速化の対象は，性質の良い直交基底$\bm{A}$の計算
 \end{itemize}
@@ -263,13 +299,15 @@
 %\includegraphics[width=0.7\linewidth]{images/subspace.png}
  \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%9
    \begin{frame}
   \frametitle{研究背景}
     \framesubtitle{部分空間法}
    \begin{block}{特異値分解を用いた直交基底の計算}
    \begin{itemize}
    \item 既存のシミュレーションの時系列データを$T$個用いて，行列$\bm{A}$を作成する手法
-\item 空間解像度を$n$とする．一般に，$n \gg T \gg r$ 
+\item 空間解像度を$n$とする．一般に，$n <\!< T <\!< r$ 
 \item 時刻$t$における速度ベクトル$\bm{u_t}$を用いて，$3(n+1)\times T$行列$\bm{S}$を定義する
 	 \[ \bm{S} = 
         		\begin{bmatrix}
@@ -289,10 +327,12 @@
 %\includegraphics[width=0.7\linewidth]{images/subspace.png}
  \end{frame}
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ %10
 \begin{frame}
 \frametitle{研究背景}
 \framesubtitle{先行研究}
-	\begin{block}{線形項\cite{projection_base}[Treuille et al. 2006]}
+	\begin{block}{線形項[Treuille et al. 2006]}
 	   \begin{itemize}
    	\item 中間子$\bm{u}_i$から得た基底を$\bm{U}_i$，$\bm{p}$から得られた基底を$\bm{P}$とする
 	\item $n\times n$行列が$r \times r$行列に．各ステップが高速化
@@ -305,12 +345,12 @@
 \end{align*}
 \end{block}
 
-	\begin{block}{非線形項}
- 		\begin{itemize}
-		\item 立体求積法\cite{subspace}[Kim et al.2013]を用いる．
-		\item 本研究の高速化の対象ではない
-	\end{itemize}
-	\end{block}
+%	\begin{block}{非線形項}
+ %		\begin{itemize}
+%		\item 立体求積法\cite{subspace}[Kim et al.2013]を用いる
+%		\item 本研究の高速化の対象ではない
+%	\end{itemize}
+%	\end{block}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -348,6 +388,8 @@
 %	\end{block}
 %\end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%11
 \begin{frame}
 \frametitle{部分空間法の課題}
 \subsection{部分空間法の課題}
@@ -364,12 +406,15 @@
 
 	\begin{block}{前処理の計算時間}
  		\begin{itemize}
-		\item 線傾項：$3(n +1)\times T$行列の特異値分解，QR分解の計算量は$O(nT^2)$
-		\item 非線形項：$O(rTP^3)$
+		\item $3(n +1)\times T$行列の特異値分解，QR分解の計算量は$O(nT^2)$
+		\item	シミュレーションに用いる行列を，部分空間へ射影する計算時間
+		%\item 非線形項：$O(rTP^3)$
 	\end{itemize}
 	\end{block}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%12
 \section{提案手法}
 \begin{frame}
 \frametitle{提案手法}
@@ -388,8 +433,11 @@ $O(nT^2)$の計算負荷が，$O(n(T/2)^2)$に削減できる
  \end{frame}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  %13
  \begin{frame}
  \frametitle{実験結果}
+ \vspace{-35pt}
  \begin {table}[htbp]
     \centering
   \caption{基底計算の解像度と分割数ごとの実行時間(秒)}
@@ -411,37 +459,42 @@ $O(nT^2)$の計算負荷が，$O(n(T/2)^2)$に削減できる
     $128^3$ 				& 5.21 			& 3.06 			& 3.05 			&3.98\\ \hline
   \end {tabular}
 \end {table}
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{提案手法}
-\begin{frame}
-\frametitle{実験結果}
+
 \begin {table}[htbp]
     \centering
   \caption{基底の累積寄与率の最小値と最大値}
   \label{tab:ruiseki}
   \begin {tabular}{rrrrr} \hline
     \multicolumn{1}{c}{解像度} 					&\multicolumn{1}{c}{分割なし} 		&\multicolumn{1}{c}{分割数2}			&\multicolumn{1}{c}{分割数4} 		&\multicolumn{1}{c}{分割数10}\\ \hline
-    $64^3$ 									& 0.969886					& 0.972114						&0.979512	 				&0.992557				\\
-    										&							&0.985917						&0.990411					&0.996893				\\ \hline
-    $128^3$ 								&0.940446 					&0.954735						&0.971454	 				&0.988967				\\ 
-    										&							&0.96489							&0.976306					&0.996132				\\	\hline
+    $64^3$ 									& 0.970						& 0.972							&0.98		 				&0.993				\\
+    										&							&0.986							&0.990						&0.997				\\ \hline
+    $128^3$ 								&0.940 						&0.955							&0.971		 				&0.989				\\ 
+    										&							&0.965							&0.976						&0.996				\\	\hline
   \end {tabular}
 \end {table}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%14
+\section{提案手法}
+\begin{frame}
+\frametitle{実験結果}
+
 \begin{columns}[T]
-	\begin{column}{0.4\linewidth}
+	\begin{column}{0.3\linewidth}
 	\begin{block}{}
 	平均誤差$L_2 = \frac{|| \bm{u} - \bm{\widetilde{u}} ||_2}{||  \bm{u} ||_2}$
 	\end{block}
     	\end{column}
 	\begin{column}{0.6\linewidth}
-		\includegraphics[width=0.7\linewidth]{images/128error.png}
+		\includegraphics[width=0.89\linewidth]{images/128error.png}
 	   \end{column}
     \end{columns}
 
-
  \end{frame}
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  %15
  \begin{frame}
  \frametitle{実験結果}
 %sub diff 6micro
@@ -455,16 +508,37 @@ $O(nT^2)$の計算負荷が，$O(n(T/2)^2)$に削減できる
 \includemovie[autoplay, label=origin]{40mm}{40mm}{movies/obstacle_origin.mp4}
     \end{column}
     \begin{column}{0.33\textwidth}
-\includemovie[autoplay, label=dev1]{40mm}{40mm}{movies/obstacle_dev1.mp4}
+\includemovie[autoplay, label=dev1]{40mm}{40mm}{movies/obstacle_dev1_color.mp4}
     \end{column}
     \begin{column}{0.33\textwidth}
-\includemovie[autoplay, label=dev2]{40mm}{40mm}{movies/obstacle_dev2.mp4}
+\includemovie[autoplay, label=dev2]{40mm}{40mm}{movies/obstacle_dev2_color.mp4}
     \end{column}
 \end{columns}
+\end{frame}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  %16
+ \begin{frame}
+ \frametitle{おわりに}
+\begin{block}{結論}
+\begin{itemize}
+	\item スナップショット行列の分割による手法を提案した．
+	\item 部分空間の前処理の計算負荷の軽減に成功した．
+	\item 流れの様子が急激に変化した場合，分割によりより良い部分空間が構築できることがある．
+\end{itemize}
+\end{block}
+\begin{block}{今後の研究}
+\begin{itemize}
+	\item 分割の最適化
+	\item 離散コサイン変換を用いた圧縮手法[Jones et al. 2016]への適用．
+\end{itemize}
+\end{block}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{thebibliography}{99}
 \beamertemplatetextbibitems
+\bibitem{subspaceDCT}
+A. D. Jones, P. Sen, and T. Kim. Compressing fluid subspaces. \textit{Proceedings of the ACM SIGGRAPH/Eurographics Symposium on Computer Animation}, 77--84, 2016.
 
 \bibitem{Chorin}
 A. J. Chorin. Numerical solution of the navier-stokes equations. \textit{Mathematics of Computation}, 22(104):745--762, 1968.
