@@ -1,6 +1,7 @@
 \beamer@sectionintoc {1}{概要}{2}{0}{1}
 \beamer@sectionintoc {2}{研究背景}{3}{0}{2}
 \beamer@subsectionintoc {2}{1}{流体シミュレーション}{3}{0}{2}
-\beamer@subsectionintoc {2}{2}{部分空間法}{10}{0}{2}
-\beamer@subsectionintoc {2}{3}{部分空間法の課題}{12}{0}{2}
-\beamer@sectionintoc {3}{改善手法}{13}{0}{3}
+\beamer@subsectionintoc {2}{2}{部分空間法}{9}{0}{2}
+\beamer@subsectionintoc {2}{3}{部分空間法}{10}{0}{2}
+\beamer@subsectionintoc {2}{4}{部分空間法の課題}{11}{0}{2}
+\beamer@sectionintoc {3}{提案手法}{12}{0}{3}
