@@ -2,6 +2,7 @@
 \usepackage{graphicx}
 \usepackage{url}
 \usepackage{bm}
+\usepackage{amsmath}
 \usepackage[absolute,overlay]{textpos}
 \newcommand{\thickhrulefill}{\leavevmode\leaders\hrule depth-1.2pt height 3.2pt\hfill\kern0pt}
 \newcommand{\indicatewidth}[1]{\thickhrulefill{#1}\thickhrulefill}
@@ -15,7 +16,11 @@
 %\usepackage[dvipdfmx]{hyperref} % \movieref を使う場合に必要
 \usepackage[dvipdfmx]{movie15_dvipdfmx}
 %\usepackage[dvipdfmx]{movie15}
+\usepackage {dotseqn}
 \renewcommand{\kanjifamilydefault}{\gtdefault}% 既定をゴシック体に
+\usepackage{caption}
+\captionsetup[table]{labelformat=empty}
+\captionsetup[figure]{labelformat=empty}
 
  %\usepackage[colorgrid,gridunit=pt,texcoord]{eso-pic}
  \title{煙シミュレーションのための部分空間法の高速化}
@@ -52,8 +57,7 @@
 	\begin{column}{0.35\linewidth}
 	  \begin{block}{}
   		\begin{itemize}
-			\item 
-			\item 
+			\item 190.54秒 $\to$ 33.43秒
 		\end{itemize}
 	\end{block}
     \end{column}
@@ -62,8 +66,8 @@
   \begin{block}{}
   \begin{itemize}
 	\item 部分空間法：流体シミュレーションの高速化手法
-	\item 部分空間法の前処理の計算負荷が膨大
-	\item 提案手法による計算負荷の軽減と，シミュレーションの変化を評価
+	\item 煙のシミュレーションに部分空間法を適用
+	\item 提案手法による部分空間法の高速化と，シミュレーション結果の変化を評価
 \end{itemize}
 \end{block}
 
@@ -124,10 +128,13 @@
   \framesubtitle{流体シミュレーション（煙，液体）の数理モデル}
 
 \begin{columns}[T]
-	\begin{column}{0.6\linewidth}
+	\begin{column}{0.65\linewidth}
 	    \begin{block}{ナビエ・ストークス方程式の離散化}
     	\[
 	\bm{u}(t + \varDelta t)  =\bm{u}(t) -\varDelta t( (\bm{u} \boldsymbol{\cdot}\nabla) \bm{u} - \frac{1}{\rho}\nabla p + \nu\nabla^2\bm{u} + \bm{f})
+	\]
+	\[
+	\nabla\boldsymbol{\cdot}\bm{u} = 0
 	\]
 	\vspace{-10pt}
 	\begin{itemize}
@@ -189,16 +196,19 @@
   \frametitle{研究背景}
   \framesubtitle{流体シミュレーション（煙，液体）の数理モデル}
     \begin{block}{部分段階法}
-\begin{align}
-	\bm{u}_0	& =  \bm{u} (t)  - \varDelta t \bm{f}\notag \\ 
-	\bm{u}_1(\bm{x}) 	&= \bm{u}_0(\bm{x}  - \varDelta t \bm{u}_0)\label{eq:semi-Lagrangian}\\
-%\end{align*}
-%\begin{align*}
-	\bm{u}_2   		&=  \bm{V}\bm{u}_1		\notag\\
-	\bm{b} 			&= \bm{W}\bm{u}_2		\label{eq:v2p}	\\ 
-	\bm{p} 			&= \bm{A}^{-1}\bm{b}	\label{eq:poisson} \\ 
-	\bm{u} (t + \varDelta t) = \bm{u}_3  	&=  \bm{u}_2 - \bm{Y}\bm{p}\notag
-\end{align}
+%\begin{align}
+\begin{eqnarray}
+%\begin{array}{ccc}
+	\bm{u}_0			&=&  \bm{u} (t)  - \varDelta t \bm{f}\notag \\ 
+	\bm{u}_1(\bm{x}) 	&=& \bm{u}_0(\bm{x}  - \varDelta t \bm{u}_0)\label{eq:semi-Lagrangian}\\
+	\bm{u}_2   		&=&  \bm{V}\bm{u}_1		\notag\\
+	\bm{b} 			&=& \bm{W}\bm{u}_2		 \label{eq:v2p}	\\ 
+	\bm{p} 			&=& \bm{A}^{-1}\bm{b}	\label{eq:poisson} \\ 
+	\bm{u} (t + \varDelta t) = \bm{u}_3  	&=& \bm{u}_2 - \bm{Y}\bm{p}\notag
+%\end{array}
+%\end{align}
+\end{eqnarray}
+
 \begin{itemize}
 \item 式\ref{eq:semi-Lagrangian}はsemi-Lagrangian法[Stam 1999]，式\ref{eq:v2p}，\ref{eq:poisson}はコリンの射影法[Chorin 1968]
 \item $\bm{V}$，$\bm{A}$は離散ラプラシアン行列を用いて$\nabla^2$を離散化
@@ -224,7 +234,6 @@
 	
 	\begin{block}{計算機実験}
 	\begin{itemize}
-%	\item CPU:Apple M4 Pro，メモリ:64GB
 	\item 解像度$128^3$，$200$フレーム
 	\item シミュレーション\text{1800ms/f}
 	%\item 圧力項$\bm{p} = \bm{A}^{-1}\bm{b}$は反復回数20回，\text{330ms/f}
@@ -279,21 +288,24 @@
       \framesubtitle{部分空間法}
 \begin{block}{部分空間法(subspace method)}
 \begin{itemize}
-\item 部分空間に射影し，計算負荷を軽減する手法
+\item 既存のシミュレーションの時系列データ（スナップショット）を主成分分析し，次元削減する
 \item 空間解像度を保ったまま高速化可能
 \item 前処理の計算負荷が大きい
+%\end{itemize}
+%\end{block}
+%\begin{block}{概要}
+%\begin{itemize}
+% \item シミュレーションの前処理として，$\bm{A}^{\mathsf T} \bm{A} = \bm{I}$を満たし，$\bm{x} = \bm{A}\bm{\widetilde{x}} $が成り立つような，$n \times r$行列$\bm{A}$を考える
+ %\[
+ %\bm{\widetilde{x}} = \bm{A}^{\mathsf T}\bm{x}
+ %\]
+%\item $\bm{\widetilde{x}}$を用いてシミュレーションを行い，$\bm{x} = \bm{A}\bm{\widetilde{x}}$を用いて$\bm{x}$を求める
+\item 本研究の高速化の対象は，主成分分析
 \end{itemize}
 \end{block}
-
-\begin{block}{概要}
+\begin{block}{流体シミュレーションへの適用}
 \begin{itemize}
- \item シミュレーションの前処理として，$\bm{A}^{\mathsf T} \bm{A} = \bm{I}$を満たし，$\bm{x} = \bm{A}\bm{\widetilde{x}} $が成り立つような，$n \times r$行列$\bm{A}$を考える
- \[
- \bm{\widetilde{x}} = \bm{A}^{\mathsf T}\bm{x}
- \]
-\item $\bm{\widetilde{x}}$を用いてシミュレーションを行い，$\bm{x} = \bm{A}\bm{\widetilde{x}}$を用いて$\bm{x}$を求める
-\item $\bm{\widetilde{u}}$は，流体の非圧縮条件$\nabla\boldsymbol{\cdot}\bm{\widetilde{u}}$ = 0を満たしていなければならない
-\item 本研究の高速化の対象は，性質の良い直交基底$\bm{A}$の計算
+	\item 次元削減後の流速$\bm{\widetilde{u}}$は，流体の非圧縮条件$\nabla\boldsymbol{\cdot}\bm{\widetilde{u}}$ = 0を満たしていなければならない
 \end{itemize}
 \end{block}
 %\includegraphics[width=0.7\linewidth]{images/subspace.png}
@@ -306,20 +318,15 @@
     \framesubtitle{部分空間法}
    \begin{block}{特異値分解を用いた直交基底の計算}
    \begin{itemize}
-   \item 既存のシミュレーションの時系列データを$T$個用いて，行列$\bm{A}$を作成する手法
-\item 空間解像度を$n$とする．一般に，$n <\!< T <\!< r$ 
+   \item 既存のシミュレーションの時系列データ（スナップショット）を$T$個用いて，部分空間の直交基底を作成する手法
+\item 空間解像度を$n$，削減後の次元を$r$とすると，$n <\!< T <\!< r$ 
 \item 時刻$t$における速度ベクトル$\bm{u_t}$を用いて，$3(n+1)\times T$行列$\bm{S}$を定義する
 	 \[ \bm{S} = 
         		\begin{bmatrix}
    \bm{u}_0 & \bm{u}_1 &\cdots  & \bm{u}_{T-1}
 \end{bmatrix}
 \]
-\item $\bm{S}$を以下のように特異値分解して得られるユニタリ行列$\bm{U}$を$\bm{A}$とする
-
-\[
-\bm{S} = \bm{U} \bm{\Sigma} \bm{V}^{\mathsf T}
-\]
-
+\item $\bm{S}$を特異値分解して得られる左特異行列$\bm{U}$を部分空間の直交基底とする
 \item 先にQR分解を適用し，サイズを小さくすることができる
 \end{itemize}
 \end{block}
@@ -336,6 +343,7 @@
 	   \begin{itemize}
    	\item 中間子$\bm{u}_i$から得た基底を$\bm{U}_i$，$\bm{p}$から得られた基底を$\bm{P}$とする
 	\item $n\times n$行列が$r \times r$行列に．各ステップが高速化
+	\item 前処理に$\bm{\widetilde{V}}$，$\bm{\widetilde{W}}$，$\bm{\widetilde{A}}$，$\bm{\widetilde{Y}}$の計算も含める
 	\end{itemize}
 \begin{align*}
  \bm{U}_2^{\mathsf T}\bm{u}_2	& = (\bm{U}_2^{\mathsf T}\bm{V}\bm{U}_1)\bm{U}_1^{\mathsf T}\bm{u}_1 					&\bm{\widetilde{u}}_2 		&= \bm{\widetilde{V}}\bm{\widetilde{u}_1}	\\
@@ -400,7 +408,7 @@
    		\begin{itemize}
 			\item $n = 256^3$，$r=50$のとき，行列$\bm{A}$のために10GBほど必要
    			\item 削減後の次元の数に制限．$r \le T$
-   			\item GPUによる高速化が不可能
+   			\item 廉価なGPUではメモリが足りない
 		\end{itemize}
 	\end{block}
 
@@ -425,9 +433,12 @@
 \end{bmatrix}
 \]
 二分割すると，
-\begin{align*}
-	\bm{S_0} 		&= \begin{bmatrix}\bm{u}_0 &\cdots  & \bm{u}_{T/2-1}\end{bmatrix}		&\bm{S_1} 	&= \begin{bmatrix} \bm{u}_{T/2}  &\cdots  & \bm{u}_{T-1}\end{bmatrix}\\
-\end{align*}
+%\begin{align*}
+\begin{eqnarray}
+	\bm{S_0} 		&= \begin{bmatrix}\bm{u}_0 &\cdots  & \bm{u}_{T/2-1}\end{bmatrix}\notag		\\
+	\bm{S_1} 	&= \begin{bmatrix} \bm{u}_{T/2}  &\cdots  & \bm{u}_{T-1}\end{bmatrix}\notag	
+\end{eqnarray}
+%\end{align*}
 $O(nT^2)$の計算負荷が，$O(n(T/2)^2)$に削減できる
 \end{block}
  \end{frame}
@@ -437,7 +448,7 @@ $O(nT^2)$の計算負荷が，$O(n(T/2)^2)$に削減できる
   %13
  \begin{frame}
  \frametitle{実験結果}
- \vspace{-35pt}
+ \vspace{-25pt}
  \begin {table}[htbp]
     \centering
   \caption{基底計算の解像度と分割数ごとの実行時間(秒)}
@@ -462,7 +473,7 @@ $O(nT^2)$の計算負荷が，$O(n(T/2)^2)$に削減できる
 
 \begin {table}[htbp]
     \centering
-  \caption{基底の累積寄与率の最小値と最大値}
+  \caption{基底の累積寄与率の最小値（上）と最大値（下）}
   \label{tab:ruiseki}
   \begin {tabular}{rrrrr} \hline
     \multicolumn{1}{c}{解像度} 					&\multicolumn{1}{c}{分割なし} 		&\multicolumn{1}{c}{分割数2}			&\multicolumn{1}{c}{分割数4} 		&\multicolumn{1}{c}{分割数10}\\ \hline
@@ -479,18 +490,24 @@ $O(nT^2)$の計算負荷が，$O(n(T/2)^2)$に削減できる
 \section{提案手法}
 \begin{frame}
 \frametitle{実験結果}
-
+	%\begin{column}{0.3\linewidth}
+%	\begin{block}{}
+%	平均誤差$L_2 = \frac{|| \bm{u} - \bm{\widetilde{u}} ||_2}{||  \bm{u} ||_2}$
+%	\end{block}
+	%\end{column}
+%\includegraphics[width=0.8\linewidth]{images/128error.png}
+\vspace{-10pt}
 \begin{columns}[T]
-	\begin{column}{0.3\linewidth}
+	\begin{column}{0.15\linewidth}
 	\begin{block}{}
 	平均誤差$L_2 = \frac{|| \bm{u} - \bm{\widetilde{u}} ||_2}{||  \bm{u} ||_2}$
 	\end{block}
     	\end{column}
-	\begin{column}{0.6\linewidth}
-		\includegraphics[width=0.89\linewidth]{images/128error.png}
+	\begin{column}{0.85\linewidth}
+	\vspace{-20pt}
+		\includegraphics[width=0.9\linewidth]{images/128error.png}
 	   \end{column}
     \end{columns}
-
  \end{frame}
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   
@@ -502,16 +519,28 @@ $O(nT^2)$の計算負荷が，$O(n(T/2)^2)$に削減できる
 %sub restore 1800micro
 \begin{block}{}
 解像度$128^3$，$200$フレーム
+
+CPU:Apple M4 Pro，メモリ:64GB
+
 \end{block}
 \begin{columns}
     \begin{column}{0.33\textwidth}
+   \begin{figure}
 \includemovie[autoplay, label=origin]{40mm}{40mm}{movies/obstacle_origin.mp4}
+\caption{オリジナルのシミュレーション}
+   \end{figure}
     \end{column}
     \begin{column}{0.33\textwidth}
+       \begin{figure}
 \includemovie[autoplay, label=dev1]{40mm}{40mm}{movies/obstacle_dev1_color.mp4}
+\caption{既存手法}
+   \end{figure}
     \end{column}
     \begin{column}{0.33\textwidth}
+       \begin{figure}
 \includemovie[autoplay, label=dev2]{40mm}{40mm}{movies/obstacle_dev2_color.mp4}
+\caption{提案手法}
+   \end{figure}
     \end{column}
 \end{columns}
 \end{frame}
@@ -534,7 +563,9 @@ $O(nT^2)$の計算負荷が，$O(n(T/2)^2)$に削減できる
 \end{itemize}
 \end{block}
 \end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%		印刷しない		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{thebibliography}{99}
 \beamertemplatetextbibitems
 \bibitem{subspaceDCT}
