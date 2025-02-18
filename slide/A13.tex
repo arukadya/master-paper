@@ -12,6 +12,7 @@
  \usepackage{algorithmic}
 \usepackage{algorithm}
 \usepackage{comment}
+\usepackage{textcomp}
 \usepackage{capt-of}
 %\usepackage[dvipdfmx]{hyperref} % \movieref を使う場合に必要
 \usepackage[dvipdfmx]{movie15_dvipdfmx}
@@ -48,10 +49,12 @@
   %\vspace{-100pt}
  %\hspace{40pt}
 	\begin{column}{0.3\linewidth}
-	 \includemovie[autoplay, label=headorigin]{40mm}{40mm}{movies/obstacle_origin.mp4}
+	 \includemovie[autoplay, repeat,poster=movies/obstacle_origin.png,label=headorigin]{40mm}{40mm}{movies/obstacle_origin.mp4}
+	 %	\includegraphics[width=1.0\linewidth]{movies/obstacle_origin.png}
 	\end{column}
 	\begin{column}{0.3\linewidth}
-	\includemovie[autoplay, label=headdev2]{40mm}{40mm}{movies/obstacle_dev2.mp4}
+	\includemovie[autoplay, repeat,poster=movies/obstacle_dev2.png,label=headdev2]{40mm}{40mm}{movies/obstacle_dev4.mp4}
+	%	 	\includegraphics[width=1.0\linewidth]{movies/obstacle_dev4.png}
     \end{column}
 
 	\begin{column}{0.35\linewidth}
@@ -151,7 +154,9 @@
 	\end{block}
     	\end{column}
 	\begin{column}{0.35\linewidth}
-	\includegraphics[width=1.1\linewidth]{images/3dstaggerd.png}
+	%\includegraphics[width=1.1\linewidth]{images/3dstaggerd.png}
+	%\vspace{-10pt}
+	\includegraphics[width=0.9\linewidth]{images/Macgrid.png}
 	\label{fig:staggerd}
     	\end{column}
     \end{columns}
@@ -236,14 +241,13 @@
 	\begin{itemize}
 	\item 解像度$128^3$，$200$フレーム
 	\item シミュレーション\text{1800ms/f}
-	%\item 圧力項$\bm{p} = \bm{A}^{-1}\bm{b}$は反復回数20回，\text{330ms/f}
-	%\item 粘性項\text{440ms/f}
 	\item レンダリング\text{240ms/f}
 	\end{itemize}
 	\end{block}
     	\end{column}
 	\begin{column}{0.4\linewidth}
-\includemovie[autoplay, label=hikone]{60mm}{60mm}{movies/obstacle_origin.mp4}
+\includemovie[autoplay, repeat,poster=movies/obstacle_origin.png, label=hikone]{60mm}{60mm}{movies/obstacle_origin.mp4}
+%		 	\includegraphics[width=1.0\linewidth]{movies/obstacle_origin.png}
     	\end{column}
     \end{columns}
  \end{frame}
@@ -289,8 +293,6 @@
 \begin{block}{部分空間法(subspace method)}
 \begin{itemize}
 \item 既存のシミュレーションの時系列データ（スナップショット）を主成分分析し，次元削減する
-\item 空間解像度を保ったまま高速化可能
-\item 前処理の計算負荷が大きい
 %\end{itemize}
 %\end{block}
 %\begin{block}{概要}
@@ -305,6 +307,9 @@
 \end{block}
 \begin{block}{流体シミュレーションへの適用}
 \begin{itemize}
+	\item 空間解像度を保ったまま高速化可能
+	\item タイムステップを小さくして再計算できる
+	\item 前処理の計算負荷が大きい
 	\item 次元削減後の流速$\bm{\widetilde{u}}$は，流体の非圧縮条件$\nabla\boldsymbol{\cdot}\bm{\widetilde{u}}$ = 0を満たしていなければならない
 \end{itemize}
 \end{block}
@@ -339,20 +344,19 @@
 \begin{frame}
 \frametitle{研究背景}
 \framesubtitle{先行研究}
-	\begin{block}{線形項[Treuille et al. 2006]}
+	\begin{block}{部分空間上のシミュレーション手法[Treuille et al. 2006]}
 	   \begin{itemize}
    	\item 中間子$\bm{u}_i$から得た基底を$\bm{U}_i$，$\bm{p}$から得られた基底を$\bm{P}$とする
 	\item $n\times n$行列が$r \times r$行列に．各ステップが高速化
 	\item 前処理に$\bm{\widetilde{V}}$，$\bm{\widetilde{W}}$，$\bm{\widetilde{A}}$，$\bm{\widetilde{Y}}$の計算も含める
 	\end{itemize}
 \begin{align*}
- \bm{U}_2^{\mathsf T}\bm{u}_2	& = (\bm{U}_2^{\mathsf T}\bm{V}\bm{U}_1)\bm{U}_1^{\mathsf T}\bm{u}_1 					&\bm{\widetilde{u}}_2 		&= \bm{\widetilde{V}}\bm{\widetilde{u}_1}	\\
- \bm{P}^{\mathsf T}\bm{b}		& = (\bm{P}^{\mathsf T}\bm{W}\bm{U}_2)\bm{U}_2^{\mathsf T}\bm{u}_2        				&\bm{\widetilde{b}}			&= \bm{\widetilde{W}}\bm{\widetilde{u}}_2	\\
- \bm{P}^{\mathsf T}\bm{p} 		&= (\bm{P}^{\mathsf T}\bm{A}^{-1}\bm{P})\bm{P}^{\mathsf T}\bm{b}						&\bm{\widetilde{p}}			&= \bm{\widetilde{A}}\bm{\widetilde{b}}\\
- \bm{U}_3^{\mathsf T}\bm{u}_3 	&=  \bm{U}_2^{\mathsf T}\bm{u}_2 - (\bm{U}_3^{\mathsf T}\bm{Y}\bm{P})\bm{P}^{\mathsf T}\bm{p}	&\bm{\widetilde{u}}_3		&= \bm{\widetilde{u}}_2  -  \bm{\widetilde{Y}}\bm{\widetilde{p}}
+ \bm{u}_2   		&=  \bm{V}\bm{u}_1&\bm{U}_2^{\mathsf T}\bm{u}_2	& = (\bm{U}_2^{\mathsf T}\bm{V}\bm{U}_1)\bm{U}_1^{\mathsf T}\bm{u}_1 					&\bm{\widetilde{u}}_2 		&= \bm{\widetilde{V}}\bm{\widetilde{u}_1}	\\
+ \bm{b} 			&= \bm{W}\bm{u}_2&\bm{P}^{\mathsf T}\bm{b}		& = (\bm{P}^{\mathsf T}\bm{W}\bm{U}_2)\bm{U}_2^{\mathsf T}\bm{u}_2        				&\bm{\widetilde{b}}			&= \bm{\widetilde{W}}\bm{\widetilde{u}}_2	\\
+ \bm{p} 			&= \bm{A}^{-1}\bm{b}&\bm{P}^{\mathsf T}\bm{p} 		&= (\bm{P}^{\mathsf T}\bm{A}^{-1}\bm{P})\bm{P}^{\mathsf T}\bm{b}						&\bm{\widetilde{p}}			&= \bm{\widetilde{A}}\bm{\widetilde{b}}\\
+\bm{u}_3  			&= \bm{u}_2 - \bm{Y}\bm{p} &\bm{U}_3^{\mathsf T}\bm{u}_3 	&=  \bm{U}_2^{\mathsf T}\bm{u}_2 - (\bm{U}_3^{\mathsf T}\bm{Y}\bm{P})\bm{P}^{\mathsf T}\bm{p}	&\bm{\widetilde{u}}_3		&= \bm{\widetilde{u}}_2  -  \bm{\widetilde{Y}}\bm{\widetilde{p}}
 \end{align*}
 \end{block}
-
 %	\begin{block}{非線形項}
  %		\begin{itemize}
 %		\item 立体求積法\cite{subspace}[Kim et al.2013]を用いる
@@ -407,8 +411,8 @@
 		\[30 \le r \le 150\]
    		\begin{itemize}
 			\item $n = 256^3$，$r=50$のとき，行列$\bm{A}$のために10GBほど必要
+			\item 廉価なGPUではメモリが足りない
    			\item 削減後の次元の数に制限．$r \le T$
-   			\item 廉価なGPUではメモリが足りない
 		\end{itemize}
 	\end{block}
 
@@ -439,8 +443,19 @@
 	\bm{S_1} 	&= \begin{bmatrix} \bm{u}_{T/2}  &\cdots  & \bm{u}_{T-1}\end{bmatrix}\notag	
 \end{eqnarray}
 %\end{align*}
-$O(nT^2)$の計算負荷が，$O(n(T/2)^2)$に削減できる
+$O(nT^2)$の計算負荷が，$O(2n(T/4))$に削減できる
 \end{block}
+
+\begin{block}{評価方法}
+ 	\begin{itemize}
+	\item 前処理の計算時間を計測
+	\item	累積寄与率を計測
+	\item	相対誤差により精度を評価
+	%\item 非線形項：$O(rTP^3)$
+	\end{itemize}
+\end{block}
+
+
  \end{frame}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -500,12 +515,12 @@ $O(nT^2)$の計算負荷が，$O(n(T/2)^2)$に削減できる
 \begin{columns}[T]
 	\begin{column}{0.15\linewidth}
 	\begin{block}{}
-	平均誤差$L_2 = \frac{|| \bm{u} - \bm{\widetilde{u}} ||_2}{||  \bm{u} ||_2}$
+	相対誤差$L_2 = \frac{|| \bm{u} - \bm{\widetilde{u}} ||_2}{||  \bm{u} ||_2}$
 	\end{block}
     	\end{column}
 	\begin{column}{0.85\linewidth}
 	\vspace{-20pt}
-		\includegraphics[width=0.9\linewidth]{images/128error.png}
+		\includegraphics[width=0.9\linewidth]{images/128error_obstacle.png}
 	   \end{column}
     \end{columns}
  \end{frame}
@@ -522,23 +537,27 @@ $O(nT^2)$の計算負荷が，$O(n(T/2)^2)$に削減できる
 
 CPU:Apple M4 Pro，メモリ:64GB
 
+分割前後で流れが変化しているのが確認できる．
 \end{block}
 \begin{columns}
     \begin{column}{0.33\textwidth}
    \begin{figure}
-\includemovie[autoplay, label=origin]{40mm}{40mm}{movies/obstacle_origin.mp4}
+\includemovie[autoplay, repeat,poster=movies/obstacle_origin.png, label=origin]{40mm}{40mm}{movies/obstacle_origin.mp4}
+%		 	\includegraphics[width=1.0\linewidth]{movies/obstacle_origin.png}
 \caption{オリジナルのシミュレーション}
    \end{figure}
     \end{column}
     \begin{column}{0.33\textwidth}
        \begin{figure}
-\includemovie[autoplay, label=dev1]{40mm}{40mm}{movies/obstacle_dev1_color.mp4}
+\includemovie[autoplay, repeat,poster=movies/obstacle_dev1.png, label=dev1]{40mm}{40mm}{movies/obstacle_dev1_color.mp4}
+%		 	\includegraphics[width=1.0\linewidth]{movies/obstacle_dev1.png}
 \caption{既存手法}
    \end{figure}
     \end{column}
     \begin{column}{0.33\textwidth}
        \begin{figure}
-\includemovie[autoplay, label=dev2]{40mm}{40mm}{movies/obstacle_dev2_color.mp4}
+\includemovie[autoplay, repeat,poster=movies/obstacle_dev2.png, label=dev2]{40mm}{40mm}{movies/obstacle_dev2_color.mp4}
+%		 	\includegraphics[width=1.0\linewidth]{movies/obstacle_dev2.png}
 \caption{提案手法}
    \end{figure}
     \end{column}
@@ -553,13 +572,14 @@ CPU:Apple M4 Pro，メモリ:64GB
 \begin{itemize}
 	\item スナップショット行列の分割による手法を提案した．
 	\item 部分空間の前処理の計算負荷の軽減に成功した．
-	\item 流れの様子が急激に変化した場合，分割によりより良い部分空間が構築できることがある．
+	\item 流れの様子が急激に変化し，見た目に影響する場合がある．
 \end{itemize}
 \end{block}
 \begin{block}{今後の研究}
 \begin{itemize}
 	\item 分割の最適化
-	\item 離散コサイン変換を用いた圧縮手法[Jones et al. 2016]への適用．
+	\item 分割前後の流速の変化を軽減
+	\item 離散コサイン変換を用いた圧縮手法[Jones et al. 2016]への適用
 \end{itemize}
 \end{block}
 \end{frame}
@@ -583,9 +603,52 @@ J. Stam. Stable fluids. In \textit{SIGGRAPH 99 Conference Proceedings, Annual Co
 \bibitem{fedkiw}
 R. Fedkiew, J. Stam, and H. Jensen. Visual simulation of smoke. In \textit{Proceedings of SIGGRAPH 01}, 15--22, 2001.
 
-\bibitem{subspace}
-T. Kim and J. Delaney. Subspace fluid re-simulation. \textit{ACM Transactions on Graphics}, 32(4):62:1--62:9, 2013.
+%\bibitem{subspace}
+%T. Kim and J. Delaney. Subspace fluid re-simulation. \textit{ACM Transactions on Graphics}, 32(4):62:1--62:9, 2013.
 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  %質疑
+ \begin{frame}
+ \frametitle{質疑応答}
+\begin{block}{シミュレーションの条件変更}
+\begin{itemize}
+	\item タイムステップを変更
+	\item 障害物を変更
+\end{itemize}
+\end{block}
+\begin{columns}
+    \begin{column}{0.33\textwidth}
+   \begin{figure}
+\includemovie[autoplay, repeat,poster=movies/obstacle_origin.png, label=dt]{40mm}{40mm}{movies/dt.mp4}
+%		 	\includegraphics[width=1.0\linewidth]{movies/obstacle_origin.png}
+\caption{タイムステップを変更}
+   \end{figure}
+    \end{column}
+    \begin{column}{0.33\textwidth}
+       \begin{figure}
+\includemovie[autoplay, repeat,poster=movies/obstacle_origin.png, label=dev20]{40mm}{40mm}{movies/obstacle_dev10.mp4}
+%		 	\includegraphics[width=1.0\linewidth]{movies/obstacle_dev1.png}
+\caption{大きな分割数}
+   \end{figure}
+    \end{column}
+ \end{columns}
+
+\end{frame}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  %質疑
+ \begin{frame}
+ \frametitle{質疑応答}
+\begin{block}{その他の計算時間}
+\begin{itemize}
+	\item 圧力項$\bm{p} = \bm{A}^{-1}\bm{b}$は反復回数20回，\text{330ms/f} $\to$ 6\textmu s/f
+	\item 粘性項\text{440ms/f} $\to$ 4\textmu s/f
+	\item 部分空間から全次元へ射影 1.34ms
+\end{itemize}
+\end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \end{thebibliography}
 \end{document}
