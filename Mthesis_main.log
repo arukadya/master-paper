@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.1-u1.30-230214-2.6 (utf8.euc) (TeX Live 2024) (preloaded format=platex 2024.3.22)  25 FEB 2025 15:30
+This is e-upTeX, Version 3.141592653-p4.1.1-u1.30-230214-2.6 (utf8.euc) (TeX Live 2024) (preloaded format=platex 2024.3.22)  3 MAR 2025 12:03
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -228,7 +228,11 @@ File: l3backend-dvips.def 2024-02-20 L3 backend support: dvips
 \g__pdf_backend_link_int=\count288
 \g__pdf_backend_link_sf_int=\count289
 )
-(./Mthesis_main.aux)
+(./Mthesis_main.aux
+
+LaTeX Warning: Label `fig:slice' multiply defined.
+
+)
 \openout1 = `Mthesis_main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 35.
@@ -334,38 +338,38 @@ File: images/velocity_plot_100_obst.png Graphic file (type bmp)
 
 
 Package caption Warning: \setcaptionsubtype
-(caption)                outside box or environment on input line 945.
+(caption)                outside box or environment on input line 947.
 See the caption package documentation for explanation.
 
-
-Package caption Warning: \subcaption
-(caption)                outside box or environment on input line 945.
-See the caption package documentation for explanation.
-
-LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <10> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 945.
-LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <10> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 945.
-File: images/velocity_plot_101_obst.png Graphic file (type bmp)
-<images/velocity_plot_101_obst.png>
 
 Package caption Warning: \subcaption
 (caption)                outside box or environment on input line 947.
 See the caption package documentation for explanation.
 
+LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <10> not available
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 947.
+LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <10> not available
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 947.
+File: images/velocity_plot_101_obst.png Graphic file (type bmp)
+<images/velocity_plot_101_obst.png>
 
-LaTeX Warning: Float too large for page by 12.44995pt on input line 948.
+Package caption Warning: \subcaption
+(caption)                outside box or environment on input line 949.
+See the caption package documentation for explanation.
+
+
+LaTeX Warning: Float too large for page by 12.44995pt on input line 950.
 
 File: images/n64_origin_f99.png Graphic file (type bmp)
 <images/n64_origin_f99.png>
 
 Package caption Warning: \setcaptionsubtype
-(caption)                outside box or environment on input line 963.
+(caption)                outside box or environment on input line 965.
 See the caption package documentation for explanation.
 
 
 Package caption Warning: \subcaption
-(caption)                outside box or environment on input line 963.
+(caption)                outside box or environment on input line 965.
 See the caption package documentation for explanation.
 
 File: images/n64_div1_f99.png Graphic file (type bmp)
@@ -377,18 +381,18 @@ File: images/n64_div2_f99.png Graphic file (type bmp)
 File: images/n64_div2_f99_color.png Graphic file (type bmp)
 <images/n64_div2_f99_color.png>
 
-LaTeX Warning: Float too large for page by 14.01846pt on input line 986.
+LaTeX Warning: Float too large for page by 14.01846pt on input line 988.
 
 File: images/n64_origin_f100.png Graphic file (type bmp)
 <images/n64_origin_f100.png>
 
 Package caption Warning: \setcaptionsubtype
-(caption)                outside box or environment on input line 993.
+(caption)                outside box or environment on input line 995.
 See the caption package documentation for explanation.
 
 
 Package caption Warning: \subcaption
-(caption)                outside box or environment on input line 993.
+(caption)                outside box or environment on input line 995.
 See the caption package documentation for explanation.
 
 File: images/n64_div1_f100.png Graphic file (type bmp)
@@ -400,18 +404,18 @@ File: images/n64_div2_f100.png Graphic file (type bmp)
 File: images/n64_div2_f100_color.png Graphic file (type bmp)
 <images/n64_div2_f100_color.png>
 
-LaTeX Warning: Float too large for page by 14.01846pt on input line 1016.
+LaTeX Warning: Float too large for page by 14.01846pt on input line 1018.
 
 File: images/n128_origin_f99_obstacle.png Graphic file (type bmp)
 <images/n128_origin_f99_obstacle.png>
 
 Package caption Warning: \setcaptionsubtype
-(caption)                outside box or environment on input line 1029.
+(caption)                outside box or environment on input line 1031.
 See the caption package documentation for explanation.
 
 
 Package caption Warning: \subcaption
-(caption)                outside box or environment on input line 1029.
+(caption)                outside box or environment on input line 1031.
 See the caption package documentation for explanation.
 
 File: images/n128_dev1_f99_obstacle.png Graphic file (type bmp)
@@ -423,18 +427,18 @@ File: images/n128_dev2_f99_obstacle.png Graphic file (type bmp)
 File: images/n128_dev2_f99_obstacle_color.png Graphic file (type bmp)
 <images/n128_dev2_f99_obstacle_color.png>
 
-LaTeX Warning: Float too large for page by 1.78404pt on input line 1052.
+LaTeX Warning: Float too large for page by 1.78404pt on input line 1054.
 
 File: images/n128_origin_f100_obstacle.png Graphic file (type bmp)
 <images/n128_origin_f100_obstacle.png>
 
 Package caption Warning: \setcaptionsubtype
-(caption)                outside box or environment on input line 1059.
+(caption)                outside box or environment on input line 1061.
 See the caption package documentation for explanation.
 
 
 Package caption Warning: \subcaption
-(caption)                outside box or environment on input line 1059.
+(caption)                outside box or environment on input line 1061.
 See the caption package documentation for explanation.
 
 File: images/n128_dev1_f100_obstacle.png Graphic file (type bmp)
@@ -446,36 +450,44 @@ File: images/n128_dev2_f100_obstacle.png Graphic file (type bmp)
 File: images/n128_dev2_f100_obstacle_color.png Graphic file (type bmp)
 <images/n128_dev2_f100_obstacle_color.png>
 
-LaTeX Warning: Float too large for page by 1.78404pt on input line 1082.
+LaTeX Warning: Float too large for page by 1.78404pt on input line 1085.
 
-[23] [24] [25] [26] [27] [28] [29] [30]
+File: images/dev1_100_slice.png Graphic file (type bmp)
+<images/dev1_100_slice.png>
+File: images/dev1_101_slice.png Graphic file (type bmp)
+<images/dev1_101_slice.png>
+File: images/dev2_100_slice.png Graphic file (type bmp)
+<images/dev2_100_slice.png>
+File: images/dev2_101_slice.png Graphic file (type bmp)
+<images/dev2_101_slice.png>
+[23] [24] [25] [26] [27] [28] [29] [30] [31]
 第 6 章
-[31
+[32
 
-] [32
+] [33
 
 ]
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 1139.
+(Font)              No change on input line 1146.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 1142.
+(Font)              No change on input line 1149.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 1145.
+(Font)              No change on input line 1152.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 1148.
+(Font)              No change on input line 1155.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 1151.
+(Font)              No change on input line 1158.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 1154.
+(Font)              No change on input line 1161.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 1157.
+(Font)              No change on input line 1164.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 1160.
+(Font)              No change on input line 1167.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 1163.
+(Font)              No change on input line 1170.
 LaTeX Font Info:    Kanji font shape `JY1/mc/m/it' undefined
-(Font)              No change on input line 1166.
- [33
+(Font)              No change on input line 1173.
+ [34
 
 ] (./Mthesis_main.aux)
  ***********
@@ -483,14 +495,18 @@ pLaTeX2e <2023-02-14>+1, based on
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
+
+
+LaTeX Warning: There were multiply-defined labels.
+
  ) 
 Here is how much of TeX's memory you used:
- 4539 strings out of 474774
- 75876 string characters out of 5758801
- 1936032 words of memory out of 5000000
- 26829 multiletter control sequences out of 15000+600000
+ 4565 strings out of 474774
+ 76626 string characters out of 5758801
+ 1938032 words of memory out of 5000000
+ 26851 multiletter control sequences out of 15000+600000
  582860 words of font info for 131 fonts, out of 8000000 for 9000
  929 hyphenation exceptions out of 8191
- 57i,13n,65p,1149b,738s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 57i,13n,65p,1149b,742s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on Mthesis_main.dvi (37 pages, 110476 bytes).
+Output written on Mthesis_main.dvi (38 pages, 111920 bytes).

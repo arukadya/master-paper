@@ -67,7 +67,7 @@ Toshiki SUNOUCHI\\
 
 
 \begin{center} {\large \bf{概　要}} \end{center}
-本研究では部分空間法の前処理に対して，計算時間を高速化する手法を提案する．部分空間法を適用することで，シミュレーションは大幅に高速化することができるが，前処理に膨大な計算時間がかかることが課題である．そこで本研究は，前処理をシミュレーション時間に対して分割し，前処理全体の計算時間を削減する手法を提案する．計算機実験の結果，前処理の計算時間のボトルネックとなっている基底計算のための特異値分解の高速化を確認し，前処理の高速化に有効であると示すことができた．また，計算結果の精度について，基底の累積寄与率や相対誤差を用いて評価をし，分割数によるシミュレーションのレンダリング結果の変化を確認した．
+本研究では部分空間法の前処理に対して，計算時間を高速化する手法を提案する．部分空間法を適用することで，シミュレーションは大幅に高速化することができるが，前処理に膨大な計算時間がかかることが課題である．そこで本研究は，前処理をシミュレーション時間に対して分割し，前処理全体の計算時間を削減する手法を提案する．計算機実験の結果，前処理の計算時間のボトルネックとなっている基底計算のための主成分分析の高速化を確認し，前処理の高速化に有効であると示すことができた．また，計算結果の精度について，基底の累積寄与率や相対誤差を用いて評価をし，分割数によるシミュレーションのレンダリング結果の変化を確認した．
 
 \vspace{1zw} \noindent
 {\bf キーワード: }流体シミュレーション，部分空間法，スナップショット固有直交分解，立体求積法．
@@ -633,15 +633,15 @@ W_{i，j} =
 圧力勾配を行列 $\bm{Y}$ を用いて離散化し，以下のように表せることを説明する．
 
 \begin{equation}
-\nabla p = \bm{Y} p
+\nabla \bm{p} = \bm{Y} \bm{p}
 \end{equation}
 
 3次元格子では，圧力勾配 $\nabla p = (\frac{\partial p}{\partial x}, \frac{\partial p}{\partial y}, \frac{\partial p}{\partial z})$ は，各方向において以下のように離散化される：
 
 \begin{equation}
-\frac{\partial p}{\partial x} \approx \frac{p_{i+1,j,k} - p_{i,j,k}}{\Delta x}, \quad
-\frac{\partial p}{\partial y} \approx \frac{p_{i,j+1,k} - p_{i,j,k}}{\Delta y}, \quad
-\frac{\partial p}{\partial z} \approx \frac{p_{i,j,k+1} - p_{i,j,k}}{\Delta z}
+\frac{\partial  \bm{p} }{\partial x} \approx \frac{p_{i+1,j,k} - p_{i,j,k}}{\Delta x}, \quad
+\frac{\partial  \bm{p} }{\partial y} \approx \frac{p_{i,j+1,k} - p_{i,j,k}}{\Delta y}, \quad
+\frac{\partial  \bm{p} }{\partial z} \approx \frac{p_{i,j,k+1} - p_{i,j,k}}{\Delta z}
 \end{equation}
 
 ただし，本実験では$\varDelta x = \varDelta y= \varDelta z$である．
@@ -650,8 +650,8 @@ W_{i，j} =
 \[
 Y_{m,n} =
 \begin{cases}
-\frac{1}{\varDelta x}, &  \nabla p_x(i+1，j，k)，\nabla p_y(i，j+1，k)，\nabla p_z(i，j，k+1)に対応する成分 \\
--\frac{1}{\varDelta x}, &  \nabla p_x(i，j，k)， \nabla p_y(i，j，k)， \nabla p_z(i，j，k)に対応する成分\\
+\frac{1}{\varDelta x}, &   p_x(i+1，j，k)， p_y(i，j+1，k)，p_z(i，j，k+1)に対応する成分 \\
+-\frac{1}{\varDelta x}, &  p_x(i，j，k)， p_y(i，j，k)，p_z(i，j，k)に対応する成分\\
 0, & \text{otherwise}
 \end{cases}
 \]
@@ -726,26 +726,26 @@ I_n( \bm{x}) = \alpha_n( \bm{x}) c_n( \bm{x}) + ( 1-\alpha_n( \bm{x}) ) I_{n-1}(
 \chapter{部分空間法とスナップショット分割による高速化} \label{chapter:3}
 本章では，スタッガード格子を用いた煙の流体シミュレーション\cite{fedkiw}に対して，線形項と非線形項の計算を部分空間上に射影して計算する既存手法\cite{subspace}を適用する方法を説明する．その後，スナップショットを分割する手法を提案する．部分空間法の前処理において，基底の計算と行列の射影の計算量はスナップショット数の$2$乗に比例し，前処理の計算時間の大多数の時間を占めている．スナップショットを分割することで前処理の計算の高速化が期待できる．
 \section{基底空間構築手法}
-スタッガード格子を用いた流体シミュレーションの，時刻$t \{t \in N, 0 \le t \le m\}$の流速データ$\bm{u_t}$と圧力データ$\bm{p}$を用いて，以下のスナップショット行列$\bm{S_u}$と$\bm{S}_p$を定義する．
+スタッガード格子を用いた流体シミュレーションの，時刻$t$の流速データ$\bm{u_t}$と圧力データ$\bm{p}$を用いて，以下のスナップショット行列$\bm{S_u}$と$\bm{S}_p$を定義する．
  \[ \bm{S_u} = 
 	 \begin{bmatrix}
-  	 \bm{u}_0 & \bm{u}_1 &\cdots  & \bm{u}_{m-1} \\
+  	 \bm{u}_0 & \bm{u}_1 &\cdots  & \bm{u}_{T-1} \\
 	\end{bmatrix}
 \]
  \[ \bm{S}_p = 
 	 \begin{bmatrix}
-  	 \bm{p}_0 & \bm{p}_1 &\cdots  & \bm{p}_{m-1} \\
+  	 \bm{p}_0 & \bm{p}_1 &\cdots  & \bm{p}_{T-1} \\
 	\end{bmatrix}
 \]
-ここで，$\rm{x，y，z}$軸方向の分割数を$\rm{nx，ny，nz}$$(nx = ny = nz)$とすると，$\bm{u_t}$と$\bm{p}$の次元はそれぞれ$3(nx+1)\times nx\times nx$，$nx\times nx \times nx$である．
+ここで，$\rm{x，y，z}$軸方向の分割数を$nx，ny，nz$$(nx = ny = nz)$とすると，$\bm{u_t}$と$\bm{p}$の次元はそれぞれ$3(nx+1)\times nx\times nx$，$nx\times nx \times nx$である．
 スナップショット行列は空間計算量が大きく，直接特異値分解を適用すると空間計算量の制約を満たさない場合がある．これを避けるため，QR分解を利用する手法を説明する．また，特異値分解を用いた次元削減はの条件数は，行列を構成する列ベクトル同士の相関が強いほど悪くなることが知られている．スナップショット行列はデータ間に相関があるため，直接特異値分解を適応すると条件数が大きくなり，計算が不安定になる問題を緩和することができる．
 
-まず，$n \times m$行列$\bm{S}$を以下のようにQR分解する．
+まず，$n \times T$行列$\bm{S}$を以下のようにQR分解する．
 \[
 	\bm{S} = \bm{Q}\bm{R}
 \]
-ここで，行列$\bm{Q}$は$n \times n$直交行列であり，行列$\bm{R}$は$n \times m$上三角行列である．
-その後，行列$\bm{R}$の第$m$行まで取り出し$m\times m$上三角行列にした後，以下のように特異値分解する．
+ここで，行列$\bm{Q}$は$n \times n$直交行列であり，行列$\bm{R}$は$n \times T$上三角行列である．
+その後，行列$\bm{R}$の第$T$行まで取り出し$T\times T$上三角行列にした後，以下のように特異値分解する．
 \[
 \bm{R} = \bm{U_R} \bm{\Sigma_R} \bm{V_R}^{\mathsf T}
 \]
@@ -762,7 +762,7 @@ $\bm{Q}と\bm{U_R}$は直交行列であることから，以下が得られる�
 
 \ref{sec:Subspace}にて
 $\bm{S}^{\mathsf T}\bm{S} = \bm{V}\bm{\Sigma}^2 \bm{V}^{\mathsf T}$
-となることを利用して基底を求めることができることを紹介した．同様にしてQR分解後の特異値分解を利用して基底を求めることができる．この手法により，特異値分解する行列は各列に相関がある$n \times m$行列からQR分解後の$m \times m$上三角行列になり，空間計算量と行列の条件数が改善される．
+となることを利用して基底を求めることができることを紹介した．同様にしてQR分解後の特異値分解を利用して基底を求めることができる．この手法により，特異値分解する行列は各列に相関がある$n \times T$行列からQR分解後の$T \times T$上三角行列になり，空間計算量と行列の条件数が改善される．
 
 \section{部分段階法への部分空間法の適用}
 本節では，\ref{sec:fractional}にて得た部分段階法による以下のシミュレーション計算に，部分空間法を適用する方法を説明する．
@@ -793,7 +793,7 @@ $\bm{S}^{\mathsf T}\bm{S} = \bm{V}\bm{\Sigma}^2 \bm{V}^{\mathsf T}$
 \[
 	\bm{u}_3  =  \bm{u}_2 - \bm{Y}\bm{p} 
 \]
-部分段階法では，中間子$\bm{u}_0$から$\bm{u}_3$までの4種類の速度ベクトルを計算する．それぞれの速度ベクトルを部分空間に射影するため，対応したスナップショット行列が1つずつ必要である．中間子$\bm{u}_i$から得た基底を$\bm{U}_i$，$\bm{p}$から得られた基底を$\bm{P}$とする．
+部分段階法では，中間子$\bm{u}_0$から$\bm{u}_3$までの4種類の速度ベクトルと，圧力ベクトルを計算する．それぞれのベクトルを部分空間に射影するため，対応したスナップショット行列が1つずつ必要である．中間子$\bm{u}_i$から得た基底を$\bm{U}_i$，$\bm{p}$から得られた基底を$\bm{P}$とする．
 部分段階法の線形項の計算を部分空間に射影すると，以下のようになる．
 %\[
 %\begin{aligned}
@@ -809,9 +809,9 @@ $\bm{S}^{\mathsf T}\bm{S} = \bm{V}\bm{\Sigma}^2 \bm{V}^{\mathsf T}$
  \bm{P}^{\mathsf T}\bm{p} 		&= (\bm{P}^{\mathsf T}\bm{A}^{-1}\bm{P})\bm{P}^{\mathsf T}\bm{b}						&\bm{\widetilde{p}}			&= \bm{\widetilde{A}}\bm{\widetilde{b}}\\
  \bm{U}_3^{\mathsf T}\bm{u}_3 	&=  \bm{U}_2^{\mathsf T}\bm{u}_2 - (\bm{U}_3^{\mathsf T}\bm{Y}\bm{P})\bm{P}^{\mathsf T}\bm{p}	&\bm{\widetilde{u}}_3		&= \bm{\widetilde{u}}_2  -  \bm{\widetilde{Y}}\bm{\widetilde{p}}
 \end{align*}
-ただし，$\bm{P}^{\mathsf T}\bm{A}^{-1}\bm{P} = (\bm{P}^{\mathsf T}\bm{A}\bm{P})^{-1}$であり，圧力ベクトルの次元数を$n$として$\bm{A}$は$n\times n$疎行列であり，$(\bm{P}^{\mathsf T}\bm{A}\bm{P})$は$m\times m$密行列である．密行列であることに注意が必要だが，逆行列を高速に求められるため，$\bm{\widetilde{A}} = (\bm{P}^{\mathsf T}\bm{A}\bm{P})^{-1}$とする．
+ただし，$\bm{P}^{\mathsf T}\bm{A}^{-1}\bm{P} = (\bm{P}^{\mathsf T}\bm{A}\bm{P})^{-1}$であり，圧力ベクトルの次元数を$n$として$\bm{A}$は$n\times n$疎行列であり，$(\bm{P}^{\mathsf T}\bm{A}\bm{P})$は$r\times r$密行列である．密行列であることに注意が必要だが，逆行列を高速に求められるため，$\bm{\widetilde{A}} = (\bm{P}^{\mathsf T}\bm{A}\bm{P})^{-1}$とする．
 
-部分空間法によるシミュレーション計算は，前処理として基底と部分空間に射影した行列を計算する．基底を計算するステップの計算量のボトルネックは，QR分解の$O(nm^2)$である．部分空間に射影した行列を計算するステップについては，射影前のそれぞれの行列が非常に疎であるため，基底の計算ほど時間はかからない．
+部分空間法によるシミュレーション計算は，前処理として基底と部分空間に射影した行列を計算する．基底を計算するステップの計算量のボトルネックは，QR分解の$O(nT^2)$である．部分空間に射影した行列を計算するステップについては，射影前のそれぞれの行列が非常に疎であるため，基底の計算ほど時間はかからない．
 
 非線形項は\ref{noLinear}にて紹介した立体求積法を用いて計算する．立体求積法に用いる基底は，外力項は$\bm{U}_0$であり，移流項は$\bm{U}_1$である．
 例えば，移流項を最終的な部分空間に射影した移流項計算は以下のようになる．
@@ -820,14 +820,14 @@ $\bm{S}^{\mathsf T}\bm{S} = \bm{V}\bm{\Sigma}^2 \bm{V}^{\mathsf T}$
 \]
 
 \section{部分空間法の課題}
-部分空間法はシミュレーションの次元を$n$次元から$r$次元に削減するため，各ステップの計算負荷を大幅に減らすことができる手法である．その一方で，前処理として基底の計算や立体求積法のランダムサンプリングと重み計算，シミュレーションに用いる行列の部分空間への射影などを行う必要がある．これらの計算負荷はスナップショットの数に依存しているが，スナップショットの数以下の次元にしか次元削減できず，流体シミュレーションとして意味のある結果を得るためにはスナップショットの数が十分でなければならない．また，スナップショット行列の空間解像度が大きいという問題点がある．例えば空間解像度$64\times64\times64$，スナップショット数$50$とすると，流速のスナップショット行列の空間解像度は$10$GB程度になる．GPUによる高速化を併用する際，GPUが1度のデータ通信によって処理し切ることができる空間解像度の制限を超えてしまうことで計算時間が増加することが考えられる．
+部分空間法はシミュレーションの次元を$n$次元から$r$次元に削減するため，各ステップの計算負荷を大幅に減らすことができる手法である．その一方で，前処理として基底の計算や立体求積法のランダムサンプリングと重み計算，シミュレーションに用いる行列の部分空間への射影などを行う必要がある．これらの計算負荷はスナップショットの数に依存しているが，スナップショットの数以下の次元にしか次元削減できず，流体シミュレーションとして意味のある結果を得るためにはスナップショットの数が十分でなければならない．また，スナップショット行列の空間解像度が大きいという問題点がある．例えば空間解像度$256\times256\times256$，スナップショット数$50$とすると，流速のスナップショット行列の空間解像度は$10$GB程度になる．GPUによる高速化を併用する際，GPUが1度のデータ通信によって処理し切ることができる空間解像度の制限を超えてしまうことで計算時間が増加することが考えられる．
 
 他にも，事前計算したシミュレーションと異なるシミュレーションを行うことが困難であり，境界条件や流体の初期化，与える外力を大幅に変更することはできず，別途シミュレーションデータを用意する必要がある．
 
 \section{部分空間法の高速化手法の提案}
 部分空間法の前処理において，基底の計算と行列の射影の計算量はスナップショット数の$2$乗に比例し，前処理の計算時間の大多数の時間を占めている．本節では部分空間法の前処理の高速化を達成するため，スナップショットを$d$個に分割する手法を提案する．
 
-部分空間法の基底の計算に用いるスナップショットを$d$分割することによって，基底1つの計算負荷$O(nm^2)$が$\frac{1}{d}^2$に削減される．アルゴリズム全体では$d$回計算するため，計算負荷は$\frac{1}{d}$になることが期待できる．行列の射影計算も分割した基底ごとに行う．空間計算量のボトルネックは分割前のスナップショット行列であり，分割前と変わらない．しかし，特異値分解する行列のサイズが$\frac{1}{d}$になることで，GPUを用いた大規模高速計算と併用する場合，GPUメモリの削減が期待できる．空間計算量をGPUが一度に扱うことができる値まで削減することで，並列計算による高速化が期待できる一方で，特異値分解の回数が$d$倍になることで，CPU-GPU間のデータ通信の時間が増加することに注意が必要である．
+部分空間法の基底の計算に用いるスナップショットを$d$分割することによって，基底1つの計算負荷$O(nm^2)$が$\frac{1}{d^2}$に削減される．アルゴリズム全体では$d$回計算するため，計算負荷は$\frac{1}{d}$になることが期待できる．行列の射影計算も分割した基底ごとに行う．空間計算量のボトルネックは分割前のスナップショット行列であり，分割前と変わらない．しかし，特異値分解する行列のサイズが$\frac{1}{d}$になることで，GPUを用いた大規模高速計算と併用する場合，GPUメモリの削減が期待できる．空間計算量をGPUが一度に扱うことができる値まで削減することで，並列計算による高速化が期待できる一方で，特異値分解の回数が$d$倍になることで，CPU-GPU間のデータ通信の時間が増加することに注意が必要である．
 
 \chapter{計算機実験}
 本研究では，C++と線形代数ライブラリEigenを用いて，文献\cite{fedkiw}の煙の流体シミュレーションを行うソフトウェアを実装した．立方体形状のシミュレーション空間の底面中心から，煙が立ち上る様子をシミュレーションし，そのデータを元に部分空間法による次元削減を行なった．また，シミュレーション空間中央に障害物を設置した状況でもシミュレーションを行った．立体求積法のNNLSソルバにはEigenのUnsupportedライブラリのソルバを用いた．また，コンピュータグラフィックスライブラリOpenGLを用いてスライスベースのボリュームレンダリングを行い，実験結果を可視化するソフトウェアを実装した．これによって得られたシミュレーション結果と，提案手法の計算負荷と削減後のデータの精度について調査を行った．計算負荷の評価は，部分空間法の基底を計算する前処理と行列の射影について実行時間を計測した．データの精度は相対誤差を用いて評価を行なった．ここで相対誤差$L_2$は次元削減前後のベクトル$\bm{u}$と$\bm{\widetilde{u}}$について，以下のように表される．また，基底の精度を累積誤差を用いて評価した．
@@ -840,9 +840,11 @@ L_2 = \frac{|| \bm{u} - \bm{\widetilde{u}}||_2}{||  \bm{u} ||_2}
 
 表\ref{tab:ruiseki}は，基底の累積寄与率を解像度と分割数ごとに計測した結果である．分割数が大きい基底の累積寄与率は，最大値最小値ともに大きくなっているのがわかる．
 
-また，図\ref{fig:128error}，図\ref{fig:128error_obstacle}は，解像度$128^3$における，流速の相対誤差の時間推移を表したグラフである．障害物の有無に関わらず，スナップショットの分割の直後に相対誤差が減少している．また，流れの時間変化が少ないシミュレーションの後半では，分割なしと比べて精度が向上している．図\ref{fig:n128_obst_vel}は，解像度$128^3$，障害物あり，分割数2において，相対誤差が大きく変動した$100$フレーム目と$101$フレーム目における位置ごとの速度誤差を計算し，誤差に基づいて流速に色をつけたものである．誤差が小さい部分は青く，誤差が大きい部分は赤く色をつけており，平面$z=63$上のもののみを描画している．特に，画像中央から中央上部において誤差が小さくなっていることがわかる．
+また，図\ref{fig:128error}，\ref{fig:128error_obstacle}は，解像度$128^3$における，流速の相対誤差の時間推移を表したグラフである．障害物の有無に関わらず，スナップショットの分割の直後に相対誤差が減少している．また，流れの時間変化が少ないシミュレーションの後半では，分割なしと比べて精度が向上している．図\ref{fig:n128_obst_vel}は，解像度$128^3$，障害物あり，分割数2において，相対誤差が大きく変動した$100$フレーム目と$101$フレーム目における位置ごとの速度誤差を計算し，誤差に基づいて流速に色をつけたものである．誤差が小さい部分は青く，誤差が大きい部分は赤く色をつけており，平面$z=63$上のもののみを描画している．特に，画像中央から中央上部において誤差が小さくなっていることがわかる．
 
-図\ref{fig:n128_f99}，\ref{fig:n128_f100}は，シミュレーション結果のレンダリング画像のうち，誤差が大きく変化した100フレーム目と101フレーム目のもので，上段が元のシミュレーション結果，中段が分割なし，下段が分割数2のものである．また，図\ref{fig:n128_f99}，\ref{fig:n128_f100}は，上記のレンダリング画像を密度の誤差によって色付けしたものである．誤差が小さい部分は青く，誤差が大きい部分は赤く色をつけている．図\ref{fig:n128_f99_obstacle}，\ref{fig:n128_f100_obstacle}は，障害物ありのレンダリング結果である．流速の誤差に基づいて，煙の密度分布に誤差が発生しているのがわかる．特に障害物ありの結果において，障害物衝突後の煙の流れの誤差が大きくなっていることが確認できる．また，分割2の方が誤差が少なく，元のシミュレーションに近い結果になっている．一方で，基底を切り替えた前後で流速の相対誤差が小さくなることで，流れの様子が不自然に変化することが確認できる場合がある．
+図\ref{fig:n128_f99}，\ref{fig:n128_f100}は，シミュレーション結果のレンダリング画像のうち，誤差が大きく変化した100フレーム目と101フレーム目のもので，上段が元のシミュレーション結果，中段が分割なし，下段が分割数2のものである．また，図\ref{fig:n128_f99}，\ref{fig:n128_f100}は，上記のレンダリング画像を密度の誤差によって色付けしたものである．誤差が小さい部分は青く，誤差が大きい部分は赤く色をつけている．図\ref{fig:n128_f99_obstacle}，\ref{fig:n128_f100_obstacle}は，障害物ありのレンダリング結果である．流速の誤差に基づいて，煙の密度分布に誤差が発生しているのがわかる．特に障害物ありの結果において，障害物衝突後の煙の流れの誤差が大きくなっていることが確認できる．また，分割数2の方が誤差が少なく，元のシミュレーションに近い結果になっている．一方で，基底を切り替えた前後で流速の相対誤差が小さくなることで，流れの様子が不自然に変化することが確認できる場合がある．
+
+また，図\ref{fig:slice}は密度誤差のボリュームデータの断面図である．透明度は考慮しておらず，断面は流速データの断面図と同じ断面である．既存手法と比べ，分割数2ではシミュレーション空間の上部において，誤差が小さくなっていることが確認できる．一方で，障害物付近では局所的に誤差が大きくなる箇所を確認できる．
 
 非線形項については追加の実験を行ったところ，サンプリングされる点によって重みの計算が発散する場合がある．計算時間はスナップショット数については線形時間であるが，サンプリングする点の数が減ることによりNNLSソルバの反復回数が減ることで，実質的に高速化が見込めることもあった．
 \begin {table}[htbp]
@@ -965,12 +967,12 @@ L_2 = \frac{|| \bm{u} - \bm{\widetilde{u}}||_2}{||  \bm{u} ||_2}
 \begin{tabular}{cc}
 \begin{minipage}[b]{0.45\linewidth}
 \includegraphics[width=65mm]{images/n64_div1_f99.png}
-\subcaption{分割数1}
+\subcaption{既存手法}
 \end{minipage}
 
 \begin{minipage}[b]{0.45\linewidth}
 \includegraphics[width=65mm]{images/n64_div1_f99_color.png}
-\subcaption{分割数1，誤差による色付け}
+\subcaption{既存手法，誤差による色付け}
 \end{minipage}
 \\
 \begin{minipage}[b]{0.45\linewidth}
@@ -995,12 +997,12 @@ L_2 = \frac{|| \bm{u} - \bm{\widetilde{u}}||_2}{||  \bm{u} ||_2}
 \begin{tabular}{cc}
 \begin{minipage}[b]{0.45\linewidth}
 \includegraphics[width=65mm]{images/n64_div1_f100.png}
-\subcaption{分割数1}
+\subcaption{既存手法}
 \end{minipage}
 
 \begin{minipage}[b]{0.45\linewidth}
 \includegraphics[width=65mm]{images/n64_div1_f100_color.png}
-\subcaption{分割数1，誤差による色付け}
+\subcaption{既存手法，誤差による色付け}
 \end{minipage}
 \\
 \begin{minipage}[b]{0.45\linewidth}
@@ -1023,20 +1025,20 @@ L_2 = \frac{|| \bm{u} - \bm{\widetilde{u}}||_2}{||  \bm{u} ||_2}
 
 \begin{figure}[htbp]
 \caption{$解像度128^3，障害物あり，100フレーム目$}
-\label{fig:n128_f99_obstacle}
 \centering
+\label{fig:n128_f99_obstacle}
 \includegraphics[width=65mm]{images/n128_origin_f99_obstacle.png}
 \subcaption{gruound truth}
 
 \begin{tabular}{cc}
 \begin{minipage}[b]{0.45\linewidth}
 \includegraphics[width=65mm]{images/n128_dev1_f99_obstacle.png}
-\subcaption{分割数1}
+\subcaption{既存手法}
 \end{minipage}
 
 \begin{minipage}[b]{0.45\linewidth}
 \includegraphics[width=65mm]{images/n128_dev1_f99_obstacle_color.png}
-\subcaption{分割数1，誤差による色付け}
+\subcaption{既存手法，誤差による色付け}
 \end{minipage}
 \\
 \begin{minipage}[b]{0.45\linewidth}
@@ -1061,12 +1063,12 @@ L_2 = \frac{|| \bm{u} - \bm{\widetilde{u}}||_2}{||  \bm{u} ||_2}
 \begin{tabular}{cc}
 \begin{minipage}[b]{0.45\linewidth}
 \includegraphics[width=65mm]{images/n128_dev1_f100_obstacle.png}
-\subcaption{分割数1}
+\subcaption{既存手法}
 \end{minipage}
 
 \begin{minipage}[b]{0.45\linewidth}
 \includegraphics[width=65mm]{images/n128_dev1_f100_obstacle_color.png}
-\subcaption{分割数1，誤差による色付け}
+\subcaption{既存手法，誤差による色付け}
 \end{minipage}
 \\
 \begin{minipage}[b]{0.45\linewidth}
@@ -1077,34 +1079,38 @@ L_2 = \frac{|| \bm{u} - \bm{\widetilde{u}}||_2}{||  \bm{u} ||_2}
 \begin{minipage}[b]{0.45\linewidth}
 \includegraphics[width=65mm]{images/n128_dev2_f100_obstacle_color.png}
 \subcaption{分割数2，誤差による色付け}
+\label{fig:slice}
 \end{minipage}
 \end{tabular}
 \end{figure}
-%\begin{figure}[htbp]
-%\caption{$解像度128^3，100フレーム目$}
-%\label{fig:n128_f100}
-%\centering
-%\includegraphics[width=100mm]{images/n128_f100_truth.png}
-%\subcaption{gruound truth}
-%\includegraphics[width=100mm]{images/n128_f100_dev1.png}
-%\subcaption{分割数1}
-%\includegraphics[width=100mm]{images/n128_f100_dev2.png}
-%\subcaption{分割数2}
-%\end{figure}
 
+\begin{figure}[htbp]
+\caption{$密度誤差のボリュームデータの断面図$}
+\label{fig:slice}
+\centering
+\begin{tabular}{cc}
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=65mm]{images/dev1_100_slice.png}
+\subcaption{既存手法，100フレーム目}
+\end{minipage}
 
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=65mm]{images/dev1_101_slice.png}
+\subcaption{既存手法，101フレーム目}
+\end{minipage}
+\\
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=65mm]{images/dev2_100_slice.png}
+\subcaption{分割数2，100フレーム目}
+\end{minipage}
 
-%\begin{figure}[htbp]
-%\caption{$解像度128^3，180フレーム目$}
-%\label{fig:n128_f100}
-%\centering
-%\includegraphics[width=100mm]{images/n128_f180_truth.png}
-%\subcaption{gruound truth}
-%\includegraphics[width=100mm]{images/n128_f180_dev1.png}
-%\subcaption{分割数1}
-%\includegraphics[width=100mm]{images/n128_f100_dev2.png}
-%\subcaption{分割数2}
-%\end{figure}
+\begin{minipage}[b]{0.45\linewidth}
+\includegraphics[width=65mm]{images/dev2_101_slice.png}
+\subcaption{分割数2，101フレーム目}
+\end{minipage}
+\end{tabular}
+\end{figure}
+
 \section{考察}
 
 %解像度$128^3$における計算時間が，分割なしと分割数2で劇的に向上しているのは，スナップショット行列の空間計算量が計算機のメモリを超えてしまい，メモリ領域外アクセスが発生してしまったためだと考えられる．
@@ -1135,35 +1141,36 @@ L_2 = \frac{|| \bm{u} - \bm{\widetilde{u}}||_2}{||  \bm{u} ||_2}
 %参考文献
 \begin{thebibliography}{99}
 \addcontentsline{toc}{chapter}{参考文献}
-\bibitem{subspaceDCT}
-A. D. Jones, P. Sen, and T. Kim. Compressing fluid subspaces. \textit{Proceedings of the ACM SIGGRAPH/Eurographics Symposium on Computer Animation}, 77--84, 2016.
-
-\bibitem{Chorin}
-A. J. Chorin. Numerical solution of the navier-stokes equations. \textit{Mathematics of Computation}, 22(104):745--762, 1968.
-
-\bibitem{projection_base}
-A. Treuille, A. Lewis, and Z. Popovi\'{c}. Model reduction for real-time fluids. \textit{ACM Transactions on Graphics}, 25(3):826--834, 2006.
-
-\bibitem{APIC}
-C. Jiang, C. Schroeder, A. Selle, J. Teran, and A. Stomakhin, The affine particle-in-cell method. \textit{ACM Transactions on Graphics},34(4):51:1--51:10, 2015.
-
-\bibitem{MAC}
-F. H. Harlow and J. E. Welch. Numerical calculation of time-dependent viscous incompressible flow of fluid with a free surface. \textit{Physics of Fluids}, 8(12): 2182--2189, 1965.
-
-\bibitem{stam}
-J. Stam. Stable fluids. In \textit{SIGGRAPH 99 Conference Proceedings, Annual Conference Series}, pages 121--128, 1999.
 
 \bibitem{FLIP}
 J. U. Brackbill. D. B. KotheH.M.Ruppel. Flip: A low-dissipation, particle-in-cell method for fluid flow, \textit{Computer Physics Communications}, 48(1),25--38, 1988.
 
+\bibitem{Chorin}
+A. J. Chorin. Numerical solution of the navier-stokes equations. \textit{Mathematics of Computation}, 22(104):745--762, 1968.
+
 \bibitem{fedkiw}
 R. Fedkiew, J. Stam, and H. Jensen. Visual simulation of smoke. In \textit{Proceedings of SIGGRAPH 01}, 15--22, 2001.
+
+\bibitem{MAC}
+F. H. Harlow and J. E. Welch. Numerical calculation of time-dependent viscous incompressible flow of fluid with a free surface. \textit{Physics of Fluids}, 8(12): 2182--2189, 1965.
+
+\bibitem{APIC}
+C. Jiang, C. Schroeder, A. Selle, J. Teran, and A. Stomakhin, The affine particle-in-cell method. \textit{ACM Transactions on Graphics},34(4):51:1--51:10, 2015.
+
+\bibitem{subspaceDCT}
+A. D. Jones, P. Sen, and T. Kim. Compressing fluid subspaces. \textit{Proceedings of the ACM SIGGRAPH/Eurographics Symposium on Computer Animation}, 77--84, 2016.
 
 \bibitem{subspace}
 T. Kim and J. Delaney. Subspace fluid re-simulation. \textit{ACM Transactions on Graphics}, 32(4):62:1--62:9, 2013.
 
+\bibitem{stam}
+J. Stam. Stable fluids. In \textit{SIGGRAPH 99 Conference Proceedings, Annual Conference Series}, pages 121--128, 1999.
+
 \bibitem{EOL}
 Y. Teng, D. I.W. Levin, and T. Kim. Eulerian solid-fluid coupling. \textit{ACM Transactions on Graphics}, 35(6):200:1--200:8, 2016.
+
+\bibitem{projection_base}
+A. Treuille, A. Lewis, and Z. Popovi\'{c}. Model reduction for real-time fluids. \textit{ACM Transactions on Graphics}, 25(3):826--834, 2006.T
 
 \end{thebibliography}
 
